@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import api from './api';
+import React, { useState } from 'react';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
@@ -7,101 +6,109 @@ import HairAnalysis from './components/HairAnalysis';
 import CarePlans from './components/CarePlans';
 import ProgressTracking from './components/ProgressTracking';
 
-const App = () => {
-  const [currentPage, setCurrentPage] = useState('login');
+function App() {
+  // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [capturedImage, setCapturedImage] = useState(null);
-  const [completedSteps, setCompletedSteps] = useState(new Set());
-  const [journalEntries, setJournalEntries] = useState([]);
-  const [activeReminders, setActiveReminders] = useState([]);
-  const [backendStatus, setBackendStatus] = useState('unknown');
-  // API response states
-  const [hairAnalysis, setHairAnalysis] = useState(null);
+  const [currentPage, setCurrentPage] = useState('login');
+
+  // Global state that needs to be shared between components
   const [sessionId, setSessionId] = useState(null);
+  const [analysis, setHairAnalysis] = useState(null);
+  const [capturedImage, setCapturedImage] = useState(null);
   const [carePlan, setCarePlan] = useState(null);
-  const [progressHistory, setProgressHistory] = useState([]);
+  const [completedSteps, setCompletedSteps] = useState(new Set());
+  const [activeReminders, setActiveReminders] = useState([]);
 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    setCurrentPage('home');
-  };
-
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setCurrentPage('login');
-  };
-
+  // Navigation handler
   const navigateToPage = (page) => {
     setCurrentPage(page);
   };
 
-  const commonProps = {
-    currentPage,
-    navigateToPage,
-    handleLogout,
-    capturedImage,
-    setCapturedImage,
-    completedSteps,
-    setCompletedSteps,
-    journalEntries,
-    setJournalEntries,
-    activeReminders,
-    setActiveReminders,
-    // API state
-    hairAnalysis,
-    setHairAnalysis,
-    sessionId,
-    setSessionId,
-    carePlan,
-    setCarePlan,
-    progressHistory,
-    setProgressHistory
+  // Auth handlers
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    navigateToPage('home');
   };
 
-  useEffect(() => {
-    let mounted = true;
-    api.get('/')  // FastAPI root endpoint
-      .then(res => {
-        if (mounted) setBackendStatus('online: ' + (res.data?.message ?? 'ok'));
-      })
-      .catch(() => {
-        if (mounted) setBackendStatus('offline');
-      });
-    return () => { mounted = false };
-  }, []);
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setSessionId(null);
+    setHairAnalysis(null);
+    setCarePlan(null);
+    setCapturedImage(null);
+    navigateToPage('login');
+  };
 
-  if (currentPage === 'login') {
+  // Render logic based on authentication and current page
+  if (!isAuthenticated) {
+    if (currentPage === 'signup') {
+      return <Signup onSignup={handleLogin} navigateToPage={navigateToPage} />;
+    }
     return <Login onLogin={handleLogin} navigateToPage={navigateToPage} />;
   }
 
-  if (currentPage === 'signup') {
-    return <Signup onSignup={handleLogin} navigateToPage={navigateToPage} />;
-  }
+  // Main app routing
+  switch (currentPage) {
+    case 'home':
+      return (
+        <Home
+          currentPage={currentPage}
+          navigateToPage={navigateToPage}
+          handleLogout={handleLogout}
+        />
+      );
 
-  if (currentPage === 'home') {
-    return (
-      <>
-        <div style={{padding:8, textAlign:'center', background:'#f3f4f6'}}>
-          Backend: {backendStatus}
-        </div>
-        <Home {...commonProps} />
-      </>
-    );
-  }
+    case 'analysis':
+      return (
+        <HairAnalysis
+          currentPage={currentPage}
+          navigateToPage={navigateToPage}
+          handleLogout={handleLogout}
+          sessionId={sessionId}
+          setSessionId={setSessionId}
+          hairAnalysis={analysis}
+          setHairAnalysis={setHairAnalysis}
+          capturedImage={capturedImage}
+          setCapturedImage={setCapturedImage}
+        />
+      );
 
-  if (currentPage === 'analysis') {
-    return <HairAnalysis {...commonProps} />;
-  }
+    case 'plan':
+      return (
+        <CarePlans
+          currentPage={currentPage}
+          navigateToPage={navigateToPage}
+          handleLogout={handleLogout}
+          sessionId={sessionId}
+          carePlan={carePlan}
+          setCarePlan={setCarePlan}
+          completedSteps={completedSteps}
+          setCompletedSteps={setCompletedSteps}
+          activeReminders={activeReminders}
+          setActiveReminders={setActiveReminders}
+        />
+      );
 
-  if (currentPage === 'plan') {
-    return <CarePlans {...commonProps} />;
-  }
+    case 'tracking':
+      return (
+        <ProgressTracking
+          currentPage={currentPage}
+          navigateToPage={navigateToPage}
+          handleLogout={handleLogout}
+          sessionId={sessionId}
+          completedSteps={completedSteps}
+          activeReminders={activeReminders}
+          setActiveReminders={setActiveReminders}
+        />
+      );
 
-  if (currentPage === 'tracking') {
-    return <ProgressTracking {...commonProps} />;
+    default:
+      return <Home 
+        currentPage={currentPage}
+        navigateToPage={navigateToPage}
+        handleLogout={handleLogout}
+      />;
   }
-
-  return null;
-};
+}
 
 export default App;

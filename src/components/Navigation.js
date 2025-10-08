@@ -10,7 +10,7 @@ const Navigation = ({ currentPage, navigateToPage, handleLogout }) => {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center gap-2">
             <Sparkles className="w-8 h-8 text-purple-600" />
-            <span className="text-xl font-bold text-gray-800">HairCare AI</span>
+            <span className="text-xl font-bold text-gray-800">HAIrly</span>
           </div>
           
           {/* Desktop Navigation */}
