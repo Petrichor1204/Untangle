@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import { TrendingUp, Calendar, Bell, BookOpen, Plus, X, Clock, Camera, Star, AlertCircle } from 'lucide-react';
 import api from '../api';
+import MoodSelector from './MoodSelector';
+import StyleRecommendations from './StyleRecommendations';
+import { getMoodEmoji } from '../utils/moodConfig';
 
 // Save progress log entry
 export const saveProgressLog = async (sessionId, logData) => {
@@ -9,6 +12,7 @@ export const saveProgressLog = async (sessionId, logData) => {
     const response = await api.post(`/log?session_id=${sessionId}`, {
       notes: logData.notes,
       rating: logData.rating,
+      mood: logData.mood,
       photo_url: logData.photo_url || null
     });
     
@@ -59,18 +63,17 @@ const ProgressTracking = ({
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showNewEntry, setShowNewEntry] = useState(false);
-  const [newEntry, setNewEntry] = useState({ notes: '', rating: 5 });
+  const [newEntry, setNewEntry] = useState({ notes: '', rating: 5, mood: 'confident' });
   const [error, setError] = useState(null);
+  const [showStyleRecs, setShowStyleRecs] = useState(false);
 
-  // Mock plan steps count for progress calculation
   const totalSteps = 4;
 
-  // Fetch progress history on component mount
   useEffect(() => {
     fetchHistory();
   }, []);
 
-  const handleSaveProgress = async (notes, rating) => {
+  const handleSaveProgress = async (notes, rating, mood) => {
     const sessionId = localStorage.getItem('hairly_session_id');
     if (!sessionId) {
       setError('Please analyze your hair first');
@@ -78,13 +81,13 @@ const ProgressTracking = ({
     }
     
     setLoading(true);
-    const result = await saveProgressLog(sessionId, { notes, rating });
+    const result = await saveProgressLog(sessionId, { notes, rating, mood });
     
     if (result.success) {
-      // Refresh history after saving
       await fetchHistory();
-      setNewEntry({ notes: '', rating: 5 });
+      setNewEntry({ notes: '', rating: 5, mood: 'confident' });
       setShowNewEntry(false);
+      setShowStyleRecs(true);
       setError(null);
     } else {
       setError(result.error);
@@ -110,12 +113,13 @@ const ProgressTracking = ({
 
   const addJournalEntry = () => {
     setShowNewEntry(true);
+    setShowStyleRecs(false);
     setError(null);
   };
 
   const cancelNewEntry = () => {
     setShowNewEntry(false);
-    setNewEntry({ notes: '', rating: 5 });
+    setNewEntry({ notes: '', rating: 5, mood: 'confident' });
     setError(null);
   };
 
@@ -124,7 +128,7 @@ const ProgressTracking = ({
       setError('Please add some notes about your hair journey');
       return;
     }
-    await handleSaveProgress(newEntry.notes, newEntry.rating);
+    await handleSaveProgress(newEntry.notes, newEntry.rating, newEntry.mood);
   };
 
   const removeReminder = (id) => {
@@ -205,6 +209,14 @@ const ProgressTracking = ({
               <p className="text-2xl font-bold text-purple-500">{activeReminders.length}</p>
             </div>
           </div>
+
+          {/* Style Recommendations */}
+          {showStyleRecs && (
+            <StyleRecommendations 
+              mood={newEntry.mood} 
+              onClose={() => setShowStyleRecs(false)} 
+            />
+          )}
           
           {/* Active Reminders */}
           {activeReminders.length > 0 && (
@@ -253,9 +265,14 @@ const ProgressTracking = ({
             {/* New Entry Form */}
             {showNewEntry && (
               <div className="border border-purple-200 rounded-lg p-4 mb-4 bg-purple-50">
+                <MoodSelector 
+                  selectedMood={newEntry.mood}
+                  onMoodChange={(mood) => setNewEntry({ ...newEntry, mood })}
+                />
+
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    How's your hair feeling today?
+                    Tell us more about your hair today
                   </label>
                   <textarea
                     value={newEntry.notes}
@@ -323,7 +340,10 @@ const ProgressTracking = ({
                 {logs.map((log) => (
                   <div key={log.id} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-gray-800">{formatDate(log.date)}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-2xl">{getMoodEmoji(log.mood)}</span>
+                        <span className="font-medium text-gray-800">{formatDate(log.date)}</span>
+                      </div>
                       <div className="flex items-center space-x-1">
                         {renderStars(log.rating)}
                       </div>
