@@ -45,3 +45,5 @@ const StyleRecommendations = ({ mood, onClose }) => {
 export default StyleRecommendations;
 
 
+// the emojis don't change(give the same emoji everytime) and 
+// the recommendation is the same and the color sucks
