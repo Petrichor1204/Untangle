@@ -1,49 +1,43 @@
 import React, { useState } from 'react';
-import { Sparkles, Home, Camera, BookOpen, LogOut, Menu } from 'lucide-react';
+import { Home, NotebookPen, LogOut, Menu } from 'lucide-react';
 
 const Navigation = ({ currentPage, navigateToPage, handleLogout }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
-    <nav className="bg-white shadow-lg">
+    <nav className="bg-white-600 p-1 shadow-xl">
       <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-between items-center py-4">
+        <div className="flex items-center gap-8 py-4">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-8 h-8 text-purple-600" />
-            <span className="text-xl font-bold text-gray-800">HAIrly</span>
+            {/* <Sparkles className="w-8 h-8 text-purple-600" /> */}
+            <span className="text-sm font-impact text-fuchsia-800">hAIrly</span>
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-6 flex-grow">
             <button 
               onClick={() => navigateToPage('home')}
-              className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-                currentPage === 'home' ? 'bg-purple-100 text-purple-700' : 'text-gray-600 hover:text-purple-600'
+              className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors text-xs ${
+                currentPage === 'home' ? 'bg-fuchsia-100 text-fuchsia-700' : 'text-gray-600 hover:text-fuchsia-600'
               }`}
             >
               <Home className="w-5 h-5" />
               Home
             </button>
             <button 
-              onClick={() => navigateToPage('analysis')}
-              className="flex items-center gap-2 text-gray-600 hover:text-purple-600 px-3 py-2 rounded-lg transition-colors"
-            >
-              <Camera className="w-5 h-5" />
-              Analyze
-            </button>
-            <button 
               onClick={() => navigateToPage('tracking')}
-              className="flex items-center gap-2 text-gray-600 hover:text-purple-600 px-3 py-2 rounded-lg transition-colors"
+              className="flex items-center gap-1 text-gray-600 hover:text-fuchsia-600 px-3 py-2 rounded-lg transition-colors text-xs"
             >
-              <BookOpen className="w-5 h-5" />
-              Journal
+              <NotebookPen className="w-5 h-5" />
+              Learn
             </button>
+            <div className="flex-grow"></div>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-gray-600 hover:text-red-600 px-3 py-2 rounded-lg transition-colors"
+              className="flex items-center justify-center text-gray-600 hover:text-red-600 p-2 rounded-lg transition-colors text-xs"
+              title="Logout"
             >
               <LogOut className="w-5 h-5" />
-              Logout
             </button>
           </div>
           
@@ -61,31 +55,23 @@ const Navigation = ({ currentPage, navigateToPage, handleLogout }) => {
           <div className="md:hidden border-t py-4 space-y-2">
             <button 
               onClick={() => {navigateToPage('home'); setShowMobileMenu(false);}}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-purple-100 hover:text-purple-600 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-fuchsia-100 hover:text-fuchsia-600 transition-colors text-xs"
             >
               <Home className="w-5 h-5" />
               Home
             </button>
             <button 
-              onClick={() => {navigateToPage('analysis'); setShowMobileMenu(false);}}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-purple-100 hover:text-purple-600 transition-colors"
-            >
-              <Camera className="w-5 h-5" />
-              Analyze
-            </button>
-            <button 
               onClick={() => {navigateToPage('tracking'); setShowMobileMenu(false);}}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-purple-100 hover:text-purple-600 transition-colors"
+              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-fuchsia-100 hover:text-fuchsia-600 transition-colors text-xs"
             >
-              <BookOpen className="w-5 h-5" />
-              Journal
+              <NotebookPen className="w-5 h-5" />
+              Learn
             </button>
             <button
               onClick={() => {handleLogout(); setShowMobileMenu(false);}}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-red-100 hover:text-red-600 transition-colors"
+              className="w-full flex items-center justify-center px-3 py-2 rounded-lg text-gray-600 hover:bg-red-100 hover:text-red-600 transition-colors"
             >
               <LogOut className="w-5 h-5" />
-              Logout
             </button>
           </div>
         )}

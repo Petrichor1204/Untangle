@@ -26,7 +26,7 @@ const Login = ({ onLogin, navigateToPage }) => {
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
-              <Sparkles className="w-10 h-10 text-purple-600" />
+              {/* <Sparkles className="w-10 h-10 text-purple-600" /> */}
               <h1 className="text-2xl font-bold text-gray-800">hAIrly </h1>
             </div>
             <p className="text-gray-600">Welcome back! Sign in to continue your hair journey.</p>
