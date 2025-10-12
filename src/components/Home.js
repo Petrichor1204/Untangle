@@ -1,5 +1,6 @@
 import React from 'react';
 import Navigation from './Navigation';
+import StreakCard from './Streak';
 import { Camera, ArrowRight, TrendingUp, Scissors, BookMarked, Users, User } from 'lucide-react';
 
 const Home = ({ currentPage, navigateToPage, handleLogout }) => {
@@ -19,62 +20,14 @@ const Home = ({ currentPage, navigateToPage, handleLogout }) => {
             <p className="text-gray-600 text-lg">Discover your hair's potential with AI-powered analysis and personalized care plans.</p>
           </div>
         </div> */}
-        
+        <div className="flex items-center gap-2 p-2">
+            <span className="text-sm font-bold text-black-800">Welcome, Euphoria </span>
+          </div>
         {/* Quick Actions Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {/* Streak */}
-          <div 
-            onClick={() => navigateToPage('analysis')}
-            className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer group overflow-hidden p-4"
-          >
-            <div className="flex flex-col h-full">
-              <div className="flex-grow"></div>
-              <div className="flex flex-col items-center">
-                <div className="flex justify-center items-center gap-2">
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100">
-                      <svg className="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13 10V3L4 14H11V21L20 10H13Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <span className="text-xs text-gray-600 mt-1">M</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100">
-                      <svg className="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13 10V3L4 14H11V21L20 10H13Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <span className="text-xs text-gray-600 mt-1">T</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100">
-                      <svg className="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13 10V3L4 14H11V21L20 10H13Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <span className="text-xs text-gray-600 mt-1">W</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100">
-                      <svg className="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13 10V3L4 14H11V21L20 10H13Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <span className="text-xs text-gray-600 mt-1">Th</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-yellow-100">
-                      <svg className="w-4 h-4 text-yellow-500 fill-current" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M13 10V3L4 14H11V21L20 10H13Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <span className="text-xs text-gray-600 mt-1">F</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <StreakCard onNavigate={navigateToPage} />
+        
 
           {/* Hair Analysis */}
           <div 

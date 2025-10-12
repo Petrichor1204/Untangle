@@ -21,15 +21,15 @@ const Login = ({ onLogin, navigateToPage }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white p-8">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               {/* <Sparkles className="w-10 h-10 text-purple-600" /> */}
-              <h1 className="text-2xl font-bold text-gray-800">hAIrly </h1>
+              <h1 className="text-2xl font-bold text-fuchsia-800">hAIrly </h1>
             </div>
-            <p className="text-gray-600">Welcome back! Sign in to continue your hair journey.</p>
+            <p className="text-gray-600">Welcome back! Sign in</p>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -70,7 +70,7 @@ const Login = ({ onLogin, navigateToPage }) => {
             
             <button
               type="submit"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold transition-colors"
+              className="w-full bg-fuchsia-800 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold transition-colors"
             >
               Sign In
             </button>
@@ -81,7 +81,7 @@ const Login = ({ onLogin, navigateToPage }) => {
               Don't have an account?{' '}
               <button
                 onClick={() => navigateToPage('signup')}
-                className="text-purple-600 hover:text-purple-700 font-semibold"
+                className="text-fuchsia-800 hover:text-purple-700 font-semibold"
               >
                 Sign up here
               </button>
