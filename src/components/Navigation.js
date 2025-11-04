@@ -25,7 +25,7 @@ const Navigation = ({ currentPage, navigateToPage, handleLogout }) => {
               Home
             </button>
             <button 
-              onClick={() => navigateToPage('tracking')}
+              onClick={() => navigateToPage('learn')}
               className="flex items-center gap-1 text-gray-600 hover:text-fuchsia-600 px-3 py-2 rounded-lg transition-colors text-xs"
             >
               <NotebookPen className="w-5 h-5" />

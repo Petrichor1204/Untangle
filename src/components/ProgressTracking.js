@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
-import { TrendingUp, Calendar, Bell, BookOpen, Plus, X, Clock, Camera, Star, AlertCircle } from 'lucide-react';
+import { TrendingUp, Calendar, Bell, BookOpen, Plus, X, Clock, Camera, Star, AlertCircle, Sparkles } from 'lucide-react';
 import api from '../api';
 import MoodSelector from './MoodSelector';
-import StyleRecommendations from './StyleRecommendations';
+import StyleSuggestionsPage from './StyleSuggestionsPage';
 import { getMoodEmoji } from '../utils/moodConfig';
 
 // Save progress log entry
@@ -58,14 +58,15 @@ const ProgressTracking = ({
   journalEntries,
   setJournalEntries,
   activeReminders,
-  setActiveReminders 
+  setActiveReminders,
+  sessionId
 }) => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showNewEntry, setShowNewEntry] = useState(false);
   const [newEntry, setNewEntry] = useState({ notes: '', rating: 5, mood: 'confident' });
   const [error, setError] = useState(null);
-  const [showStyleRecs, setShowStyleRecs] = useState(false);
+  const [showStyleSuggestions, setShowStyleSuggestions] = useState(false);
 
   const totalSteps = 4;
 
@@ -74,20 +75,19 @@ const ProgressTracking = ({
   }, []);
 
   const handleSaveProgress = async (notes, rating, mood) => {
-    const sessionId = localStorage.getItem('hairly_session_id');
-    if (!sessionId) {
+    const storedSessionId = sessionId || localStorage.getItem('hairly_session_id');
+    if (!storedSessionId) {
       setError('Please analyze your hair first');
       return;
     }
     
     setLoading(true);
-    const result = await saveProgressLog(sessionId, { notes, rating, mood });
+    const result = await saveProgressLog(storedSessionId, { notes, rating, mood });
     
     if (result.success) {
       await fetchHistory();
       setNewEntry({ notes: '', rating: 5, mood: 'confident' });
       setShowNewEntry(false);
-      setShowStyleRecs(true);
       setError(null);
     } else {
       setError(result.error);
@@ -96,11 +96,11 @@ const ProgressTracking = ({
   };
 
   const fetchHistory = async () => {
-    const sessionId = localStorage.getItem('hairly_session_id');
-    if (!sessionId) return;
+    const storedSessionId = sessionId || localStorage.getItem('hairly_session_id');
+    if (!storedSessionId) return;
     
     setLoading(true);
-    const result = await getProgressHistory(sessionId);
+    const result = await getProgressHistory(storedSessionId);
     
     if (result.success) {
       setLogs(result.logs);
@@ -113,7 +113,6 @@ const ProgressTracking = ({
 
   const addJournalEntry = () => {
     setShowNewEntry(true);
-    setShowStyleRecs(false);
     setError(null);
   };
 
@@ -153,7 +152,7 @@ const ProgressTracking = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen bg-gray-50">
       <Navigation 
         currentPage={currentPage} 
         navigateToPage={navigateToPage} 
@@ -163,12 +162,21 @@ const ProgressTracking = ({
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gray-800">Hair Journey Tracking</h2>
-            <button
-              onClick={() => navigateToPage('plan')}
-              className="bg-purple-100 hover:bg-purple-200 text-purple-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-            >
-              View Plan
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowStyleSuggestions(true)}
+                className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                Style Ideas
+              </button>
+              <button
+                onClick={() => navigateToPage('plan')}
+                className="bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+              >
+                View Plan
+              </button>
+            </div>
           </div>
 
           {/* Error Display */}
@@ -189,45 +197,37 @@ const ProgressTracking = ({
           
           {/* Progress Overview */}
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-white rounded-xl p-4 text-center">
-              <TrendingUp className="w-8 h-8 text-green-500 mx-auto mb-2" />
+            <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
+              <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-2" />
               <h3 className="font-semibold text-gray-800">Progress</h3>
-              <p className="text-2xl font-bold text-green-500">
+              <p className="text-2xl font-bold text-green-600">
                 {Math.round((completedSteps.size / totalSteps) * 100)}%
               </p>
             </div>
             
-            <div className="bg-white rounded-xl p-4 text-center">
-              <Calendar className="w-8 h-8 text-blue-500 mx-auto mb-2" />
+            <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
+              <Calendar className="w-8 h-8 text-blue-600 mx-auto mb-2" />
               <h3 className="font-semibold text-gray-800">Entries</h3>
-              <p className="text-2xl font-bold text-blue-500">{logs.length}</p>
+              <p className="text-2xl font-bold text-blue-600">{logs.length}</p>
             </div>
 
-            <div className="bg-white rounded-xl p-4 text-center">
-              <Bell className="w-8 h-8 text-purple-500 mx-auto mb-2" />
+            <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
+              <Bell className="w-8 h-8 text-gray-600 mx-auto mb-2" />
               <h3 className="font-semibold text-gray-800">Reminders</h3>
-              <p className="text-2xl font-bold text-purple-500">{activeReminders.length}</p>
+              <p className="text-2xl font-bold text-gray-600">{activeReminders.length}</p>
             </div>
           </div>
-
-          {/* Style Recommendations */}
-          {showStyleRecs && (
-            <StyleRecommendations 
-              mood={newEntry.mood} 
-              onClose={() => setShowStyleRecs(false)} 
-            />
-          )}
           
           {/* Active Reminders */}
           {activeReminders.length > 0 && (
-            <div className="bg-white rounded-xl p-4 mb-6">
+            <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
               <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
                 <Bell className="w-5 h-5" />
                 Active Reminders
               </h3>
               <div className="space-y-2">
                 {activeReminders.map((reminder) => (
-                  <div key={reminder.id} className="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
+                  <div key={reminder.id} className="flex items-center justify-between bg-blue-50 border border-blue-200 p-3 rounded-lg">
                     <div>
                       <p className="font-medium text-blue-800">{reminder.title}</p>
                       <p className="text-sm text-blue-600">{reminder.time}</p>
@@ -245,7 +245,7 @@ const ProgressTracking = ({
           )}
           
           {/* Hair Journal */}
-          <div className="bg-white rounded-xl p-4 mb-6">
+          <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-gray-800 flex items-center gap-2">
                 <BookOpen className="w-5 h-5" />
@@ -254,7 +254,7 @@ const ProgressTracking = ({
               {!showNewEntry && (
                 <button
                   onClick={addJournalEntry}
-                  className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
+                  className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   New Entry
@@ -264,7 +264,7 @@ const ProgressTracking = ({
 
             {/* New Entry Form */}
             {showNewEntry && (
-              <div className="border border-purple-200 rounded-lg p-4 mb-4 bg-purple-50">
+              <div className="border border-gray-300 rounded-lg p-4 mb-4 bg-gray-50">
                 <MoodSelector 
                   selectedMood={newEntry.mood}
                   onMoodChange={(mood) => setNewEntry({ ...newEntry, mood })}
@@ -278,7 +278,7 @@ const ProgressTracking = ({
                     value={newEntry.notes}
                     onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
                     placeholder="Describe your hair's condition, any changes you've noticed, products used..."
-                    className="w-full p-3 border border-gray-300 rounded-lg text-sm resize-none focus:border-purple-500 focus:outline-none"
+                    className="w-full p-3 border border-gray-300 rounded-lg text-sm resize-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
                     rows="4"
                   />
                 </div>
@@ -310,13 +310,13 @@ const ProgressTracking = ({
                   <button
                     onClick={submitNewEntry}
                     disabled={loading}
-                    className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
+                    className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
                   >
                     {loading ? 'Saving...' : 'Save Entry'}
                   </button>
                   <button
                     onClick={cancelNewEntry}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                    className="bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
                   >
                     Cancel
                   </button>
@@ -327,7 +327,7 @@ const ProgressTracking = ({
             {/* Progress History */}
             {loading && logs.length === 0 ? (
               <div className="text-center py-8">
-                <div className="animate-spin w-8 h-8 border-2 border-purple-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+                <div className="animate-spin w-8 h-8 border-2 border-gray-800 border-t-transparent rounded-full mx-auto mb-4"></div>
                 <p className="text-gray-500">Loading your progress history...</p>
               </div>
             ) : logs.length === 0 ? (
@@ -338,7 +338,7 @@ const ProgressTracking = ({
             ) : (
               <div className="space-y-4">
                 {logs.map((log) => (
-                  <div key={log.id} className="border border-gray-200 rounded-lg p-4">
+                  <div key={log.id} className="border border-gray-200 rounded-lg p-4 bg-white">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
                         <span className="text-2xl">{getMoodEmoji(log.mood)}</span>
@@ -357,14 +357,14 @@ const ProgressTracking = ({
           
           {/* Quick Actions */}
           <div className="grid grid-cols-2 gap-4">
-            <button className="bg-white hover:bg-gray-50 p-4 rounded-xl text-center transition-colors">
+            <button className="bg-white hover:bg-gray-50 border border-gray-300 p-4 rounded-xl text-center transition-colors">
               <Clock className="w-8 h-8 text-gray-600 mx-auto mb-2" />
               <span className="text-sm font-medium text-gray-800">Schedule Reminder</span>
             </button>
             
             <button
               onClick={() => navigateToPage('analysis')}
-              className="bg-white hover:bg-gray-50 p-4 rounded-xl text-center transition-colors"
+              className="bg-white hover:bg-gray-50 border border-gray-300 p-4 rounded-xl text-center transition-colors"
             >
               <Camera className="w-8 h-8 text-gray-600 mx-auto mb-2" />
               <span className="text-sm font-medium text-gray-800">New Analysis</span>
@@ -372,6 +372,14 @@ const ProgressTracking = ({
           </div>
         </div>
       </div>
+
+      {/* Style Suggestions Modal */}
+      {showStyleSuggestions && sessionId && (
+        <StyleSuggestionsPage 
+          onClose={() => setShowStyleSuggestions(false)}
+          sessionId={sessionId}
+        />
+      )}
     </div>
   );
 };

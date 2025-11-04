@@ -24,7 +24,9 @@ const Home = ({ currentPage, navigateToPage, handleLogout }) => {
             <span className="text-sm font-bold text-black-800">Welcome, Euphoria </span>
           </div>
         {/* Quick Actions Grid */}
+        
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        
           {/* Streak */}
           <StreakCard onNavigate={navigateToPage} />
         

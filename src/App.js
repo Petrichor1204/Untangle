@@ -5,11 +5,15 @@ import Home from './components/Home';
 import HairAnalysis from './components/HairAnalysis';
 import CarePlans from './components/CarePlans';
 import ProgressTracking from './components/ProgressTracking';
+import Learn from './components/Learn'
+import LandingPage from './components/LandingPage';
+import StyleSuggestionsPage from './components/StyleSuggestionsPage';
+import BookmarksPage from './components/BookmarksPage';
 
 function App() {
   // Authentication state
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [currentPage, setCurrentPage] = useState('login');
+  const [currentPage, setCurrentPage] = useState('landing');
 
   // Global state that needs to be shared between components
   const [sessionId, setSessionId] = useState(null);
@@ -41,10 +45,16 @@ function App() {
 
   // Render logic based on authentication and current page
   if (!isAuthenticated) {
+    if (currentPage === 'landing' || currentPage === '') {
+      return <LandingPage navigateToPage={navigateToPage} currentPage={currentPage} handleLogout={handleLogout} />;
+    }
     if (currentPage === 'signup') {
       return <Signup onSignup={handleLogin} navigateToPage={navigateToPage} />;
     }
-    return <Login onLogin={handleLogin} navigateToPage={navigateToPage} />;
+    if (currentPage === 'login') {
+      return <Login onLogin={handleLogin} navigateToPage={navigateToPage} />;
+    }
+    return <LandingPage navigateToPage={navigateToPage} currentPage={currentPage} handleLogout={handleLogout} />;
   }
 
   // Main app routing
@@ -99,6 +109,15 @@ function App() {
           completedSteps={completedSteps}
           activeReminders={activeReminders}
           setActiveReminders={setActiveReminders}
+        />
+      );
+
+    case 'learn':
+      return (
+        <Learn
+          currentPage={currentPage}
+          navigateToPage={navigateToPage}
+          handleLogout={handleLogout}
         />
       );
 
