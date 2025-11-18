@@ -69,6 +69,8 @@ const ProgressTracking = ({
   const [showStyleSuggestions, setShowStyleSuggestions] = useState(false);
 
   const totalSteps = 4;
+  const completionPercent = totalSteps ? Math.round((completedSteps.size / totalSteps) * 100) : 0;
+  const resolvedSessionId = sessionId || (typeof window !== 'undefined' ? localStorage.getItem('hairly_session_id') : null);
 
   useEffect(() => {
     fetchHistory();
@@ -143,6 +145,16 @@ const ProgressTracking = ({
     ));
   };
 
+  const handleOpenStyleIdeas = () => {
+    const storedSessionId = sessionId || localStorage.getItem('hairly_session_id');
+    if (!storedSessionId) {
+      setError('Please analyze your hair to unlock personalized style ideas.');
+      return;
+    }
+    setError(null);
+    setShowStyleSuggestions(true);
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -152,232 +164,233 @@ const ProgressTracking = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#fdf7ff] text-[#1f1338]">
       <Navigation 
         currentPage={currentPage} 
         navigateToPage={navigateToPage} 
         handleLogout={handleLogout} 
       />
-      <div className="p-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">Hair Journey Tracking</h2>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowStyleSuggestions(true)}
-                className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center gap-2"
-              >
-                <Sparkles className="w-4 h-4" />
-                Style Ideas
-              </button>
-              <button
-                onClick={() => navigateToPage('plan')}
-                className="bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-              >
-                View Plan
-              </button>
-            </div>
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
+        <header className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-2">
+            <span className="text-xs uppercase tracking-[0.3em] text-[#b39ef7]">Journey log</span>
+            <h1 className="text-3xl font-semibold">Hair journey tracking</h1>
+            <p className="text-sm text-[#6e5c8f]">
+              Log how your strands feel, stack reminders, and see your routines turning into momentum.
+            </p>
           </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={handleOpenStyleIdeas}
+              className="inline-flex items-center gap-2 rounded-full bg-[#8256f6] hover:bg-[#6f47d9] text-white px-5 py-3 text-sm font-semibold transition"
+            >
+              <Sparkles className="w-4 h-4" />
+              Style ideas
+            </button>
+            <button
+              onClick={() => navigateToPage('plan')}
+              className="inline-flex items-center gap-2 rounded-full border border-[#eadffb] px-5 py-3 text-sm font-semibold text-[#6e5c8f] hover:bg-white"
+            >
+              View care plan
+            </button>
+          </div>
+        </header>
 
-          {/* Error Display */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-red-500" />
-                <p className="text-red-700">{error}</p>
-                <button
-                  onClick={() => setError(null)}
-                  className="ml-auto text-red-500 hover:text-red-700"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+        {error && (
+          <div className="bg-[#fff6f6] border border-[#ffdede] rounded-[24px] px-5 py-4 flex items-center gap-3 text-sm text-[#7a5252]">
+            <AlertCircle className="w-4 h-4 text-[#e05a5a]" />
+            <span>{error}</span>
+            <button onClick={() => setError(null)} className="ml-auto text-[#c44141] hover:text-[#a83636]">
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          <div className="rounded-[28px] border border-[#eadffb] bg-white/80 p-5 text-center shadow-sm">
+            <TrendingUp className="w-8 h-8 text-[#58c4a5] mx-auto mb-3" />
+            <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Progress</p>
+            <p className="text-3xl font-semibold">{completionPercent}%</p>
+          </div>
+          <div className="rounded-[28px] border border-[#eadffb] bg-white/80 p-5 text-center shadow-sm">
+            <Calendar className="w-8 h-8 text-[#6a4ccf] mx-auto mb-3" />
+            <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Entries logged</p>
+            <p className="text-3xl font-semibold">{logs.length}</p>
+          </div>
+          <div className="rounded-[28px] border border-[#eadffb] bg-white/80 p-5 text-center shadow-sm">
+            <Bell className="w-8 h-8 text-[#f3a547] mx-auto mb-3" />
+            <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Active reminders</p>
+            <p className="text-3xl font-semibold">{activeReminders.length}</p>
+          </div>
+        </div>
+
+        <section className="grid gap-6 lg:grid-cols-[1.5fr_0.9fr]">
+          <div className="space-y-6">
+            <div className="bg-white/85 border border-[#eadffb] rounded-[32px] p-6 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-[#6a4ccf]" />
+                  <h3 className="text-lg font-semibold">Hair journey log</h3>
+                </div>
+                {!showNewEntry && (
+                  <button
+                    onClick={addJournalEntry}
+                    className="inline-flex items-center gap-2 rounded-full bg-[#ede5ff] text-[#6a4ccf] px-4 py-2 text-sm font-semibold hover:bg-[#e2d8ff]"
+                  >
+                    <Plus className="w-4 h-4" />
+                    New entry
+                  </button>
+                )}
               </div>
-            </div>
-          )}
-          
-          {/* Progress Overview */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
-              <TrendingUp className="w-8 h-8 text-green-600 mx-auto mb-2" />
-              <h3 className="font-semibold text-gray-800">Progress</h3>
-              <p className="text-2xl font-bold text-green-600">
-                {Math.round((completedSteps.size / totalSteps) * 100)}%
-              </p>
-            </div>
-            
-            <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
-              <Calendar className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-              <h3 className="font-semibold text-gray-800">Entries</h3>
-              <p className="text-2xl font-bold text-blue-600">{logs.length}</p>
-            </div>
 
-            <div className="bg-white border border-gray-200 rounded-xl p-4 text-center">
-              <Bell className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-              <h3 className="font-semibold text-gray-800">Reminders</h3>
-              <p className="text-2xl font-bold text-gray-600">{activeReminders.length}</p>
-            </div>
-          </div>
-          
-          {/* Active Reminders */}
-          {activeReminders.length > 0 && (
-            <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
-              <h3 className="font-semibold text-gray-800 mb-3 flex items-center gap-2">
-                <Bell className="w-5 h-5" />
-                Active Reminders
-              </h3>
-              <div className="space-y-2">
-                {activeReminders.map((reminder) => (
-                  <div key={reminder.id} className="flex items-center justify-between bg-blue-50 border border-blue-200 p-3 rounded-lg">
-                    <div>
-                      <p className="font-medium text-blue-800">{reminder.title}</p>
-                      <p className="text-sm text-blue-600">{reminder.time}</p>
+              {showNewEntry && (
+                <div className="border border-[#eadffb] rounded-[24px] p-4 mb-5 bg-white">
+                  <MoodSelector 
+                    selectedMood={newEntry.mood}
+                    onMoodChange={(mood) => setNewEntry({ ...newEntry, mood })}
+                  />
+
+                  <div className="mt-4">
+                    <label className="text-xs uppercase tracking-[0.2em] text-[#b39ef7] block mb-2">
+                      Tell us more about your hair today
+                    </label>
+                    <textarea
+                      value={newEntry.notes}
+                      onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
+                      placeholder="What did your routine look like? Any wins or new products?"
+                      className="w-full rounded-2xl border border-[#eadffb] bg-white px-4 py-3 text-sm focus:ring-2 focus:ring-[#c9b5ff] focus:outline-none resize-none"
+                      rows="4"
+                    />
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="text-xs uppercase tracking-[0.2em] text-[#b39ef7] block mb-2">
+                      Rate your hair today
+                    </label>
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((rating) => (
+                        <button
+                          key={rating}
+                          onClick={() => setNewEntry({ ...newEntry, rating })}
+                          className="focus:outline-none"
+                        >
+                          <Star 
+                            className={`w-6 h-6 ${
+                              rating <= newEntry.rating ? 'text-[#f4b73c] fill-current' : 'text-[#dcd0f7]'
+                            } transition-colors`} 
+                          />
+                        </button>
+                      ))}
                     </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 mt-5">
                     <button
-                      onClick={() => removeReminder(reminder.id)}
-                      className="text-blue-400 hover:text-blue-600 transition-colors"
+                      onClick={submitNewEntry}
+                      disabled={loading}
+                      className="inline-flex items-center justify-center rounded-full bg-[#8256f6] text-white px-5 py-2 text-sm font-semibold hover:bg-[#6f47d9] disabled:opacity-60"
                     >
-                      <X className="w-4 h-4" />
+                      {loading ? 'Saving...' : 'Save entry'}
+                    </button>
+                    <button
+                      onClick={cancelNewEntry}
+                      className="inline-flex items-center justify-center rounded-full border border-[#eadffb] px-5 py-2 text-sm font-semibold text-[#6e5c8f] hover:bg-white"
+                    >
+                      Cancel
                     </button>
                   </div>
-                ))}
-              </div>
+                </div>
+              )}
+
+              {loading && logs.length === 0 ? (
+                <div className="text-center py-10">
+                  <div className="animate-spin w-8 h-8 border-2 border-[#b39ef7] border-t-transparent rounded-full mx-auto mb-3" />
+                  <p className="text-sm text-[#6e5c8f]">Loading your progress history...</p>
+                </div>
+              ) : logs.length === 0 ? (
+                <div className="text-center py-10 text-sm text-[#6e5c8f]">
+                  <BookOpen className="w-10 h-10 text-[#d8c9ff] mx-auto mb-3" />
+                  Start documenting your hair journey to see patterns over time.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {logs.map((log) => (
+                    <div key={log.id} className="border border-[#eadffb] rounded-[24px] p-4 bg-white">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl">{getMoodEmoji(log.mood)}</span>
+                          <span className="font-semibold">{formatDate(log.date)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {renderStars(log.rating)}
+                        </div>
+                      </div>
+                      <p className="text-sm text-[#4c4d6a] leading-relaxed">{log.notes}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-          
-          {/* Hair Journal */}
-          <div className="bg-white border border-gray-200 rounded-xl p-4 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
-                Hair Journey Log
-              </h3>
-              {!showNewEntry && (
-                <button
-                  onClick={addJournalEntry}
-                  className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  New Entry
-                </button>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-white/85 border border-[#eadffb] rounded-[32px] p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Reminder stack</p>
+                  <h3 className="text-lg font-semibold">Active reminders</h3>
+                </div>
+                <span className="text-2xl font-semibold text-[#8b6ff7]">{activeReminders.length}</span>
+              </div>
+
+              {activeReminders.length ? (
+                <div className="space-y-3">
+                  {activeReminders.map((reminder) => (
+                    <div key={reminder.id} className="flex items-center justify-between rounded-[20px] bg-[#f6f1ff] px-4 py-3">
+                      <div>
+                        <p className="text-sm font-semibold">{reminder.title}</p>
+                        <p className="text-xs text-[#6e5c8f]">{reminder.time}</p>
+                      </div>
+                      <button
+                        onClick={() => removeReminder(reminder.id)}
+                        className="text-[#6e5c8f] hover:text-[#4b3d6a]"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-[#6e5c8f]">
+                  No reminders yet. Tag any care plan step to nudge you at the right time of day.
+                </p>
               )}
             </div>
 
-            {/* New Entry Form */}
-            {showNewEntry && (
-              <div className="border border-gray-300 rounded-lg p-4 mb-4 bg-gray-50">
-                <MoodSelector 
-                  selectedMood={newEntry.mood}
-                  onMoodChange={(mood) => setNewEntry({ ...newEntry, mood })}
-                />
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tell us more about your hair today
-                  </label>
-                  <textarea
-                    value={newEntry.notes}
-                    onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
-                    placeholder="Describe your hair's condition, any changes you've noticed, products used..."
-                    className="w-full p-3 border border-gray-300 rounded-lg text-sm resize-none focus:ring-2 focus:ring-gray-400 focus:border-transparent"
-                    rows="4"
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Rate your hair today (1-5 stars)
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <button
-                        key={rating}
-                        onClick={() => setNewEntry({ ...newEntry, rating })}
-                        className="focus:outline-none"
-                      >
-                        <Star 
-                          className={`w-6 h-6 ${
-                            rating <= newEntry.rating 
-                              ? 'text-yellow-400 fill-current' 
-                              : 'text-gray-300'
-                          } hover:text-yellow-400 transition-colors`} 
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={submitNewEntry}
-                    disabled={loading}
-                    className="bg-gray-800 hover:bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50"
-                  >
-                    {loading ? 'Saving...' : 'Save Entry'}
-                  </button>
-                  <button
-                    onClick={cancelNewEntry}
-                    className="bg-white hover:bg-gray-100 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
+            <div className="bg-gradient-to-br from-[#fef7ff] to-[#f4fbff] border border-white/60 rounded-[32px] p-6 shadow-sm space-y-4">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Quick actions</p>
+              <div className="space-y-3">
+                <button className="w-full rounded-[20px] border border-[#eadffb] bg-white/70 px-4 py-3 text-sm font-semibold text-left text-[#6e5c8f] hover:bg-white flex items-center gap-3">
+                  <Clock className="w-4 h-4 text-[#6a4ccf]" />
+                  Schedule a reminder
+                </button>
+                <button
+                  onClick={() => navigateToPage('analysis')}
+                  className="w-full rounded-[20px] border border-[#eadffb] bg-white/70 px-4 py-3 text-sm font-semibold text-left text-[#6e5c8f] hover:bg-white flex items-center gap-3"
+                >
+                  <Camera className="w-4 h-4 text-[#6a4ccf]" />
+                  Start a new analysis
+                </button>
               </div>
-            )}
-            
-            {/* Progress History */}
-            {loading && logs.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="animate-spin w-8 h-8 border-2 border-gray-800 border-t-transparent rounded-full mx-auto mb-4"></div>
-                <p className="text-gray-500">Loading your progress history...</p>
-              </div>
-            ) : logs.length === 0 ? (
-              <div className="text-center py-8">
-                <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">Start documenting your hair journey!</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {logs.map((log) => (
-                  <div key={log.id} className="border border-gray-200 rounded-lg p-4 bg-white">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl">{getMoodEmoji(log.mood)}</span>
-                        <span className="font-medium text-gray-800">{formatDate(log.date)}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        {renderStars(log.rating)}
-                      </div>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed">{log.notes}</p>
-                  </div>
-                ))}
-              </div>
-            )}
+            </div>
           </div>
-          
-          {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-4">
-            <button className="bg-white hover:bg-gray-50 border border-gray-300 p-4 rounded-xl text-center transition-colors">
-              <Clock className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-              <span className="text-sm font-medium text-gray-800">Schedule Reminder</span>
-            </button>
-            
-            <button
-              onClick={() => navigateToPage('analysis')}
-              className="bg-white hover:bg-gray-50 border border-gray-300 p-4 rounded-xl text-center transition-colors"
-            >
-              <Camera className="w-8 h-8 text-gray-600 mx-auto mb-2" />
-              <span className="text-sm font-medium text-gray-800">New Analysis</span>
-            </button>
-          </div>
-        </div>
+        </section>
       </div>
 
-      {/* Style Suggestions Modal */}
-      {showStyleSuggestions && sessionId && (
+      {showStyleSuggestions && resolvedSessionId && (
         <StyleSuggestionsPage 
           onClose={() => setShowStyleSuggestions(false)}
-          sessionId={sessionId}
+          sessionId={resolvedSessionId}
         />
       )}
     </div>

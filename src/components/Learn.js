@@ -12,29 +12,28 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
 
   const hairTypeContent = {
     type4: {
-      name: 'Type 4 (Coily/Kinky)',
-      color: 'from-amber-400 to-amber-600',
+      name: 'Type 4 (Coily / Kinky)',
       characteristics: [
         'Tight coils or zig-zag pattern',
         'Naturally drier due to oil distribution challenges',
-        'High shrinkage (30-70%)',
+        'High shrinkage (30–70%)',
         'Prone to frizz and breakage',
         'Unique texture variation within the hair'
       ],
-      moisture: 'Requires frequent deep hydration and moisture-locking techniques',
+      moisture: 'Requires frequent deep hydration and moisture-locking techniques.',
       routine: [
-        'LOC Method (Leave-in, Oil, Cream) for moisture sealing',
-        'Weekly deep conditioning (at least 2-3 times weekly)',
-        'Gentle detangling on wet hair with conditioner',
-        'Low manipulation styling to reduce breakage',
-        'Protective styling when needed'
+        'Use LOC Method (Leave-in, Oil, Cream) for moisture sealing.',
+        'Deep condition at least weekly.',
+        'Gently detangle on wet hair with slip from conditioner.',
+        'Use low manipulation styling to reduce breakage.',
+        'Incorporate protective styles when needed.'
       ],
       mistakes: [
-        'Using products with sulfates and silicones',
-        'Excessive heat styling',
-        'Skipping moisturizing steps',
-        'Using regular combs instead of wide-tooth combs',
-        'Stretching hair when wet'
+        'Using products with harsh sulfates and heavy silicones.',
+        'Excessive heat styling.',
+        'Skipping moisturizing steps.',
+        'Using small-toothed combs instead of wide-tooth tools.',
+        'Roughly stretching hair when wet.'
       ],
       sources: [
         'Naptural85 (YouTube channel)',
@@ -49,28 +48,27 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
     },
     type3: {
       name: 'Type 3 (Curly)',
-      color: 'from-rose-400 to-rose-600',
       characteristics: [
-        'Well-defined curls with bouncy texture',
-        'More shine than Type 4 but less than Type 2',
-        'Moderate shrinkage (15-30%)',
-        'Curls range from loose waves to tight ringlets',
-        'Prone to frizz but less than coily hair'
+        'Well-defined curls with a bouncy texture',
+        'Moderate shine, more than Type 4 but less than Type 2',
+        'Moderate shrinkage (15–30%)',
+        'Curls range from loose spirals to tight ringlets',
+        'Prone to frizz without moisture and definition'
       ],
-      moisture: 'Benefits from regular hydration and curl-enhancing products',
+      moisture: 'Benefits from regular hydration and curl-enhancing products.',
       routine: [
-        'LCO Method (Leave-in, Cream, Oil)',
-        'Weekly deep conditioning',
-        'Curl-enhancing creams and gels',
-        'Plopping technique for curl definition',
-        'Microfiber towels to reduce frizz'
+        'Try LCO Method (Leave-in, Cream, Oil).',
+        'Deep condition weekly.',
+        'Use curl creams and gels for definition.',
+        'Use gentle drying methods like plopping.',
+        'Use microfiber towels or cotton T-shirts.'
       ],
       mistakes: [
-        'Using heavy products that weigh curls down',
-        'Over-washing which strips natural oils',
-        'Brushing dry curls',
-        'Ignoring protein treatments',
-        'Using regular towels (causes frizz)'
+        'Using heavy products that weigh curls down.',
+        'Over-washing, which strips natural oils.',
+        'Brushing dry curls.',
+        'Ignoring protein treatments.',
+        'Using rough, standard towels.'
       ],
       sources: [
         'CurlyGirl Method by Lorraine Massey',
@@ -85,31 +83,30 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
     },
     type2: {
       name: 'Type 2 (Wavy)',
-      color: 'from-blue-400 to-blue-600',
       characteristics: [
-        'Waves with loose S-shaped pattern',
+        'Waves with a loose S-shaped pattern',
         'Natural shine and movement',
-        'Low shrinkage (5-15%)',
-        'More manageable than curly or coily hair',
-        'Can appear frizzy or limp without proper care'
+        'Low shrinkage (5–15%)',
+        'Generally easier to manage than tighter curls or coils',
+        'Can look frizzy or limp without balanced care'
       ],
-      moisture: 'Needs lightweight hydration to avoid flatness',
+      moisture: 'Needs lightweight hydration to avoid flatness.',
       routine: [
-        'Lightweight leave-in conditioners',
-        'Wave-enhancing mousses and gels',
-        'Bi-weekly deep conditioning',
-        'Co-washing for gentle cleansing',
-        'Diffuser drying for volume'
+        'Use lightweight leave-in conditioners.',
+        'Use wave-enhancing mousses and gels.',
+        'Deep condition every couple of weeks.',
+        'Incorporate co-washing if scalp allows.',
+        'Use a diffuser for gentle volume.'
       ],
       mistakes: [
-        'Using too-heavy products',
-        'Over-conditioning which causes flatness',
-        'Skipping protein treatments',
-        'Rough drying techniques',
-        'Using hot water for washing'
+        'Using overly heavy products.',
+        'Over-conditioning, leading to flat roots.',
+        'Skipping protein when hair feels mushy.',
+        'Rough drying with hot air.',
+        'Using very hot water to wash.'
       ],
       sources: [
-        'Wavy Hair Careguide by Ouidad',
+        'Wavy Hair Care guide by Ouidad',
         'Cantu Shea Butter educational content',
         'Natural Hair Academy resources'
       ],
@@ -121,31 +118,30 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
     },
     type1: {
       name: 'Type 1 (Straight)',
-      color: 'from-green-400 to-green-600',
       characteristics: [
         'Straight hair from root to tip',
-        'Maximum shine and natural movement',
+        'High natural shine and movement',
         'No shrinkage',
         'Can appear flat or limp',
-        'Oil distributes easily throughout hair'
+        'Oil distributes easily through the hair shaft'
       ],
-      moisture: 'Minimal moisture needs; focus on volume and texture',
+      moisture: 'Minimal moisture needs; more focus on volume, texture, and scalp health.',
       routine: [
-        'Lightweight conditioners (focus on ends)',
-        'Monthly deep conditioning treatments',
-        'Volumizing products at roots',
-        'Regular trims for shape maintenance',
-        'Minimal product buildup management'
+        'Use lightweight conditioners focused on the ends.',
+        'Deep condition monthly or as needed.',
+        'Use volumizing products at the roots.',
+        'Schedule regular trims for shape and health.',
+        'Avoid heavy buildup from styling products.'
       ],
       mistakes: [
-        'Over-conditioning causing flatness',
-        'Using heavy oils throughout hair',
-        'Not protecting ends from damage',
-        'Excessive heat styling without heat protectant',
-        'Ignoring scalp health'
+        'Over-conditioning, causing flatness.',
+        'Using heavy oils on the full length.',
+        'Skipping heat protectant when styling.',
+        'Ignoring itchy or oily scalp signs.',
+        'Using too many heavy serums.'
       ],
       sources: [
-        'Hair Science basics from dermatology studies',
+        'Dermatology-based hair science basics',
         'SheaMoisture educational guides',
         'Professional hairstylist recommendations'
       ],
@@ -157,307 +153,272 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
     }
   };
 
-  const HairTypeCard = ({ type, data }) => (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-      <div className={`bg-gradient-to-r ${data.color} p-6 text-white cursor-pointer`}
-           onClick={() => toggleSection(type)}>
-        <div className="flex items-center justify-between">
-          <h3 className="text-2xl font-bold">{data.name}</h3>
-          <ChevronDown 
-            className={`w-6 h-6 transition-transform ${expandedSection === type ? 'rotate-180' : ''}`}
-          />
-        </div>
-      </div>
-      
-      {expandedSection === type && (
-        <div className="p-6 space-y-6">
-          <div>
-            <h4 className="font-bold text-lg mb-3 text-gray-800">Characteristics</h4>
-            <ul className="space-y-2">
-              {data.characteristics.map((char, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-gray-700">
-                  <span className="text-blue-500 font-bold">•</span>
-                  <span>{char}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <p className="text-blue-900 font-semibold">{data.moisture}</p>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-lg mb-3 text-gray-800">Care Routine</h4>
-            <ul className="space-y-2">
-              {data.routine.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-gray-700">
-                  <span className="text-green-500 font-bold">✓</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-lg mb-3 text-gray-800">Common Mistakes to Avoid</h4>
-            <ul className="space-y-2">
-              {data.mistakes.map((mistake, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-gray-700">
-                  <span className="text-red-500 font-bold">✕</span>
-                  <span>{mistake}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-lg mb-3 text-gray-800">Trusted Resources</h4>
-            <ul className="space-y-2">
-              {data.sources.map((source, idx) => (
-                <li key={idx} className="flex items-start gap-2 text-gray-700">
-                  <BookMarked className="w-4 h-4 text-purple-600 mt-1 flex-shrink-0" />
-                  <span>{source}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-bold text-lg mb-3 text-gray-800">Recommended Videos</h4>
-            <div className="space-y-3">
-              {data.videos.map((video, idx) => (
-                <div key={idx} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer">
-                  <Play className="w-5 h-5 text-red-600 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-gray-800">{video.title}</p>
-                    <p className="text-sm text-gray-600">by {video.creator}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+  const SectionCard = ({ title, sectionKey, children }) => (
+    <div className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl overflow-hidden">
+      <button
+        type="button"
+        onClick={() => toggleSection(sectionKey)}
+        className="w-full flex items-center justify-between px-5 py-4 text-left"
+      >
+        <span className="font-medium text-sm">{title}</span>
+        <ChevronDown
+          className={`w-5 h-5 text-[#a78bfa] transition-transform ${
+            expandedSection === sectionKey ? 'rotate-180' : ''
+          }`}
+        />
+      </button>
+      {expandedSection === sectionKey && (
+        <div className="px-5 pb-5 border-t border-[#3b2a5f] text-sm space-y-4">
+          {children}
         </div>
       )}
     </div>
   );
 
+  const HairTypeCard = ({ type, data }) => (
+    <SectionCard title={data.name} sectionKey={type}>
+      <div className="space-y-4">
+        <div>
+          <h4 className="font-semibold mb-2 text-gray-100 text-sm">Characteristics</h4>
+          <ul className="space-y-1 text-gray-200/90">
+            {data.characteristics.map((char, idx) => (
+              <li key={idx} className="flex gap-2">
+                <span className="text-[#a78bfa]">•</span>
+                <span>{char}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-xl bg-black/20 px-4 py-3 text-gray-100">
+          {data.moisture}
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-2 text-gray-100 text-sm">Care routine</h4>
+          <ul className="space-y-1 text-gray-200/90">
+            {data.routine.map((item, idx) => (
+              <li key={idx} className="flex gap-2">
+                <span className="text-[#a78bfa]">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-2 text-gray-100 text-sm">Common mistakes</h4>
+          <ul className="space-y-1 text-gray-200/90">
+            {data.mistakes.map((mistake, idx) => (
+              <li key={idx} className="flex gap-2">
+                <span className="text-[#a78bfa]">✕</span>
+                <span>{mistake}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-2 text-gray-100 text-sm">Trusted resources</h4>
+          <ul className="space-y-1 text-gray-200/90">
+            {data.sources.map((source, idx) => (
+              <li key={idx} className="flex gap-2">
+                <BookMarked className="w-4 h-4 text-[#a78bfa] mt-[2px]" />
+                <span>{source}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold mb-2 text-gray-100 text-sm">Recommended videos</h4>
+          <div className="space-y-2">
+            {data.videos.map((video, idx) => (
+              <div
+                key={idx}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl bg-black/20 cursor-pointer hover:bg-black/30 transition-colors"
+              >
+                <Play className="w-4 h-4 text-[#a78bfa] flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-medium text-gray-100">{video.title}</p>
+                  <p className="text-[11px] text-gray-300/80">by {video.creator}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </SectionCard>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen bg-[#1a1423] text-[#f2f2f2]">
       <Navigation 
         currentPage={currentPage} 
         navigateToPage={navigateToPage} 
         handleLogout={handleLogout} 
       />
       
-      <div className="max-w-5xl mx-auto p-6">
-        <div className="flex items-center gap-2 mb-8">
-          <span className="text-lg font-bold text-gray-800">Welcome, Euphoria</span>
-        </div>
+      <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
+        {/* Header */}
+        <header className="space-y-2">
+          <span className="text-xs uppercase tracking-[0.2em] text-[#a78bfa]/80">
+            Learn
+          </span>
+          <h1 className="text-2xl font-semibold">Understand your hair, not just your products</h1>
+          <p className="text-sm text-gray-300/80 max-w-2xl">
+            Explore hair types, porosity, and density in simple lessons. Build a foundation so your routines
+            actually make sense for your hair.
+          </p>
+        </header>
 
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <StreakCard onNavigate={navigateToPage} />
-        </div>
+        {/* Top row: streak + learning overview */}
+        <section className="grid gap-6 md:grid-cols-3">
+          <div className="md:col-span-1">
+            <StreakCard onNavigate={navigateToPage} />
+          </div>
+          <div className="md:col-span-2 bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-5 space-y-3 text-sm">
+            <p className="text-xs uppercase tracking-[0.18em] text-gray-300/70">
+              Your learning path
+            </p>
+            <p className="font-medium text-gray-100">
+              Start with hair type, then move into porosity and density.
+            </p>
+            <p className="text-xs text-gray-300/80">
+              You can take these in any order, but most people begin with identifying their curl pattern,
+              then learning how their hair absorbs moisture, and finally understanding how much hair they
+              actually have per area (density).
+            </p>
+            <div className="grid gap-2 text-[11px] sm:grid-cols-3">
+              <div className="rounded-xl border border-[#3b2a5f] px-3 py-2">
+                <p className="font-medium text-gray-100 mb-1">Step 1 • Hair type</p>
+                <p className="text-gray-300/80">Curly, coily, straight or wavy basics.</p>
+              </div>
+              <div className="rounded-xl border border-[#3b2a5f] px-3 py-2">
+                <p className="font-medium text-gray-100 mb-1">Step 2 • Porosity</p>
+                <p className="text-gray-300/80">How your hair absorbs and holds moisture.</p>
+              </div>
+              <div className="rounded-xl border border-[#3b2a5f] px-3 py-2">
+                <p className="font-medium text-gray-100 mb-1">Step 3 • Density</p>
+                <p className="text-gray-300/80">How much hair you have per square inch.</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        {/* Hair Types Section */}
-        <div className="mb-10">
-          <h2 className="text-3xl font-bold text-gray-800 mb-6">Hair Type Guide</h2>
-          <div className="grid grid-cols-1 gap-4">
+        {/* Hair Types */}
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold tracking-[0.18em] uppercase text-gray-300/80">
+            Hair type guide
+          </h2>
+          <div className="space-y-3">
             {Object.entries(hairTypeContent).map(([key, data]) => (
               <HairTypeCard key={key} type={key} data={data} />
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Porosity Section */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
-          <div className="bg-gradient-to-r from-indigo-400 to-indigo-600 p-6 text-white cursor-pointer"
-               onClick={() => toggleSection('porosity')}>
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-bold">Hair Porosity</h3>
-              <ChevronDown 
-                className={`w-6 h-6 transition-transform ${expandedSection === 'porosity' ? 'rotate-180' : ''}`}
-              />
-            </div>
-          </div>
-          
-          {expandedSection === 'porosity' && (
-            <div className="p-6 space-y-6">
-              <div className="bg-indigo-50 p-4 rounded-lg">
-                <p className="text-indigo-900">Hair porosity refers to your hair's ability to absorb and retain moisture. It's determined by the state of your hair cuticles and greatly affects how your hair responds to products and treatments.</p>
+        {/* Porosity */}
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold tracking-[0.18em] uppercase text-gray-300/80">
+            Porosity
+          </h2>
+          <SectionCard title="Hair porosity basics" sectionKey="porosity">
+            <div className="space-y-4 text-sm text-gray-200/90">
+              <p className="text-gray-200">
+                Hair porosity is how easily your hair absorbs and retains water and products. It’s
+                shaped by your cuticle layer and can change with heat, color, and damage.
+              </p>
+
+              <div>
+                <h4 className="font-semibold mb-2 text-gray-100 text-sm">Low porosity</h4>
+                <ul className="space-y-1 ml-1">
+                  <li>• Water and products tend to sit on top of the hair.</li>
+                  <li>• Hair can take a long time to get fully wet.</li>
+                  <li>• Often dries slowly.</li>
+                </ul>
+                <p className="mt-2 text-xs text-gray-300/80">
+                  Focus on lightweight, water-based products and use gentle heat during treatments to help
+                  products penetrate.
+                </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-lg mb-4 text-gray-800">Low Porosity Hair</h4>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Signs:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Water beads on hair surface</li>
-                      <li>• Slow to dry</li>
-                      <li>• Products sit on hair</li>
-                      <li>• Prone to product buildup</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Care Tips:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Use lightweight, water-based products</li>
-                      <li>• Apply products to soaking wet hair</li>
-                      <li>• Use heat to open cuticles during treatments</li>
-                      <li>• Avoid heavy oils and butters</li>
-                      <li>• Co-wash to avoid sulfate buildup</li>
-                    </ul>
-                  </div>
-                </div>
+                <h4 className="font-semibold mb-2 text-gray-100 text-sm">High porosity</h4>
+                <ul className="space-y-1 ml-1">
+                  <li>• Hair soaks up water quickly.</li>
+                  <li>• Dries fast but often feels rough or frizzy.</li>
+                  <li>• Can lose moisture just as quickly as it absorbs it.</li>
+                </ul>
+                <p className="mt-2 text-xs text-gray-300/80">
+                  Lean on richer creams, oils, and regular protein treatments to help with strength and
+                  moisture retention.
+                </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-lg mb-4 text-gray-800">High Porosity Hair</h4>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Signs:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Water absorbs quickly</li>
-                      <li>• Hair dries fast</li>
-                      <li>• Hair feels rough or dry</li>
-                      <li>• Frizz and breakage issues</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Care Tips:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Use protein treatments regularly</li>
-                      <li>• Seal moisture with oils and creams</li>
-                      <li>• Use heavier products to lock in moisture</li>
-                      <li>• Rinse with cool water to close cuticles</li>
-                      <li>• Deep condition weekly</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-lg mb-4 text-gray-800">Normal/Medium Porosity Hair</h4>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Signs:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Good moisture retention</li>
-                      <li>• Holds style well</li>
-                      <li>• Healthy shine and elasticity</li>
-                      <li>• Minimal frizz</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Care Tips:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Maintain balance with varied products</li>
-                      <li>• Deep condition bi-weekly</li>
-                      <li>• Use both moisture and protein</li>
-                      <li>• Consistent maintenance routine</li>
-                    </ul>
-                  </div>
-                </div>
+                <h4 className="font-semibold mb-2 text-gray-100 text-sm">Medium / balanced porosity</h4>
+                <ul className="space-y-1 ml-1">
+                  <li>• Holds styles relatively well.</li>
+                  <li>• Accepts moisture without too much struggle.</li>
+                  <li>• Often feels soft with a healthy sheen.</li>
+                </ul>
+                <p className="mt-2 text-xs text-gray-300/80">
+                  Maintain balance with both moisture and occasional protein, plus consistent basic care.
+                </p>
               </div>
             </div>
-          )}
-        </div>
+          </SectionCard>
+        </section>
 
-        {/* Density Section */}
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-teal-400 to-teal-600 p-6 text-white cursor-pointer"
-               onClick={() => toggleSection('density')}>
-            <div className="flex items-center justify-between">
-              <h3 className="text-2xl font-bold">Hair Density</h3>
-              <ChevronDown 
-                className={`w-6 h-6 transition-transform ${expandedSection === 'density' ? 'rotate-180' : ''}`}
-              />
-            </div>
-          </div>
-          
-          {expandedSection === 'density' && (
-            <div className="p-6 space-y-6">
-              <div className="bg-teal-50 p-4 rounded-lg">
-                <p className="text-teal-900">Hair density refers to how many hair strands you have per square inch on your scalp. It's different from porosity and affects how much volume your hair has and how much product you need.</p>
+        {/* Density */}
+        <section className="space-y-4 pb-8">
+          <h2 className="text-sm font-semibold tracking-[0.18em] uppercase text-gray-300/80">
+            Density
+          </h2>
+          <SectionCard title="Hair density overview" sectionKey="density">
+            <div className="space-y-4 text-sm text-gray-200/90">
+              <p>
+                Density describes how many strands you have in a given area on your scalp. It’s about how
+                full your hair looks, not the thickness of each strand.
+              </p>
+
+              <div>
+                <h4 className="font-semibold mb-2 text-gray-100 text-sm">Low density</h4>
+                <ul className="space-y-1 ml-1">
+                  <li>• Scalp is more visible, especially when hair is wet.</li>
+                  <li>• Hair can look fine or thin, even if strands are thick.</li>
+                </ul>
+                <p className="mt-2 text-xs text-gray-300/80">
+                  Use lightweight products, focus on root volume, and avoid heavy buildup that flattens
+                  the hair.
+                </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-lg mb-4 text-gray-800">Low Density Hair</h4>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Signs:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Scalp is visible, especially when wet</li>
-                      <li>• Hair appears thin</li>
-                      <li>• Limited volume and body</li>
-                      <li>• Styles fall flat quickly</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Care Tips:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Use lightweight products to avoid weighing hair down</li>
-                      <li>• Use volumizing mousses and gels</li>
-                      <li>• Avoid heavy oils and butters</li>
-                      <li>• Try protective styles that create fullness</li>
-                      <li>• Consider scalp stimulation exercises</li>
-                    </ul>
-                  </div>
-                </div>
+                <h4 className="font-semibold mb-2 text-gray-100 text-sm">High density</h4>
+                <ul className="space-y-1 ml-1">
+                  <li>• Hair feels very full and thick.</li>
+                  <li>• Scalp is rarely visible.</li>
+                </ul>
+                <p className="mt-2 text-xs text-gray-300/80">
+                  Work in sections, use enough product to coat strands, and give styles extra time to dry.
+                </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-lg mb-4 text-gray-800">High Density Hair</h4>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Signs:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Thick hair with lots of volume</li>
-                      <li>• Scalp not visible</li>
-                      <li>• Styles hold well</li>
-                      <li>• May be difficult to style</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Care Tips:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Use heavier products to define curls/coils</li>
-                      <li>• Deep condition more frequently</li>
-                      <li>• Section hair into smaller parts when styling</li>
-                      <li>• Allow extra drying time</li>
-                      <li>• Use richer leave-ins and creams</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h4 className="font-bold text-lg mb-4 text-gray-800">Medium/Normal Density Hair</h4>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Signs:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Good volume without being too thick</li>
-                      <li>• Balanced fullness</li>
-                      <li>• Styles hold well</li>
-                      <li>• Versatile styling options</li>
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 mb-2">Care Tips:</p>
-                    <ul className="space-y-1 text-gray-700 ml-4">
-                      <li>• Use a balance of lightweight and rich products</li>
-                      <li>• Deep condition bi-weekly</li>
-                      <li>• Layer products based on needs</li>
-                      <li>• Maintain consistent routines</li>
-                    </ul>
-                  </div>
-                </div>
+                <h4 className="font-semibold mb-2 text-gray-100 text-sm">Medium density</h4>
+                <ul className="space-y-1 ml-1">
+                  <li>• Balanced fullness and movement.</li>
+                  <li>• Holds styles without feeling too bulky.</li>
+                </ul>
+                <p className="mt-2 text-xs text-gray-300/80">
+                  Adjust product amount based on style: lighter for volume, richer for definition.
+                </p>
               </div>
             </div>
-          )}
-        </div>
+          </SectionCard>
+        </section>
       </div>
     </div>
   );

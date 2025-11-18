@@ -151,6 +151,8 @@ const CarePlans = ({
     ]
   };
 
+  const planData = carePlan || fallbackPlan;
+
   const handleStepComplete = (stepId) => {
     const newCompleted = new Set(completedSteps);
     if (newCompleted.has(stepId)) {
@@ -172,104 +174,200 @@ const CarePlans = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen bg-[#fdf7ff] text-[#1f1338]">
       <Navigation 
         currentPage={currentPage} 
         navigateToPage={navigateToPage} 
         handleLogout={handleLogout} 
       />
-      <div className="p-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800">
-                  {loading ? 'Loading...' : error ? 'Hair Care Plan' : (carePlan || fallbackPlan).title}
-                </h2>
-                <p className="text-gray-600">{(carePlan || fallbackPlan).duration} program</p>
+
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
+        <header className="space-y-2">
+          <span className="text-xs uppercase tracking-[0.28em] text-[#b39ef7]">Care guidance</span>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-semibold">{loading ? 'Building your plan' : planData.title}</h1>
+            <p className="text-sm text-[#6e5c8f]">
+              Follow small, doable habits to stretch progress across the entire {planData.duration} program.
+            </p>
+          </div>
+        </header>
+
+        <section className="grid gap-6 lg:grid-cols-[1.45fr_0.75fr]">
+          <div className="space-y-6">
+            <div className="bg-white/80 border border-[#eadffb] rounded-[32px] p-6 shadow-sm">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7] mb-2">Your plan</p>
+                  <h2 className="text-2xl font-semibold">{planData.title}</h2>
+                  <p className="text-sm text-[#6e5c8f]">
+                    {loading ? 'Syncing with your latest hair analysis...' : 'Ready when you are.'}
+                  </p>
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-xs uppercase tracking-[0.2em] text-[#b39ef7]">Duration</span>
+                  <p className="text-lg font-semibold">{planData.duration}</p>
+                </div>
               </div>
               <button
                 onClick={() => navigateToPage('tracking')}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+                className="mt-6 inline-flex items-center justify-center rounded-full bg-[#58c4a5] hover:bg-[#3da888] text-white font-semibold text-sm px-5 py-3 transition"
               >
-                Start Tracking
+                Start tracking
               </button>
             </div>
 
-            {loading ? (
-              <div className="text-center py-12">
-                <Loader className="w-12 h-12 animate-spin mx-auto mb-4 text-purple-600" />
-                <p className="text-gray-600">Loading your personalized care plan...</p>
+            <div className="bg-white/80 border border-[#eadffb] rounded-[32px] p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Daily cadence</p>
+                  <h3 className="text-xl font-semibold">Action steps</h3>
+                </div>
+                <span className="text-sm text-[#7a6a98]">{planData.steps.length} steps</span>
               </div>
-            ) : error ? (
-              <div className="text-center py-12">
-                <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-                <p className="text-red-600 mb-4">{error}</p>
-                <button
-                  onClick={() => navigateToPage('analysis')}
-                  className="text-purple-600 hover:text-purple-700 underline"
-                >
-                  Start Hair Analysis
-                </button>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {(carePlan || fallbackPlan).steps.map((step) => (
-                  <div key={step.id} className="border border-gray-200 rounded-xl p-4">
-                    <div className="flex items-start gap-4">
-                      <button
-                        onClick={() => handleStepComplete(step.id)}
-                        className={`mt-1 w-6 h-6 rounded-full border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-                          completedSteps.has(step.id)
-                            ? 'bg-green-500 border-green-500 text-white'
-                            : 'border-gray-300 hover:border-green-500'
+
+              {loading ? (
+                <div className="text-center py-10">
+                  <Loader className="w-10 h-10 animate-spin text-[#b39ef7] mx-auto mb-3" />
+                  <p className="text-sm text-[#6e5c8f]">Loading your personalized care plan...</p>
+                </div>
+              ) : error ? (
+                <div className="text-center py-10">
+                  <AlertCircle className="w-10 h-10 text-[#e05a5a] mx-auto mb-3" />
+                  <p className="text-sm text-[#764949] mb-4">{error}</p>
+                  <button
+                    onClick={() => navigateToPage('analysis')}
+                    className="text-[#8256f6] font-semibold text-sm underline hover:text-[#6f47d9]"
+                  >
+                    Start hair analysis
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {planData.steps.map((step) => {
+                    const isComplete = completedSteps.has(step.id);
+                    return (
+                      <div
+                        key={step.id}
+                        className={`rounded-[24px] border border-[#eadffb] p-5 transition ${
+                          isComplete ? 'bg-[#f2eaff]' : 'bg-white/70'
                         }`}
                       >
-                        {completedSteps.has(step.id) && <CheckCircle className="w-4 h-4" />}
-                      </button>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="font-semibold text-gray-800">{step.title}</h4>
-                          <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium">
-                            {step.frequency}
-                          </span>
-                        </div>
-                        
-                        <p className="text-gray-600 text-sm mb-3">{step.description}</p>
-                        
-                        <div className="flex items-center gap-2 mb-3">
-                          <button className="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 transition-colors">
-                            <Play className="w-3 h-3" />
-                            Watch Tutorial
-                          </button>
+                        <div className="flex items-start gap-4">
                           <button
-                            onClick={() => addReminder(step.title, "Daily at 9:00 AM")}
-                            className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 transition-colors"
+                            onClick={() => handleStepComplete(step.id)}
+                            className={`mt-1 w-8 h-8 rounded-full border-2 flex items-center justify-center transition ${
+                              isComplete
+                                ? 'bg-[#8b6ff7] border-[#8b6ff7] text-white'
+                                : 'border-[#d7c9ff] text-[#b49af1] hover:border-[#b49af1]'
+                            }`}
                           >
-                            <Bell className="w-3 h-3" />
-                            Set Reminder
+                            {isComplete && <CheckCircle className="w-4 h-4" />}
                           </button>
-                        </div>
-                        
-                        <div className="border-t pt-3">
-                          <h5 className="text-xs font-semibold text-gray-700 mb-1">Recommended Products:</h5>
-                          <div className="flex flex-wrap gap-1">
-                            {step.products.map((product, idx) => (
-                              <span key={idx} className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-xs">
-                                {product}
+                          
+                          <div className="flex-1">
+                            <div className="flex flex-wrap items-center gap-3 mb-2">
+                              <h4 className="text-lg font-semibold">{step.title}</h4>
+                              <span className="px-3 py-1 rounded-full text-xs font-medium bg-[#ede5ff] text-[#6a4ccf]">
+                                {step.frequency}
                               </span>
-                            ))}
+                            </div>
+                            
+                            <p className="text-sm text-[#6e5c8f]">{step.description}</p>
+
+                            <div className="flex flex-wrap gap-2 mt-4">
+                              <button className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#ffeef3] text-[#c44270] text-xs font-semibold hover:bg-[#ffd8e5] transition">
+                                <Play className="w-3 h-3" />
+                                Watch tutorial
+                              </button>
+                              <button
+                                onClick={() => addReminder(step.title, "Daily at 9:00 AM")}
+                                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#f0fbf7] text-[#2d8d71] text-xs font-semibold hover:bg-[#daf3ec] transition"
+                              >
+                                <Bell className="w-3 h-3" />
+                                Set reminder
+                              </button>
+                            </div>
+
+                            {step.products?.length > 0 && (
+                              <div className="mt-4 pt-4 border-t border-[#f0e8ff]">
+                                <p className="text-xs uppercase tracking-[0.2em] text-[#b39ef7] mb-2">Recommended</p>
+                                <div className="flex flex-wrap gap-2">
+                                  {step.products.map((product, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="px-3 py-1 rounded-full bg-[#f6f1ff] text-[#5c4d7a] text-xs"
+                                    >
+                                      {product}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+
+          <div className="space-y-6">
+            <div className="bg-white/80 border border-[#eadffb] rounded-[32px] p-6 shadow-sm">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Consistency</p>
+                  <h3 className="text-xl font-semibold">Active reminders</h3>
+                </div>
+                <span className="text-3xl font-semibold text-[#8b6ff7]">
+                  {activeReminders.length || 0}
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                {activeReminders.length ? (
+                  activeReminders.map((reminder) => (
+                    <div
+                      key={reminder.id}
+                      className="flex items-center justify-between rounded-2xl bg-[#f6f1ff] px-4 py-3"
+                    >
+                      <div>
+                        <p className="text-sm font-semibold">{reminder.title}</p>
+                        <p className="text-xs text-[#6e5c8f]">{reminder.time}</p>
+                      </div>
+                      <span className="text-xs font-semibold text-[#58c4a5] uppercase tracking-[0.2em]">
+                        On
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-[#6e5c8f]">
+                    Tap "Set reminder" inside any step to keep your rhythm consistent.
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#fef7ff] to-[#f4fbff] border border-white/60 rounded-[32px] p-6 shadow-sm space-y-4">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Weekly focus</p>
+              <ul className="space-y-3 text-sm text-[#6e5c8f]">
+                <li className="flex gap-3">
+                  <span className="mt-1 w-2 h-2 rounded-full bg-[#b39ef7]" />
+                  Stack hydration days after cleansing to lock in softness.
+                </li>
+                <li className="flex gap-3">
+                  <span className="mt-1 w-2 h-2 rounded-full bg-[#b39ef7]" />
+                  Alternate protective styles with low-manipulation breaks.
+                </li>
+                <li className="flex gap-3">
+                  <span className="mt-1 w-2 h-2 rounded-full bg-[#b39ef7]" />
+                  Capture a progress photo at least once per week for tracking.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

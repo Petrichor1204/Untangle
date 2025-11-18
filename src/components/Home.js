@@ -5,160 +5,194 @@ import { Camera, ArrowRight, TrendingUp, Scissors, BookMarked, Users, User } fro
 
 const Home = ({ currentPage, navigateToPage, handleLogout }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+    <div className="min-h-screen bg-[#1a1423] text-[#f2f2f2]">
       <Navigation 
         currentPage={currentPage} 
         navigateToPage={navigateToPage} 
         handleLogout={handleLogout} 
       />
       
-      <div className="max-w-6xl mx-auto p-6">
-        {/* Welcome Section
-        <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">Welcome to Your Hair Journey! 🌟</h1>
-            <p className="text-gray-600 text-lg">Discover your hair's potential with AI-powered analysis and personalized care plans.</p>
+      <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
+        {/* Top header */}
+        <header className="flex flex-col gap-2">
+          <span className="text-sm uppercase tracking-[0.2em] text-[#a78bfa]/80">
+            Dashboard
+          </span>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-semibold">Welcome back, Euphoria</h1>
+              <p className="text-sm text-gray-300/80">
+                Continue learning about your hair, tracking your journey, and exploring care routines.
+              </p>
+            </div>
           </div>
-        </div> */}
-        <div className="flex items-center gap-2 p-2">
-            <span className="text-sm font-bold text-black-800">Welcome, Euphoria </span>
-          </div>
-        {/* Quick Actions Grid */}
-        
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        
-          {/* Streak */}
-          <StreakCard onNavigate={navigateToPage} />
-        
+        </header>
 
-          {/* Hair Analysis */}
-          <div 
-            onClick={() => navigateToPage('analysis')}
-            className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer group overflow-hidden"
-          >
-            <div className="bg-gradient-to-br from-purple-400 to-purple-600 p-6 text-white">
-              <Camera className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-bold mb-2">Hair Analysis</h3>
-              <p className="text-purple-100">Get AI-powered insights about your hair type and condition</p>
-            </div>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Start Analysis</span>
-                <ArrowRight className="w-5 h-5 text-purple-600 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
+        {/* Primary grid: Streak + main actions */}
+        <section className="grid gap-6 md:grid-cols-3">
+          {/* Streak on the left, spanning 1 col */}
+          <div className="md:col-span-1">
+            <StreakCard onNavigate={navigateToPage} />
           </div>
-          
-          {/* Care Plans */}
-          <div 
-            onClick={() => navigateToPage('plan')}
-            className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer group overflow-hidden"
-          >
-            <div className="bg-gradient-to-br from-pink-400 to-pink-600 p-6 text-white">
-              <Scissors className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-bold mb-2">Care Plans</h3>
-              <p className="text-pink-100">Personalized step-by-step hair care routines</p>
-            </div>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">View Plans</span>
-                <ArrowRight className="w-5 h-5 text-pink-600 group-hover:translate-x-1 transition-transform" />
+
+          {/* Main actions */}
+          <div className="md:col-span-2 grid gap-4 sm:grid-cols-3">
+            {/* Hair Analysis */}
+            <button
+              onClick={() => navigateToPage('analysis')}
+              className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-4 flex flex-col justify-between text-left hover:border-[#a78bfa] transition"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-9 h-9 rounded-full bg-black/30 flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-[#a78bfa]" />
+                </div>
               </div>
-            </div>
-          </div>
-          
-          {/* Progress Tracking */}
-          <div 
-            onClick={() => navigateToPage('tracking')}
-            className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all cursor-pointer group overflow-hidden"
-          >
-            <div className="bg-gradient-to-br from-green-400 to-green-600 p-6 text-white">
-              <TrendingUp className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-bold mb-2">Track Progress</h3>
-              <p className="text-green-100">Document your hair journey and see improvements</p>
-            </div>
-            <div className="p-6">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">View Journal</span>
-                <ArrowRight className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" />
+              <div className="space-y-1">
+                <h3 className="font-semibold text-sm">Hair Analysis</h3>
+                <p className="text-xs text-gray-300/80">
+                  Upload a photo or start a quick check to identify your hair type.
+                </p>
               </div>
-            </div>
+              <div className="mt-4 flex items-center justify-between text-xs text-[#a78bfa]">
+                <span>Start analysis</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </button>
+
+            {/* Care Plans */}
+            <button
+              onClick={() => navigateToPage('plan')}
+              className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-4 flex flex-col justify-between text-left hover:border-[#a78bfa] transition"
+            >
+              <div className="w-9 h-9 rounded-full bg-black/30 flex items-center justify-center mb-4">
+                <Scissors className="w-5 h-5 text-[#a78bfa]" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-semibold text-sm">Care Plans</h3>
+                <p className="text-xs text-gray-300/80">
+                  View structured routines tailored to your hair type and goals.
+                </p>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-xs text-[#a78bfa]">
+                <span>View plans</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </button>
+
+            {/* Progress Tracking */}
+            <button
+              onClick={() => navigateToPage('tracking')}
+              className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-4 flex flex-col justify-between text-left hover:border-[#a78bfa] transition"
+            >
+              <div className="w-9 h-9 rounded-full bg-black/30 flex items-center justify-center mb-4">
+                <TrendingUp className="w-5 h-5 text-[#a78bfa]" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-semibold text-sm">Track Progress</h3>
+                <p className="text-xs text-gray-300/80">
+                  Log photos, notes, and milestones in your hair journey.
+                </p>
+              </div>
+              <div className="mt-4 flex items-center justify-between text-xs text-[#a78bfa]">
+                <span>Open journal</span>
+                <ArrowRight className="w-4 h-4" />
+              </div>
+            </button>
           </div>
-        </div>
-        
-        {/* Featured Content */}
-        <div className="grid md:grid-cols-2 gap-6">
+        </section>
+
+        {/* Secondary grid: Tips + Learning / Community */}
+        <section className="grid gap-6 lg:grid-cols-2">
           {/* Hair Tips */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <BookMarked className="w-6 h-6 text-blue-600" />
-              <h3 className="text-xl font-bold text-gray-800">Hair Care Tips</h3>
+          <div className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BookMarked className="w-5 h-5 text-[#a78bfa]" />
+                <h2 className="text-sm font-semibold tracking-wide">Quick Hair Tips</h2>
+              </div>
+              <span className="text-[10px] uppercase text-gray-300/70">
+                Daily snippets
+              </span>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+
+            <div className="space-y-3 text-sm">
+              <div className="flex gap-3">
+                <div className="mt-1 w-1 h-1 rounded-full bg-[#a78bfa]" />
                 <div>
-                  <h4 className="font-semibold text-blue-800">Deep Conditioning</h4>
-                  <p className="text-sm text-blue-600">Weekly deep conditioning can improve hair moisture by up to 40%</p>
+                  <p className="font-medium text-gray-100">Deep conditioning rhythm</p>
+                  <p className="text-xs text-gray-300/80">
+                    Aim for weekly deep conditioning if your hair feels dry or brittle.
+                  </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+
+              <div className="flex gap-3">
+                <div className="mt-1 w-1 h-1 rounded-full bg-[#a78bfa]" />
                 <div>
-                  <h4 className="font-semibold text-green-800">Protective Styling</h4>
-                  <p className="text-sm text-green-600">Reduce manipulation to prevent breakage and promote growth</p>
+                  <p className="font-medium text-gray-100">Low manipulation days</p>
+                  <p className="text-xs text-gray-300/80">
+                    Rotate in protective or low-manipulation styles to give your strands a break.
+                  </p>
                 </div>
               </div>
-              <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
-                <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+
+              <div className="flex gap-3">
+                <div className="mt-1 w-1 h-1 rounded-full bg-[#a78bfa]" />
                 <div>
-                  <h4 className="font-semibold text-purple-800">Regular Trims</h4>
-                  <p className="text-sm text-purple-600">Trim every 8-12 weeks to maintain healthy ends</p>
+                  <p className="font-medium text-gray-100">Scalp check-in</p>
+                  <p className="text-xs text-gray-300/80">
+                    Notice flakes, itchiness, or tightness early to adjust products or routines.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          
-          {/* Community */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Users className="w-6 h-6 text-orange-600" />
-              <h3 className="text-xl font-bold text-gray-800">Community Highlights</h3>
+
+          {/* Community / Learning preview */}
+          <div className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-[#a78bfa]" />
+                <h2 className="text-sm font-semibold tracking-wide">Learning & Community</h2>
+              </div>
             </div>
-            <div className="space-y-4">
+
+            {/* Placeholder “today’s learning path” */}
+            <div className="border border-[#3b2a5f] rounded-xl p-4 space-y-2 text-sm">
+              <p className="text-xs uppercase tracking-[0.18em] text-gray-300/70">
+                Today's focus
+              </p>
+              <p className="font-medium text-gray-100">
+                Moisture vs. Protein: understanding what your hair is asking for
+              </p>
+              <p className="text-xs text-gray-300/80">
+                A short breakdown of how to tell whether your hair needs hydration, strength, or rest.
+              </p>
+            </div>
+
+            {/* Placeholder community shoutouts */}
+            <div className="space-y-3 text-xs">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-orange-600" />
+                <div className="w-8 h-8 rounded-full bg-black/40 flex items-center justify-center">
+                  <User className="w-4 h-4 text-[#a78bfa]" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-800">Sarah M.</p>
-                  <p className="text-xs text-gray-600">"Saw amazing results after 30 days!"</p>
+                  <p className="font-medium text-gray-100">“My twist-outs finally last 3 days.”</p>
+                  <p className="text-[11px] text-gray-300/70">Shared in Type 4 learning path</p>
                 </div>
-                <div className="text-xs text-gray-500">2 days ago</div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-purple-600" />
+                <div className="w-8 h-8 rounded-full bg-black/40 flex items-center justify-center">
+                  <User className="w-4 h-4 text-[#a78bfa]" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-800">Maya K.</p>
-                  <p className="text-xs text-gray-600">"The analysis was spot on!"</p>
+                  <p className="font-medium text-gray-100">“Porosity changed how I choose products.”</p>
+                  <p className="text-[11px] text-gray-300/70">Shared in Porosity guide</p>
                 </div>
-                <div className="text-xs text-gray-500">1 week ago</div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <User className="w-5 h-5 text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-gray-800">Alex R.</p>
-                  <p className="text-xs text-gray-600">"Love the personalized plan!"</p>
-                </div>
-                <div className="text-xs text-gray-500">2 weeks ago</div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </div>
   );
