@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import StreakCard from './Streak';
 import { ChevronDown, BookMarked, Play } from 'lucide-react';
@@ -9,149 +9,155 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
   const toggleSection = (section) => {
     setExpandedSection(expandedSection === section ? null : section);
   };
+  const [hairTypeContent, setHairTypeContent] = useState({});
 
-  const hairTypeContent = {
-    type4: {
-      name: 'Type 4 (Coily / Kinky)',
-      characteristics: [
-        'Tight coils or zig-zag pattern',
-        'Naturally drier due to oil distribution challenges',
-        'High shrinkage (30–70%)',
-        'Prone to frizz and breakage',
-        'Unique texture variation within the hair'
-      ],
-      moisture: 'Requires frequent deep hydration and moisture-locking techniques.',
-      routine: [
-        'Use LOC Method (Leave-in, Oil, Cream) for moisture sealing.',
-        'Deep condition at least weekly.',
-        'Gently detangle on wet hair with slip from conditioner.',
-        'Use low manipulation styling to reduce breakage.',
-        'Incorporate protective styles when needed.'
-      ],
-      mistakes: [
-        'Using products with harsh sulfates and heavy silicones.',
-        'Excessive heat styling.',
-        'Skipping moisturizing steps.',
-        'Using small-toothed combs instead of wide-tooth tools.',
-        'Roughly stretching hair when wet.'
-      ],
-      sources: [
-        'Naptural85 (YouTube channel)',
-        'The Book of Kink by Nikki Ransom',
-        'Natural Hair Care studies from Howard University'
-      ],
-      videos: [
-        { title: 'Type 4 Hair Care Basics', creator: 'Naptural85' },
-        { title: 'How to Maintain Coily Hair', creator: 'Talia Iman' },
-        { title: 'The Science of Natural Hair', creator: 'Dr. Lois Lockhart' }
-      ]
-    },
-    type3: {
-      name: 'Type 3 (Curly)',
-      characteristics: [
-        'Well-defined curls with a bouncy texture',
-        'Moderate shine, more than Type 4 but less than Type 2',
-        'Moderate shrinkage (15–30%)',
-        'Curls range from loose spirals to tight ringlets',
-        'Prone to frizz without moisture and definition'
-      ],
-      moisture: 'Benefits from regular hydration and curl-enhancing products.',
-      routine: [
-        'Try LCO Method (Leave-in, Cream, Oil).',
-        'Deep condition weekly.',
-        'Use curl creams and gels for definition.',
-        'Use gentle drying methods like plopping.',
-        'Use microfiber towels or cotton T-shirts.'
-      ],
-      mistakes: [
-        'Using heavy products that weigh curls down.',
-        'Over-washing, which strips natural oils.',
-        'Brushing dry curls.',
-        'Ignoring protein treatments.',
-        'Using rough, standard towels.'
-      ],
-      sources: [
-        'CurlyGirl Method by Lorraine Massey',
-        'Mielle Organics educational resources',
-        'International Journal of Cosmetic Science studies'
-      ],
-      videos: [
-        { title: 'Curly Hair Routine for Type 3', creator: 'Jess Arevalo' },
-        { title: 'Defining Your Curls', creator: 'Tiana Cosby' },
-        { title: 'Best Products for Curl Definition', creator: 'Alicia Rose' }
-      ]
-    },
-    type2: {
-      name: 'Type 2 (Wavy)',
-      characteristics: [
-        'Waves with a loose S-shaped pattern',
-        'Natural shine and movement',
-        'Low shrinkage (5–15%)',
-        'Generally easier to manage than tighter curls or coils',
-        'Can look frizzy or limp without balanced care'
-      ],
-      moisture: 'Needs lightweight hydration to avoid flatness.',
-      routine: [
-        'Use lightweight leave-in conditioners.',
-        'Use wave-enhancing mousses and gels.',
-        'Deep condition every couple of weeks.',
-        'Incorporate co-washing if scalp allows.',
-        'Use a diffuser for gentle volume.'
-      ],
-      mistakes: [
-        'Using overly heavy products.',
-        'Over-conditioning, leading to flat roots.',
-        'Skipping protein when hair feels mushy.',
-        'Rough drying with hot air.',
-        'Using very hot water to wash.'
-      ],
-      sources: [
-        'Wavy Hair Care guide by Ouidad',
-        'Cantu Shea Butter educational content',
-        'Natural Hair Academy resources'
-      ],
-      videos: [
-        { title: 'Wavy Hair Routine for Beginners', creator: 'Mimi Ito' },
-        { title: 'How to Enhance Your Waves', creator: 'Kels' },
-        { title: 'Wavy Hair Products That Work', creator: 'Moniluxx' }
-      ]
-    },
-    type1: {
-      name: 'Type 1 (Straight)',
-      characteristics: [
-        'Straight hair from root to tip',
-        'High natural shine and movement',
-        'No shrinkage',
-        'Can appear flat or limp',
-        'Oil distributes easily through the hair shaft'
-      ],
-      moisture: 'Minimal moisture needs; more focus on volume, texture, and scalp health.',
-      routine: [
-        'Use lightweight conditioners focused on the ends.',
-        'Deep condition monthly or as needed.',
-        'Use volumizing products at the roots.',
-        'Schedule regular trims for shape and health.',
-        'Avoid heavy buildup from styling products.'
-      ],
-      mistakes: [
-        'Over-conditioning, causing flatness.',
-        'Using heavy oils on the full length.',
-        'Skipping heat protectant when styling.',
-        'Ignoring itchy or oily scalp signs.',
-        'Using too many heavy serums.'
-      ],
-      sources: [
-        'Dermatology-based hair science basics',
-        'SheaMoisture educational guides',
-        'Professional hairstylist recommendations'
-      ],
-      videos: [
-        { title: 'Straight Hair Care Guide', creator: 'Shayla Madison' },
-        { title: 'Adding Texture to Straight Hair', creator: 'Labaih' },
-        { title: 'Maintaining Straight Hair Health', creator: 'Jackie Aina' }
-      ]
-    }
-  };
+  useEffect(() => {
+    fetch('/data/hair_types.json')
+      .then(res => res.json())
+      .then(data => setHairTypeContent(data));
+  }, []);
+  // const hairTypeContent = {
+  //   type4: {
+  //     name: 'Type 4 (Coily / Kinky)',
+  //     characteristics: [
+  //       'Tight coils or zig-zag pattern',
+  //       'Naturally drier due to oil distribution challenges',
+  //       'High shrinkage (30-70%)',
+  //       'Prone to frizz and breakage',
+  //       'Unique texture variation within the hair'
+  //     ],
+  //     moisture: 'Requires frequent deep hydration and moisture-locking techniques.',
+  //     routine: [
+  //       'Use LOC Method (Leave-in, Oil, Cream) for moisture sealing.',
+  //       'Deep condition at least weekly.',
+  //       'Gently detangle on wet hair with slip from conditioner.',
+  //       'Use low manipulation styling to reduce breakage.',
+  //       'Incorporate protective styles when needed.'
+  //     ],
+  //     mistakes: [
+  //       'Using products with harsh sulfates and heavy silicones.',
+  //       'Excessive heat styling.',
+  //       'Skipping moisturizing steps.',
+  //       'Using small-toothed combs instead of wide-tooth tools.',
+  //       'Roughly stretching hair when wet.'
+  //     ],
+  //     sources: [
+  //       'Naptural85 (YouTube channel)',
+  //       'The Book of Kink by Nikki Ransom',
+  //       'Natural Hair Care studies from Howard University'
+  //     ],
+  //     videos: [
+  //       { title: 'Type 4 Hair Care Basics', creator: 'Naptural85' },
+  //       { title: 'How to Maintain Coily Hair', creator: 'Talia Iman' },
+  //       { title: 'The Science of Natural Hair', creator: 'Dr. Lois Lockhart' }
+  //     ]
+  //   },
+  //   type3: {
+  //     name: 'Type 3 (Curly)',
+  //     characteristics: [
+  //       'Well-defined curls with a bouncy texture',
+  //       'Moderate shine, more than Type 4 but less than Type 2',
+  //       'Moderate shrinkage (15–30%)',
+  //       'Curls range from loose spirals to tight ringlets',
+  //       'Prone to frizz without moisture and definition'
+  //     ],
+  //     moisture: 'Benefits from regular hydration and curl-enhancing products.',
+  //     routine: [
+  //       'Try LCO Method (Leave-in, Cream, Oil).',
+  //       'Deep condition weekly.',
+  //       'Use curl creams and gels for definition.',
+  //       'Use gentle drying methods like plopping.',
+  //       'Use microfiber towels or cotton T-shirts.'
+  //     ],
+  //     mistakes: [
+  //       'Using heavy products that weigh curls down.',
+  //       'Over-washing, which strips natural oils.',
+  //       'Brushing dry curls.',
+  //       'Ignoring protein treatments.',
+  //       'Using rough, standard towels.'
+  //     ],
+  //     sources: [
+  //       'CurlyGirl Method by Lorraine Massey',
+  //       'Mielle Organics educational resources',
+  //       'International Journal of Cosmetic Science studies'
+  //     ],
+  //     videos: [
+  //       { title: 'Curly Hair Routine for Type 3', creator: 'Jess Arevalo' },
+  //       { title: 'Defining Your Curls', creator: 'Tiana Cosby' },
+  //       { title: 'Best Products for Curl Definition', creator: 'Alicia Rose' }
+  //     ]
+  //   },
+  //   type2: {
+  //     name: 'Type 2 (Wavy)',
+  //     characteristics: [
+  //       'Waves with a loose S-shaped pattern',
+  //       'Natural shine and movement',
+  //       'Low shrinkage (5–15%)',
+  //       'Generally easier to manage than tighter curls or coils',
+  //       'Can look frizzy or limp without balanced care'
+  //     ],
+  //     moisture: 'Needs lightweight hydration to avoid flatness.',
+  //     routine: [
+  //       'Use lightweight leave-in conditioners.',
+  //       'Use wave-enhancing mousses and gels.',
+  //       'Deep condition every couple of weeks.',
+  //       'Incorporate co-washing if scalp allows.',
+  //       'Use a diffuser for gentle volume.'
+  //     ],
+  //     mistakes: [
+  //       'Using overly heavy products.',
+  //       'Over-conditioning, leading to flat roots.',
+  //       'Skipping protein when hair feels mushy.',
+  //       'Rough drying with hot air.',
+  //       'Using very hot water to wash.'
+  //     ],
+  //     sources: [
+  //       'Wavy Hair Care guide by Ouidad',
+  //       'Cantu Shea Butter educational content',
+  //       'Natural Hair Academy resources'
+  //     ],
+  //     videos: [
+  //       { title: 'Wavy Hair Routine for Beginners', creator: 'Mimi Ito' },
+  //       { title: 'How to Enhance Your Waves', creator: 'Kels' },
+  //       { title: 'Wavy Hair Products That Work', creator: 'Moniluxx' }
+  //     ]
+  //   },
+  //   type1: {
+  //     name: 'Type 1 (Straight)',
+  //     characteristics: [
+  //       'Straight hair from root to tip',
+  //       'High natural shine and movement',
+  //       'No shrinkage',
+  //       'Can appear flat or limp',
+  //       'Oil distributes easily through the hair shaft'
+  //     ],
+  //     moisture: 'Minimal moisture needs; more focus on volume, texture, and scalp health.',
+  //     routine: [
+  //       'Use lightweight conditioners focused on the ends.',
+  //       'Deep condition monthly or as needed.',
+  //       'Use volumizing products at the roots.',
+  //       'Schedule regular trims for shape and health.',
+  //       'Avoid heavy buildup from styling products.'
+  //     ],
+  //     mistakes: [
+  //       'Over-conditioning, causing flatness.',
+  //       'Using heavy oils on the full length.',
+  //       'Skipping heat protectant when styling.',
+  //       'Ignoring itchy or oily scalp signs.',
+  //       'Using too many heavy serums.'
+  //     ],
+  //     sources: [
+  //       'Dermatology-based hair science basics',
+  //       'SheaMoisture educational guides',
+  //       'Professional hairstylist recommendations'
+  //     ],
+  //     videos: [
+  //       { title: 'Straight Hair Care Guide', creator: 'Shayla Madison' },
+  //       { title: 'Adding Texture to Straight Hair', creator: 'Labaih' },
+  //       { title: 'Maintaining Straight Hair Health', creator: 'Jackie Aina' }
+  //     ]
+  //   }
+  // };
 
   const SectionCard = ({ title, sectionKey, children }) => (
     <div className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl overflow-hidden">
