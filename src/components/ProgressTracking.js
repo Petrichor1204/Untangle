@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import { TrendingUp, Calendar, Bell, BookOpen, Plus, X, Clock, Camera, Star, AlertCircle, Sparkles } from 'lucide-react';
 import api from '../api';
+import { getHistory } from '../api';
 import MoodSelector from './MoodSelector';
 import StyleSuggestionsPage from './StyleSuggestionsPage';
 import { getMoodEmoji } from '../utils/moodConfig';
@@ -26,26 +27,6 @@ export const saveProgressLog = async (sessionId, logData) => {
     return {
       success: false,
       error: error.response?.data?.detail || 'Failed to save progress'
-    };
-  }
-};
-
-// Get user's progress history
-export const getProgressHistory = async (sessionId) => {
-  try {
-    const response = await api.get(`/history?session_id=${sessionId}`);
-    
-    return {
-      success: true,
-      logs: response.data.logs,
-      totalLogs: response.data.total_logs,
-      hairType: response.data.hair_type
-    };
-  } catch (error) {
-    console.error('Error fetching history:', error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || 'Failed to get history'
     };
   }
 };
@@ -102,7 +83,7 @@ const ProgressTracking = ({
     if (!storedSessionId) return;
     
     setLoading(true);
-    const result = await getProgressHistory(storedSessionId);
+    const result = await getHistory(storedSessionId);
     
     if (result.success) {
       setLogs(result.logs);

@@ -1,30 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import Navigation from './Navigation';
 import { Camera, Upload, ArrowRight, AlertCircle } from 'lucide-react';
-import api from '../api';
-
-// Upload photo and get hair analysis
-export const uploadHairPhoto = async (photoFile) => {
-  try {
-    const formData = new FormData();
-    formData.append('file', photoFile);
-    
-    const response = await api.post('/upload', formData);
-    
-    return {
-      success: true,
-      sessionId: response.data.session_id,
-      analysis: response.data.analysis,
-      message: response.data.message
-    };
-  } catch (error) {
-    console.error('Error uploading photo:', error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || 'Failed to upload photo'
-    };
-  }
-};
+import { uploadHairPhoto } from '../api';
 
 const HairAnalysis = ({ 
   currentPage, 
@@ -55,19 +32,25 @@ const HairAnalysis = ({
     reader.readAsDataURL(file);
 
     // Upload to backend using the helper function
-    const result = await uploadHairPhoto(file);
-    
-    if (result.success) {
-      setSessionId(result.sessionId);
-      setHairAnalysis(result.analysis);
-      // Store sessionId for other components to use
-      localStorage.setItem('hairly_session_id', result.sessionId);
-    } else {
-      setError(result.error);
-      setCapturedImage(null); // Clear image on error
+    try {
+      const result = await uploadHairPhoto(file);
+      
+      if (result.success) {
+        setSessionId(result.sessionId);
+        setHairAnalysis(result.analysis);
+        // Store sessionId for other components to use
+        localStorage.setItem('hairly_session_id', result.sessionId);
+      } else {
+        setError(result.error);
+        setCapturedImage(null); // Clear image on error
+      }
+    } catch (error) {
+      // Handle unexpected errors (network failures, etc.)
+      setError(error.message || 'An unexpected error occurred');
+      setCapturedImage(null);
+    } finally {
+      setAnalyzing(false);
     }
-    
-    setAnalyzing(false);
   }, [setCapturedImage, setSessionId, setHairAnalysis]);
 
   const handleRetry = () => {

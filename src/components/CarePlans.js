@@ -1,25 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Navigation from './Navigation';
 import { CheckCircle, Play, Bell, AlertCircle, Loader } from 'lucide-react';
-import api from '../api';
-
-// Get personalized care plan based on hair analysis
-export const getCarePlan = async (sessionId) => {
-  try {
-    const response = await api.get(`/plan?session_id=${sessionId}`);
-    return {
-      success: true,
-      data: response.data.care_plan,
-      hairType: response.data.hair_analysis.hair_type
-    };
-  } catch (error) {
-    console.error('Error fetching care plan:', error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || 'Failed to get care plan'
-    };
-  }
-};
+import { getCarePlan } from '../api';
 
 const CarePlans = ({ 
   currentPage, 
