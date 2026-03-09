@@ -35,7 +35,7 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
   ];
 
   return (
-    <div className="min-h-screen bg-[#1a1423] text-[#f2f2f2]">
+    <div className="min-h-screen floral-bg text-[#7a2d45]">
       <Navigation 
         currentPage={currentPage} 
         navigateToPage={navigateToPage} 
@@ -46,15 +46,15 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
         {/* Hero */}
         <section className="flex flex-col gap-8 md:flex-row md:items-center">
           <div className="flex-1 space-y-5">
-            <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full border border-[#3b2a5f] text-[#a78bfa]">
+            <div className="inline-flex items-center gap-2 text-xs px-3 py-1 rounded-full border border-[#ffd0dc] text-[#e8789a]">
               <Zap className="w-3 h-3" />
               <span>AI-powered hair guidance</span>
             </div>
             <div className="space-y-3">
-              <h1 className="text-3xl md:text-4xl font-semibold">
+              <h1 className="text-4xl md:text-5xl font-display font-medium">
                 Simple tools to understand and care for your hair.
               </h1>
-              <p className="text-sm text-gray-300/85 max-w-md">
+              <p className="text-sm text-[#8a4055] max-w-md">
                 No noise, no complicated dashboards. Upload a photo or choose your hair type, learn the basics,
                 and build routines that actually match your hair.
               </p>
@@ -63,14 +63,14 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
             <div className="flex flex-wrap gap-3 pt-2">
               <button
                 onClick={() => navigateToPage('signup')}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#a78bfa] text-[#1a1423] text-sm font-medium hover:bg-[#c4b4ff] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#e8789a] text-white text-sm font-medium hover:bg-[#d4607f] transition-colors"
               >
                 Get started
                 <ChevronRight className="w-4 h-4" />
               </button>
               <button
                 onClick={() => navigateToPage('signup')}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-[#3b2a5f] text-sm hover:border-[#a78bfa] transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full border border-[#ffd0dc] text-sm hover:border-[#e8789a] transition-colors text-[#b06070]"
               >
                 <Upload className="w-4 h-4" />
                 Upload a photo
@@ -80,11 +80,11 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
 
           {/* Simple right-side card */}
           <div className="flex-1">
-            <div className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-5 space-y-4 text-sm">
-              <p className="text-xs uppercase tracking-[0.18em] text-gray-300/70">
+            <div className="soft-card p-5 space-y-4 text-sm">
+              <p className="eyebrow">
                 What you can do here
               </p>
-              <ul className="space-y-2 text-gray-200/90">
+              <ul className="space-y-2 text-[#7a2d45]">
                 <li>• Check your hair type using an image.</li>
                 <li>• Learn about porosity and density in short sections.</li>
                 <li>• Save routines and see what actually works for you.</li>
@@ -95,20 +95,20 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
 
         {/* Features */}
         <section className="space-y-6">
-          <h2 className="text-sm font-semibold tracking-[0.18em] uppercase text-gray-300/80">
+          <h2 className="eyebrow text-[#b06070]">
             How it works
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-4 space-y-3 text-sm"
+                className="soft-card p-4 space-y-3 text-sm"
               >
-                <div className="w-8 h-8 rounded-full bg-black/30 flex items-center justify-center mb-1">
-                  <span className="text-[#a78bfa]">{feature.icon}</span>
+                <div className="w-8 h-8 rounded-full bg-[#ffe8ee] flex items-center justify-center mb-1">
+                  <span className="text-[#e8789a]">{feature.icon}</span>
                 </div>
-                <h3 className="font-medium text-gray-100">{feature.title}</h3>
-                <p className="text-xs text-gray-300/85">{feature.description}</p>
+                <h3 className="font-medium text-[#7a2d45]">{feature.title}</h3>
+                <p className="text-xs text-[#8a4055]">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -117,7 +117,7 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
         {/* Hair types overview */}
         <section className="space-y-6">
           <div className="flex items-baseline justify-between gap-4">
-            <h2 className="text-sm font-semibold tracking-[0.18em] uppercase text-gray-300/80">
+            <h2 className="eyebrow text-[#b06070]">
               Hair types we talk about
             </h2>
           </div>
@@ -125,11 +125,11 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
             {hairTypes.map((type, idx) => (
               <div
                 key={idx}
-                className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-4 space-y-2"
+                className="soft-card p-4 space-y-2"
               >
                 <div className="text-2xl">{type.emoji}</div>
-                <p className="font-medium text-gray-100">{type.name}</p>
-                <p className="text-xs text-gray-300/80">{type.note}</p>
+                <p className="font-medium text-[#7a2d45]">{type.name}</p>
+                <p className="text-xs text-[#8a4055]">{type.note}</p>
               </div>
             ))}
           </div>
@@ -137,52 +137,52 @@ export default function LandingPage({ navigateToPage, currentPage, handleLogout 
 
         {/* Trust / simple stats */}
         <section className="space-y-6">
-          <h2 className="text-sm font-semibold tracking-[0.18em] uppercase text-gray-300/80">
+          <h2 className="eyebrow text-[#b06070]">
             What you can expect
           </h2>
           <div className="grid gap-4 md:grid-cols-3 text-sm">
             {stats.map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-4 space-y-2"
+                className="soft-card p-4 space-y-2"
               >
-                <p className="text-2xl font-semibold text-[#a78bfa]">{stat.value}</p>
-                <p className="text-xs font-medium text-gray-100 uppercase tracking-[0.15em]">
+                <p className="text-3xl font-display font-medium text-[#e8789a]">{stat.value}</p>
+                <p className="text-xs font-medium text-[#7a2d45] uppercase tracking-[0.15em]">
                   {stat.label}
                 </p>
-                <p className="text-xs text-gray-300/80">{stat.detail}</p>
+                <p className="text-xs text-[#8a4055]">{stat.detail}</p>
               </div>
             ))}
           </div>
 
           <div className="grid gap-4 md:grid-cols-3 text-xs pt-2">
             <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-[#a78bfa]" />
-              <p className="text-gray-300/85">Photos stay in your account and are only used for your analysis.</p>
+              <Shield className="w-4 h-4 text-[#e8789a]" />
+              <p className="text-[#8a4055]">Photos stay in your account and are only used for your analysis.</p>
             </div>
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#a78bfa]" />
-              <p className="text-gray-300/85">Designed around real hair routines, not just product marketing.</p>
+              <Sparkles className="w-4 h-4 text-[#e8789a]" />
+              <p className="text-[#8a4055]">Designed around real hair routines, not just product marketing.</p>
             </div>
             <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-[#a78bfa]" />
-              <p className="text-gray-300/85">Built with textured and natural hair in mind.</p>
+              <Heart className="w-4 h-4 text-[#e8789a]" />
+              <p className="text-[#8a4055]">Built with textured and natural hair in mind.</p>
             </div>
           </div>
         </section>
 
         {/* Final CTA */}
         <section className="pb-12">
-          <div className="bg-[#221a33] border border-[#3b2a5f] rounded-2xl p-6 text-center space-y-3">
-            <h2 className="text-lg font-semibold">
+          <div className="soft-card p-6 text-center space-y-3">
+            <h2 className="text-lg font-semibold text-[#7a2d45]">
               Ready to actually understand your hair?
             </h2>
-            <p className="text-sm text-gray-300/85 max-w-md mx-auto">
+            <p className="text-sm text-[#8a4055] max-w-md mx-auto">
               Create a simple profile, run your first analysis, and start building a routine that fits your real life.
             </p>
             <button
               onClick={() => navigateToPage('signup')}
-              className="mt-2 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#a78bfa] text-[#1a1423] text-sm font-medium hover:bg-[#c4b4ff] transition-colors"
+              className="mt-2 inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-[#e8789a] text-white text-sm font-medium hover:bg-[#d4607f] transition-colors"
             >
               Start now
               <ChevronRight className="w-4 h-4" />

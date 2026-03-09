@@ -5,73 +5,83 @@ const Navigation = ({ currentPage, navigateToPage, handleLogout }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
-    <nav className="bg-white-600 p-1 shadow-xl">
+    <nav className="bg-white/80 backdrop-blur-sm border-b border-[#ffd0dc] shadow-sm">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center gap-8 py-4">
+          {/* Logo */}
           <div className="flex items-center gap-2">
-            {/* <Sparkles className="w-8 h-8 text-purple-600" /> */}
-            <span className="text-sm font-impact text-fuchsia-800">hAIrly</span>
+            <span className="font-brand text-2xl text-[#d4607f]">hAIrly</span>
           </div>
-          
+
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6 flex-grow">
-            <button 
+          <div className="hidden md:flex items-center gap-2 flex-grow">
+            <button
               onClick={() => navigateToPage('home')}
-              className={`flex items-center gap-1 px-3 py-2 rounded-lg transition-colors text-xs ${
-                currentPage === 'home' ? 'bg-fuchsia-100 text-fuchsia-700' : 'text-gray-600 hover:text-fuchsia-600'
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full transition-all text-xs font-medium ${
+                currentPage === 'home'
+                  ? 'bg-[#ffe8ee] text-[#d4607f]'
+                  : 'text-[#b06070] hover:bg-[#fff0f4] hover:text-[#d4607f]'
               }`}
             >
-              <Home className="w-5 h-5" />
+              <Home className="w-4 h-4" />
               Home
             </button>
-            <button 
+            <button
               onClick={() => navigateToPage('learn')}
-              className="flex items-center gap-1 text-gray-600 hover:text-fuchsia-600 px-3 py-2 rounded-lg transition-colors text-xs"
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-full transition-all text-xs font-medium ${
+                currentPage === 'learn'
+                  ? 'bg-[#ffe8ee] text-[#d4607f]'
+                  : 'text-[#b06070] hover:bg-[#fff0f4] hover:text-[#d4607f]'
+              }`}
             >
-              <NotebookPen className="w-5 h-5" />
+              <NotebookPen className="w-4 h-4" />
               Learn
             </button>
-            <div className="flex-grow"></div>
+
+            <div className="flex-grow" />
+
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center text-gray-600 hover:text-red-600 p-2 rounded-lg transition-colors text-xs"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[#b06070] hover:bg-[#fff0f4] hover:text-[#d4607f] transition-all text-xs font-medium"
               title="Logout"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-4 h-4" />
+              <span className="hidden lg:inline">Sign out</span>
             </button>
           </div>
-          
+
           {/* Mobile Menu Button */}
           <button
             onClick={() => setShowMobileMenu(!showMobileMenu)}
-            className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
+            className="md:hidden ml-auto p-2 rounded-full text-[#b06070] hover:bg-[#ffe8ee] transition-colors"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-5 h-5" />
           </button>
         </div>
-        
+
         {/* Mobile Navigation */}
         {showMobileMenu && (
-          <div className="md:hidden border-t py-4 space-y-2">
-            <button 
-              onClick={() => {navigateToPage('home'); setShowMobileMenu(false);}}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-fuchsia-100 hover:text-fuchsia-600 transition-colors text-xs"
+          <div className="md:hidden border-t border-[#ffd0dc] py-3 space-y-1 pb-4">
+            <button
+              onClick={() => { navigateToPage('home'); setShowMobileMenu(false); }}
+              className="w-full flex items-center gap-2 px-4 py-2.5 rounded-full text-[#b06070] hover:bg-[#ffe8ee] hover:text-[#d4607f] transition-colors text-sm font-medium"
             >
-              <Home className="w-5 h-5" />
+              <Home className="w-4 h-4" />
               Home
             </button>
-            <button 
-              onClick={() => {navigateToPage('tracking'); setShowMobileMenu(false);}}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-fuchsia-100 hover:text-fuchsia-600 transition-colors text-xs"
+            <button
+              onClick={() => { navigateToPage('learn'); setShowMobileMenu(false); }}
+              className="w-full flex items-center gap-2 px-4 py-2.5 rounded-full text-[#b06070] hover:bg-[#ffe8ee] hover:text-[#d4607f] transition-colors text-sm font-medium"
             >
-              <NotebookPen className="w-5 h-5" />
+              <NotebookPen className="w-4 h-4" />
               Learn
             </button>
             <button
-              onClick={() => {handleLogout(); setShowMobileMenu(false);}}
-              className="w-full flex items-center justify-center px-3 py-2 rounded-lg text-gray-600 hover:bg-red-100 hover:text-red-600 transition-colors"
+              onClick={() => { handleLogout(); setShowMobileMenu(false); }}
+              className="w-full flex items-center gap-2 px-4 py-2.5 rounded-full text-[#b06070] hover:bg-[#ffe8ee] hover:text-[#d4607f] transition-colors text-sm font-medium"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-4 h-4" />
+              Sign out
             </button>
           </div>
         )}

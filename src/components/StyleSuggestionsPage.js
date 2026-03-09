@@ -110,25 +110,25 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
       case 'easy': return 'bg-[#e8fbf0] text-[#1f6b46]';
       case 'medium': return 'bg-[#fff6da] text-[#8a6220]';
       case 'advanced': return 'bg-[#ffece1] text-[#a54b1f]';
-      default: return 'bg-[#f3eefc] text-[#6a4ccf]';
+      default: return 'bg-[#ffe8ee] text-[#e8789a]';
     }
   };
 
   return (
     <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-[#fdf7ff] text-[#1f1338] w-full max-w-5xl max-h-[90vh] rounded-[32px] border border-[#eadffb] shadow-2xl flex flex-col overflow-hidden">
-        <div className="px-8 py-6 border-b border-white/60 bg-white/70 backdrop-blur">
+      <div className="bg-[#fff5f0] text-[#7a2d45] w-full max-w-5xl max-h-[90vh] rounded-[32px] border border-[#ffd0dc] shadow-2xl flex flex-col overflow-hidden">
+        <div className="px-8 py-6 border-b border-[#ffd0dc] bg-white/70 backdrop-blur">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-[#b39ef7]">Style lab</p>
-              <h2 className="text-2xl font-semibold mt-2">Hairstyle suggestions</h2>
-              <p className="text-sm text-[#6e5c8f]">
+              <p className="eyebrow">Style lab</p>
+              <h2 className="text-3xl font-display font-medium mt-2 text-[#7a2d45]">Hairstyle suggestions</h2>
+              <p className="text-sm text-[#8a4055]">
                 Tune your look to the weather, your mood, and the minutes you have to get ready.
               </p>
             </div>
             <button
               onClick={onClose}
-              className="text-[#6e5c8f] hover:text-[#4b3d6a] transition rounded-full border border-transparent hover:border-[#d9c8ff] p-2"
+              className="text-[#8a4055] hover:text-[#7a2d45] transition rounded-full border border-transparent hover:border-[#ffd0dc] p-2"
             >
               <X className="w-5 h-5" />
             </button>
@@ -137,21 +137,21 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
 
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6 bg-gradient-to-b from-white/80 to-transparent">
           <section className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
-            <div className="bg-white/80 border border-[#eadffb] rounded-[28px] p-6 shadow-sm space-y-5">
+            <div className="soft-card p-6 shadow-sm space-y-5">
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7] mb-1">Plan your look</p>
-                <h3 className="text-xl font-semibold">Tell us about your day</h3>
+                <p className="text-xs uppercase tracking-[0.25em] text-[#e8789a] mb-1">Plan your look</p>
+                <h3 className="text-2xl font-display font-medium text-[#7a2d45]">Tell us about your day</h3>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-[#b39ef7] mb-2">
+                  <label className="block text-xs uppercase tracking-[0.2em] text-[#e8789a] mb-2">
                     What's the occasion?
                   </label>
                   <select
                     value={occasion}
                     onChange={(e) => setOccasion(e.target.value)}
-                    className="w-full rounded-2xl border border-[#eadffb] bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-[#c9b5ff] focus:outline-none"
+                    className="w-full rounded-2xl border border-[#ffd0dc] bg-white px-3 py-2 text-sm text-[#7a2d45] focus:ring-2 focus:ring-[#f4a7b9] focus:outline-none"
                   >
                     {occasionOptions.map(opt => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -160,7 +160,7 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
                 </div>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-[#b39ef7] mb-2">
+                  <label className="block text-xs uppercase tracking-[0.2em] text-[#e8789a] mb-2">
                     Time available
                   </label>
                   {!useCustomTime ? (
@@ -168,7 +168,7 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
                       <select
                         value={timeAvailable}
                         onChange={(e) => setTimeAvailable(e.target.value)}
-                        className="flex-1 rounded-2xl border border-[#eadffb] bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-[#c9b5ff] focus:outline-none"
+                        className="flex-1 rounded-2xl border border-[#ffd0dc] bg-white px-3 py-2 text-sm text-[#7a2d45] focus:ring-2 focus:ring-[#f4a7b9] focus:outline-none"
                       >
                         {timeOptions.map(opt => (
                           <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -176,7 +176,7 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
                       </select>
                       <button
                         onClick={() => setUseCustomTime(true)}
-                        className="px-4 py-2 rounded-2xl border border-[#eadffb] text-sm text-[#6e5c8f] hover:bg-white"
+                        className="px-4 py-2 rounded-2xl border border-[#ffd0dc] text-sm text-[#8a4055] hover:bg-white"
                       >
                         Custom
                       </button>
@@ -188,7 +188,7 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
                         value={customTime}
                         onChange={(e) => setCustomTime(e.target.value)}
                         placeholder="Enter minutes"
-                        className="flex-1 rounded-2xl border border-[#eadffb] bg-white px-3 py-2 text-sm focus:ring-2 focus:ring-[#c9b5ff] focus:outline-none"
+                        className="flex-1 rounded-2xl border border-[#ffd0dc] bg-white px-3 py-2 text-sm text-[#7a2d45] focus:ring-2 focus:ring-[#f4a7b9] focus:outline-none"
                         min="1"
                         max="120"
                       />
@@ -197,7 +197,7 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
                           setUseCustomTime(false);
                           setCustomTime('');
                         }}
-                        className="px-4 py-2 rounded-2xl border border-[#eadffb] text-sm text-[#6e5c8f] hover:bg-white"
+                        className="px-4 py-2 rounded-2xl border border-[#ffd0dc] text-sm text-[#8a4055] hover:bg-white"
                       >
                         Preset
                       </button>
@@ -207,7 +207,7 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-[0.2em] text-[#b39ef7] mb-2">
+                <label className="block text-xs uppercase tracking-[0.2em] text-[#e8789a] mb-2">
                   How are you feeling?
                 </label>
                 <div className="grid grid-cols-5 gap-3">
@@ -217,8 +217,8 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
                       onClick={() => setMood(m.value)}
                       className={`p-3 rounded-2xl border-2 text-center transition ${
                         mood === m.value
-                          ? 'bg-[#ede5ff] border-[#c6b4ff] text-[#5b3ea5]'
-                          : 'bg-white border-[#f0e8ff] text-[#6e5c8f] hover:border-[#d9c8ff]'
+                          ? 'bg-[#ffe8ee] border-[#f4a7b9] text-[#e8789a]'
+                          : 'bg-white border-[#ffd0dc] text-[#8a4055] hover:border-[#e8789a]'
                       }`}
                     >
                       <div className="text-2xl mb-1">{m.emoji}</div>
@@ -231,50 +231,50 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
               <button
                 onClick={getSuggestions}
                 disabled={loading}
-                className="w-full inline-flex items-center justify-center rounded-full bg-[#8256f6] hover:bg-[#6f47d9] text-white font-semibold py-3 px-4 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full inline-flex items-center justify-center rounded-full bg-[#e8789a] hover:bg-[#d4607f] text-white font-semibold py-3 px-4 transition disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? 'Loading...' : 'Get Suggestions'}
               </button>
             </div>
 
             <div className="space-y-4">
-              <div className="bg-white/80 border border-[#eadffb] rounded-[28px] p-5 shadow-sm">
+              <div className="soft-card p-5 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2 text-sm text-[#6e5c8f]">
-                    <MapPin className="w-4 h-4 text-[#b39ef7]" />
+                  <div className="flex items-center gap-2 text-sm text-[#8a4055]">
+                    <MapPin className="w-4 h-4 text-[#e8789a]" />
                     <span>Weather check</span>
                   </div>
                   {weather && (
-                    <span className="text-xs uppercase tracking-[0.2em] text-[#b39ef7]">
+                    <span className="eyebrow">
                       {weather.location || 'Current'}
                     </span>
                   )}
                 </div>
                 {weather ? (
-                  <div className="space-y-3 text-sm text-[#4c4d6a]">
+                  <div className="space-y-3 text-sm text-[#7a2d45]">
                     <div className="flex items-center gap-3">
-                      <Thermometer className="w-4 h-4 text-[#6a4ccf]" />
+                      <Thermometer className="w-4 h-4 text-[#e8789a]" />
                       <span>{Math.round(weather.temperature)}°F</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Droplets className="w-4 h-4 text-[#6a4ccf]" />
+                      <Droplets className="w-4 h-4 text-[#e8789a]" />
                       <span>{weather.humidity}% humidity</span>
                     </div>
-                    <p className="capitalize">{weather.condition}</p>
+                    <p className="capitalize text-[#8a4055]">{weather.condition}</p>
                   </div>
                 ) : (
-                  <p className="text-sm text-[#6e5c8f]">
+                  <p className="text-sm text-[#8a4055]">
                     Weather insights will show up after your first suggestion request.
                   </p>
                 )}
               </div>
 
-              <div className="bg-white/80 border border-[#eadffb] rounded-[28px] p-5 shadow-sm min-h-[160px]">
-                <p className="text-xs uppercase tracking-[0.2em] text-[#b39ef7] mb-2">Why these looks</p>
+              <div className="soft-card p-5 shadow-sm min-h-[160px]">
+                <p className="text-xs uppercase tracking-[0.2em] text-[#e8789a] mb-2">Why these looks</p>
                 {reasoning ? (
-                  <p className="text-sm text-[#4c4d6a]">{reasoning}</p>
+                  <p className="text-sm text-[#7a2d45]">{reasoning}</p>
                 ) : (
-                  <p className="text-sm text-[#6e5c8f]">
+                  <p className="text-sm text-[#8a4055]">
                     We'll explain how mood, time, and weather shape each suggestion after you run a search.
                   </p>
                 )}
@@ -292,38 +292,38 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
 
           {suggestions.length > 0 && (
             <div className="space-y-4">
-              <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Personalized looks</p>
+              <p className="eyebrow">Personalized looks</p>
               {suggestions.map((style, index) => (
-                <div key={index} className="bg-white/90 border border-[#eadffb] rounded-[28px] p-5 shadow-sm space-y-4">
+                <div key={index} className="soft-card p-5 shadow-sm space-y-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <h4 className="text-xl font-semibold">{style.name}</h4>
-                      <p className="text-sm text-[#6e5c8f] mt-1">{style.description}</p>
+                      <h4 className="text-2xl font-display font-medium text-[#7a2d45]">{style.name}</h4>
+                      <p className="text-sm text-[#8a4055] mt-1">{style.description}</p>
                     </div>
                     <button
                       onClick={() => toggleBookmark(style)}
-                      className="text-[#6e5c8f] hover:text-[#4b3d6a] transition"
+                      className="text-[#8a4055] hover:text-[#7a2d45] transition"
                     >
                       {bookmarkedStyles.has(style.name) ? (
-                        <BookmarkCheck className="w-5 h-5 text-[#6a4ccf]" />
+                        <BookmarkCheck className="w-5 h-5 text-[#e8789a]" />
                       ) : (
                         <Bookmark className="w-5 h-5" />
                       )}
                     </button>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-[#4c4d6a]">
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-[#7a2d45]">
                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getDifficultyColor(style.difficulty)}`}>
                       {style.difficulty}
                     </span>
                     <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-4 h-4 text-[#e8789a]" />
                       <span>{style.time_needed} min</span>
                     </div>
                   </div>
 
                   {style.image_url && (
-                    <div className="rounded-2xl overflow-hidden border border-[#f2eaff]">
+                    <div className="rounded-2xl overflow-hidden border border-[#ffd0dc]">
                       <img
                         src={style.image_url}
                         alt={style.name}
@@ -334,19 +334,19 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
 
                   <button
                     onClick={() => setExpandedStyle(expandedStyle === index ? null : index)}
-                    className="flex items-center gap-2 text-sm text-[#6e5c8f] hover:text-[#4b3d6a] transition"
+                    className="flex items-center gap-2 text-sm text-[#8a4055] hover:text-[#7a2d45] transition"
                   >
                     <span>{expandedStyle === index ? 'Hide steps' : 'View steps'}</span>
                     <ChevronDown className={`w-4 h-4 transition-transform ${expandedStyle === index ? 'rotate-180' : ''}`} />
                   </button>
 
                   {expandedStyle === index && (
-                    <div className="pt-3 border-t border-[#f0e8ff]">
-                      <h5 className="text-xs uppercase tracking-[0.2em] text-[#b39ef7] mb-3">Steps</h5>
-                      <ol className="space-y-2 text-sm text-[#4c4d6a]">
+                    <div className="pt-3 border-t border-[#ffd0dc]">
+                      <h5 className="text-xs uppercase tracking-[0.2em] text-[#e8789a] mb-3">Steps</h5>
+                      <ol className="space-y-2 text-sm text-[#7a2d45]">
                         {style.steps.map((step, i) => (
                           <li key={i} className="flex gap-3">
-                            <span className="text-[#b39ef7]">{i + 1}.</span>
+                            <span className="text-[#e8789a]">{i + 1}.</span>
                             <span>{step}</span>
                           </li>
                         ))}
@@ -359,9 +359,9 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
           )}
 
           {!loading && suggestions.length === 0 && !error && (
-            <div className="text-center py-14 bg-white/70 border border-[#eadffb] rounded-[32px]">
-              <Clock className="w-16 h-16 text-[#d8c9ff] mx-auto mb-4" />
-              <p className="text-sm text-[#6e5c8f]">
+            <div className="text-center py-14 bg-white/70 border border-[#ffd0dc] rounded-[32px]">
+              <Clock className="w-16 h-16 text-[#f4a7b9] mx-auto mb-4" />
+              <p className="text-sm text-[#8a4055]">
                 Fill out the form above to unlock looks that match your vibe today.
               </p>
             </div>

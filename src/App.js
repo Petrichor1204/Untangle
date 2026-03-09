@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import Home from './components/Home';
@@ -21,7 +21,19 @@ function App() {
   const [capturedImage, setCapturedImage] = useState(null);
   const [carePlan, setCarePlan] = useState(null);
   const [completedSteps, setCompletedSteps] = useState(new Set());
-  const [activeReminders, setActiveReminders] = useState([]);
+  const [activeReminders, setActiveReminders] = useState(() => {
+    try {
+      const stored = localStorage.getItem('hairly_reminders');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Persist reminders to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('hairly_reminders', JSON.stringify(activeReminders));
+  }, [activeReminders]);
 
   // Navigation handler
   const navigateToPage = (page) => {
@@ -40,6 +52,8 @@ function App() {
     setHairAnalysis(null);
     setCarePlan(null);
     setCapturedImage(null);
+    setActiveReminders([]);
+    localStorage.removeItem('hairly_reminders');
     navigateToPage('login');
   };
 
@@ -118,6 +132,14 @@ function App() {
           currentPage={currentPage}
           navigateToPage={navigateToPage}
           handleLogout={handleLogout}
+        />
+      );
+
+    case 'bookmarks':
+      return (
+        <BookmarksPage
+          sessionId={sessionId || localStorage.getItem('hairly_session_id')}
+          onClose={() => navigateToPage('tracking')}
         />
       );
 

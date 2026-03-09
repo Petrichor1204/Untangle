@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
-import { TrendingUp, Calendar, Bell, BookOpen, Plus, X, Clock, Camera, Star, AlertCircle, Sparkles } from 'lucide-react';
+import { TrendingUp, Calendar, Bell, BookOpen, Plus, X, Clock, Camera, Star, AlertCircle, Sparkles, Bookmark } from 'lucide-react';
 import api from '../api';
 import { getHistory } from '../api';
 import MoodSelector from './MoodSelector';
@@ -48,6 +48,9 @@ const ProgressTracking = ({
   const [newEntry, setNewEntry] = useState({ notes: '', rating: 5, mood: 'confident' });
   const [error, setError] = useState(null);
   const [showStyleSuggestions, setShowStyleSuggestions] = useState(false);
+  const [showReminderForm, setShowReminderForm] = useState(false);
+  const [reminderTitle, setReminderTitle] = useState('');
+  const [reminderTime, setReminderTime] = useState('09:00');
 
   const totalSteps = 4;
   const completionPercent = totalSteps ? Math.round((completedSteps.size / totalSteps) * 100) : 0;
@@ -117,6 +120,23 @@ const ProgressTracking = ({
     setActiveReminders(activeReminders.filter(r => r.id !== id));
   };
 
+  const addQuickReminder = () => {
+    if (!reminderTitle.trim()) return;
+    const [hours, minutes] = reminderTime.split(':');
+    const date = new Date();
+    date.setHours(parseInt(hours), parseInt(minutes));
+    const timeLabel = `Daily at ${date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+    setActiveReminders([...activeReminders, {
+      id: Date.now(),
+      title: reminderTitle.trim(),
+      time: timeLabel,
+      active: true
+    }]);
+    setReminderTitle('');
+    setReminderTime('09:00');
+    setShowReminderForm(false);
+  };
+
   const renderStars = (rating) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star 
@@ -145,7 +165,7 @@ const ProgressTracking = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#fdf7ff] text-[#1f1338]">
+    <div className="min-h-screen floral-bg text-[#7a2d45]">
       <Navigation 
         currentPage={currentPage} 
         navigateToPage={navigateToPage} 
@@ -154,23 +174,23 @@ const ProgressTracking = ({
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-6">
         <header className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-2">
-            <span className="text-xs uppercase tracking-[0.3em] text-[#b39ef7]">Journey log</span>
-            <h1 className="text-3xl font-semibold">Hair journey tracking</h1>
-            <p className="text-sm text-[#6e5c8f]">
+            <span className="eyebrow">Journey log</span>
+            <h1 className="text-4xl font-display font-medium text-[#7a2d45]">Hair journey tracking</h1>
+            <p className="text-sm text-[#8a4055]">
               Log how your strands feel, stack reminders, and see your routines turning into momentum.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <button
               onClick={handleOpenStyleIdeas}
-              className="inline-flex items-center gap-2 rounded-full bg-[#8256f6] hover:bg-[#6f47d9] text-white px-5 py-3 text-sm font-semibold transition"
+              className="inline-flex items-center gap-2 rounded-full bg-[#e8789a] hover:bg-[#d4607f] text-white px-5 py-3 text-sm font-semibold transition"
             >
               <Sparkles className="w-4 h-4" />
               Style ideas
             </button>
             <button
               onClick={() => navigateToPage('plan')}
-              className="inline-flex items-center gap-2 rounded-full border border-[#eadffb] px-5 py-3 text-sm font-semibold text-[#6e5c8f] hover:bg-white"
+              className="inline-flex items-center gap-2 rounded-full border border-[#ffd0dc] px-5 py-3 text-sm font-semibold text-[#8a4055] hover:bg-white"
             >
               View care plan
             </button>
@@ -187,36 +207,48 @@ const ProgressTracking = ({
           </div>
         )}
 
-        <div className="grid gap-4 sm:grid-cols-3">
-          <div className="rounded-[28px] border border-[#eadffb] bg-white/80 p-5 text-center shadow-sm">
-            <TrendingUp className="w-8 h-8 text-[#58c4a5] mx-auto mb-3" />
-            <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Progress</p>
-            <p className="text-3xl font-semibold">{completionPercent}%</p>
+        <div className="soft-card p-4 flex flex-wrap gap-6 items-center">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 petal-icon bg-[#ffe8ee] flex items-center justify-center">
+              <TrendingUp className="w-4 h-4 text-[#e8789a]" />
+            </div>
+            <div>
+              <p className="text-xs text-[#b06070]">Plan progress</p>
+              <p className="font-display text-xl text-[#7a2d45]">{completionPercent}%</p>
+            </div>
           </div>
-          <div className="rounded-[28px] border border-[#eadffb] bg-white/80 p-5 text-center shadow-sm">
-            <Calendar className="w-8 h-8 text-[#6a4ccf] mx-auto mb-3" />
-            <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Entries logged</p>
-            <p className="text-3xl font-semibold">{logs.length}</p>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 petal-icon bg-[#ffe8ee] flex items-center justify-center">
+              <Calendar className="w-4 h-4 text-[#e8789a]" />
+            </div>
+            <div>
+              <p className="text-xs text-[#b06070]">Entries logged</p>
+              <p className="font-display text-xl text-[#7a2d45]">{logs.length}</p>
+            </div>
           </div>
-          <div className="rounded-[28px] border border-[#eadffb] bg-white/80 p-5 text-center shadow-sm">
-            <Bell className="w-8 h-8 text-[#f3a547] mx-auto mb-3" />
-            <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Active reminders</p>
-            <p className="text-3xl font-semibold">{activeReminders.length}</p>
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 petal-icon bg-[#ffe8ee] flex items-center justify-center">
+              <Bell className="w-4 h-4 text-[#e8789a]" />
+            </div>
+            <div>
+              <p className="text-xs text-[#b06070]">Reminders</p>
+              <p className="font-display text-xl text-[#7a2d45]">{activeReminders.length}</p>
+            </div>
           </div>
         </div>
 
         <section className="grid gap-6 lg:grid-cols-[1.5fr_0.9fr]">
           <div className="space-y-6">
-            <div className="bg-white/85 border border-[#eadffb] rounded-[32px] p-6 shadow-sm">
+            <div className="soft-card p-6 shadow-sm">
               <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
                 <div className="flex items-center gap-2">
-                  <BookOpen className="w-5 h-5 text-[#6a4ccf]" />
-                  <h3 className="text-lg font-semibold">Hair journey log</h3>
+                  <BookOpen className="w-5 h-5 text-[#e8789a]" />
+                  <h3 className="text-lg font-semibold text-[#7a2d45]">Hair journey log</h3>
                 </div>
                 {!showNewEntry && (
                   <button
                     onClick={addJournalEntry}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#ede5ff] text-[#6a4ccf] px-4 py-2 text-sm font-semibold hover:bg-[#e2d8ff]"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#ffe8ee] text-[#e8789a] px-4 py-2 text-sm font-semibold hover:bg-[#ffd0dc]"
                   >
                     <Plus className="w-4 h-4" />
                     New entry
@@ -225,27 +257,27 @@ const ProgressTracking = ({
               </div>
 
               {showNewEntry && (
-                <div className="border border-[#eadffb] rounded-[24px] p-4 mb-5 bg-white">
+                <div className="border border-[#ffd0dc] rounded-[24px] p-4 mb-5 bg-white">
                   <MoodSelector 
                     selectedMood={newEntry.mood}
                     onMoodChange={(mood) => setNewEntry({ ...newEntry, mood })}
                   />
 
                   <div className="mt-4">
-                    <label className="text-xs uppercase tracking-[0.2em] text-[#b39ef7] block mb-2">
+                    <label className="text-xs uppercase tracking-[0.2em] text-[#e8789a] block mb-2">
                       Tell us more about your hair today
                     </label>
                     <textarea
                       value={newEntry.notes}
                       onChange={(e) => setNewEntry({ ...newEntry, notes: e.target.value })}
                       placeholder="What did your routine look like? Any wins or new products?"
-                      className="w-full rounded-2xl border border-[#eadffb] bg-white px-4 py-3 text-sm focus:ring-2 focus:ring-[#c9b5ff] focus:outline-none resize-none"
+                      className="w-full rounded-2xl border border-[#ffd0dc] bg-white px-4 py-3 text-sm text-[#7a2d45] focus:ring-2 focus:ring-[#f4a7b9] focus:outline-none resize-none"
                       rows="4"
                     />
                   </div>
 
                   <div className="mt-4">
-                    <label className="text-xs uppercase tracking-[0.2em] text-[#b39ef7] block mb-2">
+                    <label className="text-xs uppercase tracking-[0.2em] text-[#e8789a] block mb-2">
                       Rate your hair today
                     </label>
                     <div className="flex items-center gap-2">
@@ -269,13 +301,13 @@ const ProgressTracking = ({
                     <button
                       onClick={submitNewEntry}
                       disabled={loading}
-                      className="inline-flex items-center justify-center rounded-full bg-[#8256f6] text-white px-5 py-2 text-sm font-semibold hover:bg-[#6f47d9] disabled:opacity-60"
+                      className="inline-flex items-center justify-center rounded-full bg-[#e8789a] text-white px-5 py-2 text-sm font-semibold hover:bg-[#d4607f] disabled:opacity-60"
                     >
                       {loading ? 'Saving...' : 'Save entry'}
                     </button>
                     <button
                       onClick={cancelNewEntry}
-                      className="inline-flex items-center justify-center rounded-full border border-[#eadffb] px-5 py-2 text-sm font-semibold text-[#6e5c8f] hover:bg-white"
+                      className="inline-flex items-center justify-center rounded-full border border-[#ffd0dc] px-5 py-2 text-sm font-semibold text-[#8a4055] hover:bg-white"
                     >
                       Cancel
                     </button>
@@ -285,28 +317,28 @@ const ProgressTracking = ({
 
               {loading && logs.length === 0 ? (
                 <div className="text-center py-10">
-                  <div className="animate-spin w-8 h-8 border-2 border-[#b39ef7] border-t-transparent rounded-full mx-auto mb-3" />
-                  <p className="text-sm text-[#6e5c8f]">Loading your progress history...</p>
+                  <div className="animate-spin w-8 h-8 border-2 border-[#e8789a] border-t-transparent rounded-full mx-auto mb-3" />
+                  <p className="text-sm text-[#8a4055]">Loading your progress history...</p>
                 </div>
               ) : logs.length === 0 ? (
-                <div className="text-center py-10 text-sm text-[#6e5c8f]">
-                  <BookOpen className="w-10 h-10 text-[#d8c9ff] mx-auto mb-3" />
+                <div className="text-center py-10 text-sm text-[#8a4055]">
+                  <BookOpen className="w-10 h-10 text-[#f4a7b9] mx-auto mb-3" />
                   Start documenting your hair journey to see patterns over time.
                 </div>
               ) : (
                 <div className="space-y-4">
                   {logs.map((log) => (
-                    <div key={log.id} className="border border-[#eadffb] rounded-[24px] p-4 bg-white">
+                    <div key={log.id} className="border border-[#ffd0dc] rounded-[24px] p-4 bg-white">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">{getMoodEmoji(log.mood)}</span>
-                          <span className="font-semibold">{formatDate(log.date)}</span>
+                          <span className="font-semibold text-[#7a2d45]">{formatDate(log.date)}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           {renderStars(log.rating)}
                         </div>
                       </div>
-                      <p className="text-sm text-[#4c4d6a] leading-relaxed">{log.notes}</p>
+                      <p className="text-sm text-[#7a2d45] leading-relaxed">{log.notes}</p>
                     </div>
                   ))}
                 </div>
@@ -315,26 +347,26 @@ const ProgressTracking = ({
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white/85 border border-[#eadffb] rounded-[32px] p-6 shadow-sm">
+            <div className="soft-card p-6 shadow-sm">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Reminder stack</p>
-                  <h3 className="text-lg font-semibold">Active reminders</h3>
+                  <p className="eyebrow">Reminder stack</p>
+                  <h3 className="text-lg font-semibold text-[#7a2d45]">Active reminders</h3>
                 </div>
-                <span className="text-2xl font-semibold text-[#8b6ff7]">{activeReminders.length}</span>
+                <span className="text-3xl font-display font-medium text-[#e8789a]">{activeReminders.length}</span>
               </div>
 
               {activeReminders.length ? (
                 <div className="space-y-3">
                   {activeReminders.map((reminder) => (
-                    <div key={reminder.id} className="flex items-center justify-between rounded-[20px] bg-[#f6f1ff] px-4 py-3">
+                    <div key={reminder.id} className="flex items-center justify-between rounded-[20px] bg-[#ffe8ee] px-4 py-3">
                       <div>
-                        <p className="text-sm font-semibold">{reminder.title}</p>
-                        <p className="text-xs text-[#6e5c8f]">{reminder.time}</p>
+                        <p className="text-sm font-semibold text-[#7a2d45]">{reminder.title}</p>
+                        <p className="text-xs text-[#8a4055]">{reminder.time}</p>
                       </div>
                       <button
                         onClick={() => removeReminder(reminder.id)}
-                        className="text-[#6e5c8f] hover:text-[#4b3d6a]"
+                        className="text-[#8a4055] hover:text-[#7a2d45]"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -342,25 +374,83 @@ const ProgressTracking = ({
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-[#6e5c8f]">
+                <p className="text-sm text-[#8a4055]">
                   No reminders yet. Tag any care plan step to nudge you at the right time of day.
                 </p>
               )}
             </div>
 
-            <div className="bg-gradient-to-br from-[#fef7ff] to-[#f4fbff] border border-white/60 rounded-[32px] p-6 shadow-sm space-y-4">
-              <p className="text-xs uppercase tracking-[0.25em] text-[#b39ef7]">Quick actions</p>
+            <div className="bg-gradient-to-br from-[#fff9f7] to-[#fff5f0] border border-[#ffd0dc] rounded-[32px] p-6 shadow-sm space-y-4">
+              <p className="eyebrow">Quick actions</p>
               <div className="space-y-3">
-                <button className="w-full rounded-[20px] border border-[#eadffb] bg-white/70 px-4 py-3 text-sm font-semibold text-left text-[#6e5c8f] hover:bg-white flex items-center gap-3">
-                  <Clock className="w-4 h-4 text-[#6a4ccf]" />
+                <button
+                  onClick={() => setShowReminderForm(!showReminderForm)}
+                  className="w-full rounded-[20px] border border-[#ffd0dc] bg-white/70 px-4 py-3 text-sm font-semibold text-left text-[#8a4055] hover:bg-white flex items-center gap-3"
+                >
+                  <Clock className="w-4 h-4 text-[#e8789a]" />
                   Schedule a reminder
                 </button>
+
+                {showReminderForm && (
+                  <div className="rounded-[20px] border border-[#ffd0dc] bg-white p-4 space-y-3">
+                    <div>
+                      <label className="text-xs uppercase tracking-[0.2em] text-[#e8789a] block mb-1">
+                        Reminder title
+                      </label>
+                      <input
+                        type="text"
+                        value={reminderTitle}
+                        onChange={(e) => setReminderTitle(e.target.value)}
+                        placeholder="e.g. Deep condition hair"
+                        className="w-full rounded-xl border border-[#ffd0dc] bg-white px-3 py-2 text-sm text-[#7a2d45] focus:ring-2 focus:ring-[#f4a7b9] focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs uppercase tracking-[0.2em] text-[#e8789a] block mb-1">
+                        Time
+                      </label>
+                      <input
+                        type="time"
+                        value={reminderTime}
+                        onChange={(e) => setReminderTime(e.target.value)}
+                        className="w-full rounded-xl border border-[#ffd0dc] bg-white px-3 py-2 text-sm text-[#7a2d45] focus:ring-2 focus:ring-[#f4a7b9] focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={addQuickReminder}
+                        disabled={!reminderTitle.trim()}
+                        className="flex-1 rounded-full bg-[#e8789a] text-white text-xs font-semibold py-2 hover:bg-[#d4607f] disabled:opacity-50 transition"
+                      >
+                        Save reminder
+                      </button>
+                      <button
+                        onClick={() => { setShowReminderForm(false); setReminderTitle(''); setReminderTime('09:00'); }}
+                        className="flex-1 rounded-full border border-[#ffd0dc] text-xs font-semibold py-2 text-[#8a4055] hover:bg-white transition"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 <button
                   onClick={() => navigateToPage('analysis')}
-                  className="w-full rounded-[20px] border border-[#eadffb] bg-white/70 px-4 py-3 text-sm font-semibold text-left text-[#6e5c8f] hover:bg-white flex items-center gap-3"
+                  className="w-full rounded-[20px] border border-[#ffd0dc] bg-white/70 px-4 py-3 text-sm font-semibold text-left text-[#8a4055] hover:bg-white flex items-center gap-3"
                 >
-                  <Camera className="w-4 h-4 text-[#6a4ccf]" />
-                  Start a new analysis
+                  <Camera className="w-4 h-4 text-[#e8789a]" />
+                  Start a new analysis 📸
+                </button>
+                <button
+                  onClick={() => {
+                    const sid = sessionId || localStorage.getItem('hairly_session_id');
+                    if (!sid) { setError('Please analyze your hair to access saved styles.'); return; }
+                    navigateToPage('bookmarks');
+                  }}
+                  className="w-full rounded-[20px] border border-[#ffd0dc] bg-white/70 px-4 py-3 text-sm font-semibold text-left text-[#8a4055] hover:bg-white flex items-center gap-3"
+                >
+                  <Bookmark className="w-4 h-4 text-[#e8789a]" />
+                  View saved styles 💇
                 </button>
               </div>
             </div>
