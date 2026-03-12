@@ -3,6 +3,7 @@ import Navigation from './Navigation';
 import { TrendingUp, Calendar, Bell, BookOpen, Plus, X, Clock, Camera, Star, AlertCircle, Sparkles, Bookmark } from 'lucide-react';
 import api from '../api';
 import { getHistory } from '../api';
+import { updateStreak, addCoins } from '../utils/streakUtils';
 import MoodSelector from './MoodSelector';
 import StyleSuggestionsPage from './StyleSuggestionsPage';
 import { getMoodEmoji } from '../utils/moodConfig';
@@ -24,10 +25,13 @@ export const saveProgressLog = async (sessionId, logData) => {
     };
   } catch (error) {
     console.error('Error saving progress:', error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || 'Failed to save progress'
-    };
+    const detail = error.response?.data?.detail;
+    const errorMsg = Array.isArray(detail)
+      ? detail.map(e => e.msg || JSON.stringify(e)).join(', ')
+      : typeof detail === 'string'
+      ? detail
+      : 'Failed to save progress';
+    return { success: false, error: errorMsg };
   }
 };
 
@@ -43,10 +47,13 @@ const ProgressTracking = ({
   sessionId
 }) => {
   const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);   // history fetch only
+  const [isSaving, setIsSaving] = useState(false); // save button only
   const [showNewEntry, setShowNewEntry] = useState(false);
   const [newEntry, setNewEntry] = useState({ notes: '', rating: 5, mood: 'confident' });
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null);         // page-level (non-form) errors
+  const [formError, setFormError] = useState(null); // inline form errors
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const [showStyleSuggestions, setShowStyleSuggestions] = useState(false);
   const [showReminderForm, setShowReminderForm] = useState(false);
   const [reminderTitle, setReminderTitle] = useState('');
@@ -63,22 +70,29 @@ const ProgressTracking = ({
   const handleSaveProgress = async (notes, rating, mood) => {
     const storedSessionId = sessionId || localStorage.getItem('hairly_session_id');
     if (!storedSessionId) {
-      setError('Please analyze your hair first');
+      setFormError('You need to analyze your hair before saving a log entry.');
       return;
     }
-    
-    setLoading(true);
+
+    setIsSaving(true);
+    setFormError(null);
     const result = await saveProgressLog(storedSessionId, { notes, rating, mood });
-    
+
     if (result.success) {
-      await fetchHistory();
-      setNewEntry({ notes: '', rating: 5, mood: 'confident' });
-      setShowNewEntry(false);
-      setError(null);
+      setSaveSuccess(true);
+      updateStreak();
+      addCoins(10);
+      fetchHistory(); // refresh in background — don't block the UI
+      setTimeout(() => {
+        setSaveSuccess(false);
+        setShowNewEntry(false);
+        setNewEntry({ notes: '', rating: 5, mood: 'confident' });
+        setFormError(null);
+      }, 1000);
     } else {
-      setError(result.error);
+      setFormError(result.error);
     }
-    setLoading(false);
+    setIsSaving(false);
   };
 
   const fetchHistory = async () => {
@@ -105,14 +119,16 @@ const ProgressTracking = ({
   const cancelNewEntry = () => {
     setShowNewEntry(false);
     setNewEntry({ notes: '', rating: 5, mood: 'confident' });
-    setError(null);
+    setFormError(null);
+    setSaveSuccess(false);
   };
 
   const submitNewEntry = async () => {
     if (!newEntry.notes.trim()) {
-      setError('Please add some notes about your hair journey');
+      setFormError('Please add some notes about your hair journey.');
       return;
     }
+    setFormError(null);
     await handleSaveProgress(newEntry.notes, newEntry.rating, newEntry.mood);
   };
 
@@ -297,17 +313,28 @@ const ProgressTracking = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap gap-3 mt-5">
+                  {formError && (
+                    <p className="mt-3 text-xs text-[#e05a5a] bg-[#fff6f6] border border-[#ffdede] rounded-xl px-3 py-2">
+                      {formError}
+                    </p>
+                  )}
+
+                  <div className="flex flex-wrap gap-3 mt-4">
                     <button
                       onClick={submitNewEntry}
-                      disabled={loading}
-                      className="inline-flex items-center justify-center rounded-full bg-[#e8789a] text-white px-5 py-2 text-sm font-semibold hover:bg-[#d4607f] disabled:opacity-60"
+                      disabled={isSaving || saveSuccess}
+                      className={`inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition ${
+                        saveSuccess
+                          ? 'bg-[#4caf82] text-white'
+                          : 'bg-[#e8789a] hover:bg-[#d4607f] text-white disabled:opacity-60'
+                      }`}
                     >
-                      {loading ? 'Saving...' : 'Save entry'}
+                      {saveSuccess ? 'Saved! ✓' : isSaving ? 'Saving…' : 'Save entry'}
                     </button>
                     <button
                       onClick={cancelNewEntry}
-                      className="inline-flex items-center justify-center rounded-full border border-[#ffd0dc] px-5 py-2 text-sm font-semibold text-[#8a4055] hover:bg-white"
+                      disabled={isSaving}
+                      className="inline-flex items-center justify-center rounded-full border border-[#ffd0dc] px-5 py-2 text-sm font-semibold text-[#8a4055] hover:bg-white disabled:opacity-50"
                     >
                       Cancel
                     </button>

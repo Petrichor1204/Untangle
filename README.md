@@ -1,70 +1,163 @@
-# Getting Started with Create React App
+# 🌸 hAIrly
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**hAIrly** is an AI-powered hair care companion that helps you understand your hair, build personalized routines, and track your journey — all in one place. Upload a photo, get an instant hair analysis, and unlock a custom care plan, style suggestions, and a learning library built around your specific texture.
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+**Hair Analysis**
+Upload a photo of your hair and the AI will identify your hair type, texture characteristics, and moisture profile. Results feed directly into your care plan and style suggestions.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Personalized Care Plan**
+A structured 8-week plan with daily, weekly, and nightly steps tailored to your hair type. Each step is completable, has a tutorial link, and can be pinned as a reminder. Completing every step earns a bonus coin reward.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**Progress Tracking**
+Log your hair journey with mood ratings, written notes, and a 5-star hair rating. Entries are saved per session and displayed chronologically. Every saved entry extends your streak and earns coins.
 
-### `npm test`
+**Style Suggestions**
+Get hairstyle recommendations matched to your occasion, available time, current mood, and local weather. Save your favourite looks to Bookmarks for quick access later.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**Learn**
+An interactive library covering hair types (1–4), porosity, and density. Each section includes a care routine, common mistakes, clickable trusted resources, and video links. Visiting the Learn page each day earns coins.
 
-### `npm run build`
+**Streaks & Coins**
+A gamification layer that keeps motivation high. Your streak updates automatically when you log an entry, visit Learn, or complete a task. Coins accumulate across all actions and are displayed on the streak card.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**Reminders**
+Set custom reminders for any care step or routine directly from the Care Plan or Tracking pages.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Tech Stack
 
-### `npm run eject`
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 (Create React App) |
+| Styling | Tailwind CSS |
+| Icons | Lucide React |
+| HTTP client | Axios |
+| Backend | FastAPI (Python) — runs separately on `localhost:8000` |
+| Persistence | localStorage (streak, coins, reminders) + backend database |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Getting Started
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Prerequisites
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Node.js 18+
+- The hAIrly FastAPI backend running on `http://localhost:8000`
 
-## Learn More
+### Install & run
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+# Clone the repo
+git clone <your-repo-url>
+cd hairly-frontend
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Install dependencies
+npm install
 
-### Code Splitting
+# Start the development server
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The app opens at [http://localhost:3000](http://localhost:3000).
 
-### Analyzing the Bundle Size
+### Environment variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Create a `.env` file in the project root if your backend runs on a different URL:
 
-### Making a Progressive Web App
+```
+REACT_APP_API_URL=http://localhost:8000
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Available scripts
 
-### Advanced Configuration
+| Command | Description |
+|---|---|
+| `npm start` | Start dev server at localhost:3000 |
+| `npm run build` | Build optimised production bundle |
+| `npm test` | Run tests in watch mode |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+src/
+├── api.js                        # Axios instance + all API calls
+├── App.js                        # Root component + page routing
+├── components/
+│   ├── BookmarksPage.js          # Saved hairstyles overlay
+│   ├── CarePlans.js              # 8-week care plan + task completion
+│   ├── HairAnalysis.js           # Photo upload + AI analysis results
+│   ├── Home.js                   # Dashboard / landing for logged-in users
+│   ├── LandingPage.js            # Public marketing landing page
+│   ├── Learn.js                  # Hair education library
+│   ├── Login.js                  # Login form
+│   ├── MoodSelector.js           # Mood picker used in journal
+│   ├── Navigation.js             # Top nav bar
+│   ├── ProgressTracking.js       # Journal, reminders, and history
+│   ├── Signup.js                 # Sign-up form
+│   ├── Streak.js                 # Streak + coin card (used on Home & Learn)
+│   ├── StyleRecommendations.js   # Style recommendation UI
+│   └── StyleSuggestionsPage.js   # Full style suggestions overlay
+├── utils/
+│   ├── moodConfig.js             # Mood emoji mapping
+│   ├── fileUtils.js              # File helpers
+│   └── streakUtils.js            # Streak + coin localStorage logic
+└── index.js
 
-### `npm run build` fails to minify
+public/
+└── data/
+    └── hair_types.json           # Hair type content (characteristics, routines, links)
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## How the Streak & Coins Work
+
+| Action | Coins | Streak |
+|---|---|---|
+| Visiting Learn (once per day) | +5 | ✅ |
+| Saving a progress log entry | +10 | ✅ |
+| Completing a care plan step | +15 | ✅ |
+| Finishing all care plan tasks | +50 bonus | ✅ |
+
+Streak count and coin total are stored in `localStorage` and visible on the streak card on both the Home and Learn pages.
+
+---
+
+## Screenshots
+
+<!-- Replace the placeholder lines below with your actual images -->
+<!-- Tip: drag images into your GitHub repo and paste the generated URLs here -->
+
+### Landing Page
+<!-- ![Landing page](screenshots/landing.png) -->
+
+### Hair Analysis
+<!-- ![Hair analysis](screenshots/analysis.png) -->
+
+### Care Plan
+<!-- ![Care plan](screenshots/care-plan.png) -->
+
+### Progress Tracking
+<!-- ![Progress tracking](screenshots/tracking.png) -->
+
+### Style Suggestions
+<!-- ![Style suggestions](screenshots/styles.png) -->
+
+### Learn
+<!-- ![Learn page](screenshots/learn.png) -->
+
+### Streak & Coins
+<!-- ![Streak card](screenshots/streak.png) -->
+
+---
+
+## License
+
+MIT

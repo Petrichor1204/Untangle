@@ -20,7 +20,8 @@ const BookmarksPage = ({ sessionId, onClose }) => {
       const response = await api.get(`/bookmarks?session_id=${sessionId}`);
       setBookmarks(response.data.bookmarks);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to load bookmarks');
+      const detail = err.response?.data?.detail;
+      setError(Array.isArray(detail) ? detail.map(e => e.msg || JSON.stringify(e)).join(', ') : typeof detail === 'string' ? detail : 'Failed to load bookmarks');
     } finally {
       setLoading(false);
     }
@@ -31,7 +32,8 @@ const BookmarksPage = ({ sessionId, onClose }) => {
       await api.delete(`/bookmark-style?session_id=${sessionId}&hairstyle_name=${encodeURIComponent(hairstyleName)}`);
       setBookmarks(prev => prev.filter(b => b.name !== hairstyleName));
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to remove bookmark');
+      const detail = err.response?.data?.detail;
+      setError(Array.isArray(detail) ? detail.map(e => e.msg || JSON.stringify(e)).join(', ') : typeof detail === 'string' ? detail : 'Failed to remove bookmark');
     }
   };
 

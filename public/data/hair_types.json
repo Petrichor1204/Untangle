@@ -24,14 +24,14 @@
         "Roughly stretching hair when wet."
       ],
       "sources": [
-        "Naptural85 (YouTube channel)",
-        "The Book of Kink by Nikki Ransom",
-        "Natural Hair Care studies from Howard University"
+        { "label": "Naptural85 (YouTube channel)", "url": "https://www.youtube.com/@Naptural85" },
+        { "label": "The Book of Kink by Nikki Ransom", "url": "https://www.amazon.com/s?k=Book+of+Kink+Nikki+Ransom" },
+        { "label": "Natural Hair Care research – Howard University", "url": "https://www.google.com/search?q=natural+hair+care+research+Howard+University" }
       ],
       "videos": [
-        { "title": "Type 4 Hair Care Basics", "creator": "Naptural85" },
-        { "title": "How to Maintain Coily Hair", "creator": "Talia Iman" },
-        { "title": "The Science of Natural Hair", "creator": "Dr. Lois Lockhart" }
+        { "title": "Type 4 Hair Care Basics", "creator": "Naptural85", "url": "https://www.youtube.com/results?search_query=Type+4+Hair+Care+Basics+Naptural85" },
+        { "title": "How to Maintain Coily Hair", "creator": "Talia Iman", "url": "https://www.youtube.com/results?search_query=How+to+Maintain+Coily+Hair+Talia+Iman" },
+        { "title": "The Science of Natural Hair", "creator": "Dr. Lois Lockhart", "url": "https://www.youtube.com/results?search_query=Science+of+Natural+Hair+Dr+Lois+Lockhart" }
       ]
     },
     "type3": {
@@ -59,14 +59,14 @@
         "Using rough, standard towels."
       ],
       "sources": [
-        "CurlyGirl Method by Lorraine Massey",
-        "Mielle Organics educational resources",
-        "International Journal of Cosmetic Science studies"
+        { "label": "Curly Girl Method by Lorraine Massey", "url": "https://www.amazon.com/s?k=Curly+Girl+Method+Lorraine+Massey" },
+        { "label": "Mielle Organics educational resources", "url": "https://mielleorganics.com/" },
+        { "label": "International Journal of Cosmetic Science", "url": "https://onlinelibrary.wiley.com/journal/14682494" }
       ],
       "videos": [
-        { "title": "Curly Hair Routine for Type 3", "creator": "Jess Arevalo" },
-        { "title": "Defining Your Curls", "creator": "Tiana Cosby" },
-        { "title": "Best Products for Curl Definition", "creator": "Alicia Rose" }
+        { "title": "Curly Hair Routine for Type 3", "creator": "Jess Arevalo", "url": "https://www.youtube.com/results?search_query=Curly+Hair+Routine+Type+3+Jess+Arevalo" },
+        { "title": "Defining Your Curls", "creator": "Tiana Cosby", "url": "https://www.youtube.com/results?search_query=Defining+Your+Curls+Tiana+Cosby" },
+        { "title": "Best Products for Curl Definition", "creator": "Alicia Rose", "url": "https://www.youtube.com/results?search_query=Best+Products+for+Curl+Definition+Alicia+Rose" }
       ]
     },
     "type2": {
@@ -94,14 +94,14 @@
         "Using very hot water to wash."
       ],
       "sources": [
-        "Wavy Hair Care guide by Ouidad",
-        "Cantu Shea Butter educational content",
-        "Natural Hair Academy resources"
+        { "label": "Wavy Hair Care – Ouidad", "url": "https://www.ouidad.com/" },
+        { "label": "Cantu Shea Butter educational content", "url": "https://cantuhaircare.com/" },
+        { "label": "Natural Hair Academy resources", "url": "https://www.naturalhairacademy.com/" }
       ],
       "videos": [
-        { "title": "Wavy Hair Routine for Beginners", "creator": "Mimi Ito" },
-        { "title": "How to Enhance Your Waves", "creator": "Kels" },
-        { "title": "Wavy Hair Products That Work", "creator": "Moniluxx" }
+        { "title": "Wavy Hair Routine for Beginners", "creator": "Mimi Ito", "url": "https://www.youtube.com/results?search_query=Wavy+Hair+Routine+for+Beginners" },
+        { "title": "How to Enhance Your Waves", "creator": "Kels", "url": "https://www.youtube.com/results?search_query=How+to+Enhance+Your+Waves+wavy+hair" },
+        { "title": "Wavy Hair Products That Work", "creator": "Moniluxx", "url": "https://www.youtube.com/results?search_query=Wavy+Hair+Products+That+Work+Moniluxx" }
       ]
     },
     "type1": {
@@ -129,14 +129,14 @@
         "Using too many heavy serums."
       ],
       "sources": [
-        "Dermatology-based hair science basics",
-        "SheaMoisture educational guides",
-        "Professional hairstylist recommendations"
+        { "label": "AAD – Hair & Scalp Care guide", "url": "https://www.aad.org/public/everyday-care/hair-scalp-care" },
+        { "label": "SheaMoisture educational guides", "url": "https://www.sheamoisture.com/" },
+        { "label": "Behind The Chair – pro stylist resources", "url": "https://www.behindthechair.com/" }
       ],
       "videos": [
-        { "title": "Straight Hair Care Guide", "creator": "Shayla Madison" },
-        { "title": "Adding Texture to Straight Hair", "creator": "Labaih" },
-        { "title": "Maintaining Straight Hair Health", "creator": "Jackie Aina" }
+        { "title": "Straight Hair Care Guide", "creator": "Shayla Madison", "url": "https://www.youtube.com/results?search_query=Straight+Hair+Care+Guide+Shayla+Madison" },
+        { "title": "Adding Texture to Straight Hair", "creator": "Labaih", "url": "https://www.youtube.com/results?search_query=Adding+Texture+to+Straight+Hair" },
+        { "title": "Maintaining Straight Hair Health", "creator": "Jackie Aina", "url": "https://www.youtube.com/results?search_query=Maintaining+Straight+Hair+Health+Jackie+Aina" }
       ]
     }
   }

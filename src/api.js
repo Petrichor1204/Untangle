@@ -2,6 +2,14 @@ import axios from 'axios';
 
 const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
+/** Safely converts a FastAPI error detail (string or array of objects) to a string. */
+const extractError = (error, fallback) => {
+  const detail = error.response?.data?.detail;
+  if (Array.isArray(detail)) return detail.map(e => e.msg || JSON.stringify(e)).join(', ');
+  if (typeof detail === 'string') return detail;
+  return fallback;
+};
+
 const api = axios.create({
   baseURL: API_BASE,
   headers: { 'Content-Type': 'application/json' },
@@ -37,10 +45,7 @@ export const uploadHairPhoto = async (imageFile) => {
     };
   } catch (error) {
     console.error("Upload failed:", error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || 'Failed to upload photo'
-    };
+    return { success: false, error: extractError(error, 'Failed to upload photo') };
   }
 };
 
@@ -54,10 +59,7 @@ export const getCarePlan = async (sessionId) => {
     };
   } catch (error) {
     console.error("Failed to fetch plan:", error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || 'Failed to get care plan'
-    };
+    return { success: false, error: extractError(error, 'Failed to get care plan') };
   }
 };
 
@@ -72,10 +74,7 @@ export const getHistory = async (sessionId) => {
     };
   } catch (error) {
     console.error("Failed to fetch history:", error);
-    return {
-      success: false,
-      error: error.response?.data?.detail || 'Failed to get history'
-    };
+    return { success: false, error: extractError(error, 'Failed to get history') };
   }
 };
 

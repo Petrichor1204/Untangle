@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Navigation from './Navigation';
 import { CheckCircle, Play, Bell, AlertCircle, Loader } from 'lucide-react';
 import { getCarePlan } from '../api';
+import { updateStreak, addCoins, getCoins } from '../utils/streakUtils';
 
 const CarePlans = ({ 
   currentPage, 
@@ -17,6 +18,9 @@ const CarePlans = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showCongrats, setShowCongrats] = useState(false);
+  const [congratsCoins, setCongratsCoins] = useState(0);
+  const prevCompletedSizeRef = useRef(completedSteps.size);
 
   // Fetch care plan when component mounts
   useEffect(() => {
@@ -33,43 +37,45 @@ const CarePlans = ({
       
       if (result.success) {
         // Transform backend data to match your component structure
+        const routine = result.data?.routine || {};
+        const products = result.data?.products || [];
         const transformedPlan = {
-          title: `${result.hairType} Hair Care Plan`,
+          title: `${result.hairType || 'Your'} Hair Care Plan`,
           duration: "8 weeks",
           steps: [
             {
               id: 1,
               title: "Daily Routine",
-              description: result.data.routine.wash_frequency ? 
-                `Wash frequency: ${result.data.routine.wash_frequency}` : 
+              description: routine.wash_frequency ?
+                `Wash frequency: ${routine.wash_frequency}` :
                 "Follow your personalized daily routine",
               frequency: "Daily",
               videoUrl: "#",
-              products: result.data.products || [],
+              products: products,
               completed: false
             },
             {
               id: 2,
               title: "Conditioning",
-              description: result.data.routine.conditioning || "Regular conditioning routine",
+              description: routine.conditioning || "Regular conditioning routine",
               frequency: "As recommended",
               videoUrl: "#",
-              products: result.data.products.slice(0, 2) || [],
+              products: products.slice(0, 2),
               completed: false
             },
             {
               id: 3,
               title: "Styling",
-              description: result.data.routine.styling || "Follow styling recommendations",
+              description: routine.styling || "Follow styling recommendations",
               frequency: "As needed",
               videoUrl: "#",
-              products: result.data.products.slice(2) || [],
+              products: products.slice(2),
               completed: false
             },
             {
               id: 4,
               title: "Night Care",
-              description: result.data.routine.night_care || "Follow night care routine",
+              description: routine.night_care || "Follow night care routine",
               frequency: "Nightly",
               videoUrl: "#",
               products: ["Silk/satin pillowcase"],
@@ -134,6 +140,19 @@ const CarePlans = ({
   };
 
   const planData = carePlan || fallbackPlan;
+  const totalSteps = planData.steps.length;
+
+  // Detect when the user just finished the last task
+  useEffect(() => {
+    const prev = prevCompletedSizeRef.current;
+    const current = completedSteps.size;
+    if (current === totalSteps && totalSteps > 0 && prev < totalSteps) {
+      const bonus = addCoins(50);
+      setCongratsCoins(bonus);
+      setShowCongrats(true);
+    }
+    prevCompletedSizeRef.current = current;
+  }, [completedSteps, totalSteps]);
 
   const handleStepComplete = (stepId) => {
     const newCompleted = new Set(completedSteps);
@@ -141,6 +160,9 @@ const CarePlans = ({
       newCompleted.delete(stepId);
     } else {
       newCompleted.add(stepId);
+      // Award coins + update streak for each newly completed step
+      updateStreak();
+      addCoins(15);
     }
     setCompletedSteps(newCompleted);
   };
@@ -156,6 +178,7 @@ const CarePlans = ({
   };
 
   return (
+    <>
     <div className="min-h-screen floral-bg text-[#7a2d45]">
       <Navigation 
         currentPage={currentPage} 
@@ -355,6 +378,50 @@ const CarePlans = ({
         </section>
       </div>
     </div>
+
+    {/* ── All-tasks congratulations modal ── */}
+    {showCongrats && (
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+        onClick={() => setShowCongrats(false)}
+      >
+        <div
+          className="relative bg-white rounded-[32px] p-8 max-w-sm w-full shadow-2xl text-center"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Decorative flowers */}
+          <div className="text-5xl mb-3 select-none">🌺🌸🌺</div>
+
+          <h2 className="text-2xl font-display font-semibold text-[#7a2d45] mb-2">
+            You crushed it!
+          </h2>
+          <p className="text-sm text-[#8a4055] mb-5">
+            You've completed every step in your care plan. Your hair is going to thank you.
+          </p>
+
+          {/* Coins earned */}
+          <div className="flex items-center justify-center gap-2 bg-[#ffe8ee] rounded-2xl px-5 py-3 mb-6">
+            <span className="text-2xl">🪙</span>
+            <div className="text-left">
+              <p className="text-xs text-[#b06070] uppercase tracking-wide">Total coins</p>
+              <p className="text-2xl font-bold text-[#e8789a]">{congratsCoins.toLocaleString()}</p>
+            </div>
+          </div>
+
+          <p className="text-xs text-[#b06070] mb-6">
+            +50 bonus coins for finishing every task 🎉 Keep going — your streak is counting!
+          </p>
+
+          <button
+            onClick={() => setShowCongrats(false)}
+            className="w-full rounded-full bg-[#e8789a] hover:bg-[#d4607f] text-white font-semibold text-sm py-3 transition"
+          >
+            Keep it up! 💪
+          </button>
+        </div>
+      </div>
+    )}
+    </>
   );
 };
 

@@ -77,7 +77,14 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
       setWeather(response.data.weather);
       setReasoning(response.data.reasoning);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to get suggestions');
+      const detail = err.response?.data?.detail;
+      setError(
+        Array.isArray(detail)
+          ? detail.map(e => e.msg || JSON.stringify(e)).join(', ')
+          : typeof detail === 'string'
+          ? detail
+          : 'Failed to get suggestions'
+      );
     } finally {
       setLoading(false);
     }
@@ -101,7 +108,14 @@ const StyleSuggestionsPage = ({ onClose, sessionId }) => {
         setBookmarkedStyles(prev => new Set([...prev, style.name]));
       }
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to update bookmark');
+      const detail = err.response?.data?.detail;
+      setError(
+        Array.isArray(detail)
+          ? detail.map(e => e.msg || JSON.stringify(e)).join(', ')
+          : typeof detail === 'string'
+          ? detail
+          : 'Failed to update bookmark'
+      );
     }
   };
 

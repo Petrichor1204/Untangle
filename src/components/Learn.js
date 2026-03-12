@@ -1,21 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import Navigation from './Navigation';
 import StreakCard from './Streak';
-import { ChevronDown, BookMarked, Play } from 'lucide-react';
+import { ChevronDown, ExternalLink, Play } from 'lucide-react';
+import { updateStreak, addCoins } from '../utils/streakUtils';
 
 const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
   const [expandedSection, setExpandedSection] = useState(null);
-
-  const toggleSection = (section) => {
-    setExpandedSection(expandedSection === section ? null : section);
-  };
   const [hairTypeContent, setHairTypeContent] = useState({});
+
+  // Award coins + update streak once per day when the user visits Learn
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    const lastLearnDate = localStorage.getItem('hairly_last_learn_date');
+    if (lastLearnDate !== today) {
+      localStorage.setItem('hairly_last_learn_date', today);
+      updateStreak();
+      addCoins(5);
+    }
+  }, []);
 
   useEffect(() => {
     fetch('/data/hair_types.json')
       .then(res => res.json())
       .then(data => setHairTypeContent(data));
   }, []);
+
+  const toggleSection = (section) => {
+    setExpandedSection(expandedSection === section ? null : section);
+  };
 
   const SectionCard = ({ title, sectionKey, children }) => (
     <div className="soft-card overflow-hidden">
@@ -84,11 +96,19 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
 
         <div>
           <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">Trusted resources</h4>
-          <ul className="space-y-1 text-[#8a4055]">
+          <ul className="space-y-2 text-[#8a4055]">
             {data.sources.map((source, idx) => (
-              <li key={idx} className="flex gap-2">
-                <BookMarked className="w-4 h-4 text-[#e8789a] mt-[2px]" />
-                <span>{source}</span>
+              <li key={idx}>
+                <a
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="inline-flex items-center gap-2 text-[#e8789a] hover:text-[#d4607f] hover:underline transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>{source.label}</span>
+                </a>
               </li>
             ))}
           </ul>
@@ -98,16 +118,23 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
           <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">Recommended videos</h4>
           <div className="space-y-2">
             {data.videos.map((video, idx) => (
-              <div
+              <a
                 key={idx}
-                className="flex items-center gap-3 px-3 py-2 rounded-xl bg-[#fff9f7] cursor-pointer hover:bg-[#ffe8ee] transition-colors"
+                href={video.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="flex items-center gap-3 px-3 py-2 rounded-xl bg-[#fff9f7] hover:bg-[#ffe8ee] transition-colors group"
               >
                 <Play className="w-4 h-4 text-[#e8789a] flex-shrink-0" />
-                <div>
-                  <p className="text-xs font-medium text-[#7a2d45]">{video.title}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-medium text-[#7a2d45] group-hover:underline truncate">
+                    {video.title}
+                  </p>
                   <p className="text-[11px] text-[#b06070]">by {video.creator}</p>
                 </div>
-              </div>
+                <ExternalLink className="w-3 h-3 text-[#c08090] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </a>
             ))}
           </div>
         </div>
@@ -117,22 +144,22 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
 
   return (
     <div className="min-h-screen floral-bg text-[#7a2d45]">
-      <Navigation 
-        currentPage={currentPage} 
-        navigateToPage={navigateToPage} 
-        handleLogout={handleLogout} 
+      <Navigation
+        currentPage={currentPage}
+        navigateToPage={navigateToPage}
+        handleLogout={handleLogout}
       />
-      
+
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
         {/* Header */}
         <header className="space-y-2">
-          <span className="eyebrow">
-            Learn
-          </span>
-          <h1 className="text-3xl font-display font-medium text-[#7a2d45]">Understand your hair, not just your products</h1>
+          <span className="eyebrow">Learn</span>
+          <h1 className="text-3xl font-display font-medium text-[#7a2d45]">
+            Understand your hair, not just your products
+          </h1>
           <p className="text-sm text-[#8a4055] max-w-2xl">
-            Explore hair types, porosity, and density in simple lessons. Build a foundation so your routines
-            actually make sense for your hair.
+            Explore hair types, porosity, and density in simple lessons. Build a foundation so your
+            routines actually make sense for your hair.
           </p>
         </header>
 
@@ -142,16 +169,14 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
             <StreakCard onNavigate={navigateToPage} />
           </div>
           <div className="md:col-span-2 bg-white/80 border border-[#ffd0dc] rounded-2xl p-5 space-y-3 text-sm">
-            <p className="eyebrow">
-              Your learning path
-            </p>
+            <p className="eyebrow">Your learning path</p>
             <p className="font-medium text-[#7a2d45]">
               Start with hair type, then move into porosity and density.
             </p>
             <p className="text-xs text-[#8a4055]">
-              You can take these in any order, but most people begin with identifying their curl pattern,
-              then learning how their hair absorbs moisture, and finally understanding how much hair they
-              actually have per area (density).
+              You can take these in any order, but most people begin with identifying their curl
+              pattern, then learning how their hair absorbs moisture, and finally understanding how
+              much hair they actually have per area (density).
             </p>
             <div className="grid gap-2 text-[11px] sm:grid-cols-3">
               <div className="rounded-xl border border-[#ffd0dc] px-3 py-2 bg-[#fff9f7]">
@@ -172,9 +197,7 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
 
         {/* Hair Types */}
         <section className="space-y-4">
-          <h2 className="eyebrow text-[#b06070]">
-            Hair type guide 🌷
-          </h2>
+          <h2 className="eyebrow text-[#b06070]">Hair type guide 🌷</h2>
           <div className="space-y-3">
             {Object.entries(hairTypeContent).map(([key, data]) => (
               <HairTypeCard key={key} type={key} data={data} />
@@ -184,9 +207,7 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
 
         {/* Porosity */}
         <section className="space-y-4">
-          <h2 className="eyebrow text-[#b06070]">
-            Porosity 💧
-          </h2>
+          <h2 className="eyebrow text-[#b06070]">Porosity 💧</h2>
           <SectionCard title="Hair porosity basics" sectionKey="porosity">
             <div className="space-y-4 text-sm text-[#8a4055]">
               <p className="text-[#7a2d45]">
@@ -196,40 +217,55 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
 
               <div>
                 <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">Low porosity</h4>
-                <ul className="space-y-1 ml-1 text-[#8a4055]">
+                <ul className="space-y-1 ml-1">
                   <li>• Water and products tend to sit on top of the hair.</li>
                   <li>• Hair can take a long time to get fully wet.</li>
                   <li>• Often dries slowly.</li>
                 </ul>
-                <p className="mt-2 text-xs text-[#8a4055]">
-                  Focus on lightweight, water-based products and use gentle heat during treatments to help
-                  products penetrate.
+                <p className="mt-2 text-xs">
+                  Focus on lightweight, water-based products and use gentle heat during treatments
+                  to help products penetrate.
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">High porosity</h4>
-                <ul className="space-y-1 ml-1 text-[#8a4055]">
+                <ul className="space-y-1 ml-1">
                   <li>• Hair soaks up water quickly.</li>
                   <li>• Dries fast but often feels rough or frizzy.</li>
                   <li>• Can lose moisture just as quickly as it absorbs it.</li>
                 </ul>
-                <p className="mt-2 text-xs text-[#8a4055]">
-                  Lean on richer creams, oils, and regular protein treatments to help with strength and
-                  moisture retention.
+                <p className="mt-2 text-xs">
+                  Lean on richer creams, oils, and regular protein treatments to help with strength
+                  and moisture retention.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">Medium / balanced porosity</h4>
-                <ul className="space-y-1 ml-1 text-[#8a4055]">
+                <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">
+                  Medium / balanced porosity
+                </h4>
+                <ul className="space-y-1 ml-1">
                   <li>• Holds styles relatively well.</li>
                   <li>• Accepts moisture without too much struggle.</li>
                   <li>• Often feels soft with a healthy sheen.</li>
                 </ul>
-                <p className="mt-2 text-xs text-[#8a4055]">
-                  Maintain balance with both moisture and occasional protein, plus consistent basic care.
+                <p className="mt-2 text-xs">
+                  Maintain balance with both moisture and occasional protein, plus consistent basic
+                  care.
                 </p>
+              </div>
+
+              <div className="pt-2">
+                <a
+                  href="https://www.healthline.com/health/hair-care/hair-porosity"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-[#e8789a] hover:text-[#d4607f] hover:underline text-xs transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  Read more on hair porosity – Healthline
+                </a>
               </div>
             </div>
           </SectionCard>
@@ -237,48 +273,59 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
 
         {/* Density */}
         <section className="space-y-4 pb-8">
-          <h2 className="eyebrow text-[#b06070]">
-            Density 👆
-          </h2>
+          <h2 className="eyebrow text-[#b06070]">Density 👆</h2>
           <SectionCard title="Hair density overview" sectionKey="density">
             <div className="space-y-4 text-sm text-[#8a4055]">
               <p className="text-[#7a2d45]">
-                Density describes how many strands you have in a given area on your scalp. It's about how
-                full your hair looks, not the thickness of each strand.
+                Density describes how many strands you have in a given area on your scalp. It's
+                about how full your hair looks, not the thickness of each strand.
               </p>
 
               <div>
                 <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">Low density</h4>
-                <ul className="space-y-1 ml-1 text-[#8a4055]">
+                <ul className="space-y-1 ml-1">
                   <li>• Scalp is more visible, especially when hair is wet.</li>
                   <li>• Hair can look fine or thin, even if strands are thick.</li>
                 </ul>
-                <p className="mt-2 text-xs text-[#8a4055]">
-                  Use lightweight products, focus on root volume, and avoid heavy buildup that flattens
-                  the hair.
+                <p className="mt-2 text-xs">
+                  Use lightweight products, focus on root volume, and avoid heavy buildup that
+                  flattens the hair.
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">High density</h4>
-                <ul className="space-y-1 ml-1 text-[#8a4055]">
+                <ul className="space-y-1 ml-1">
                   <li>• Hair feels very full and thick.</li>
                   <li>• Scalp is rarely visible.</li>
                 </ul>
-                <p className="mt-2 text-xs text-[#8a4055]">
-                  Work in sections, use enough product to coat strands, and give styles extra time to dry.
+                <p className="mt-2 text-xs">
+                  Work in sections, use enough product to coat strands, and give styles extra time
+                  to dry.
                 </p>
               </div>
 
               <div>
                 <h4 className="font-semibold mb-2 text-[#7a2d45] text-sm">Medium density</h4>
-                <ul className="space-y-1 ml-1 text-[#8a4055]">
+                <ul className="space-y-1 ml-1">
                   <li>• Balanced fullness and movement.</li>
                   <li>• Holds styles without feeling too bulky.</li>
                 </ul>
-                <p className="mt-2 text-xs text-[#8a4055]">
+                <p className="mt-2 text-xs">
                   Adjust product amount based on style: lighter for volume, richer for definition.
                 </p>
+              </div>
+
+              <div className="pt-2">
+                <a
+                  href="https://www.naturallycurly.com/curlreading/hair-properties/understanding-hair-density"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-[#e8789a] hover:text-[#d4607f] hover:underline text-xs transition-colors"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  Read more on hair density – NaturallyCurly
+                </a>
               </div>
             </div>
           </SectionCard>

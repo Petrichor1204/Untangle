@@ -1,1 +1,242 @@
-{}
+{
+  "914e6cbe-8a2e-43d3-a58f-d31b8d206b48": {
+    "session_id": "914e6cbe-8a2e-43d3-a58f-d31b8d206b48",
+    "hair_type": "3A",
+    "analysis": {
+      "hair_type": "3A",
+      "hair_type_label": "Type 3A \u2014 Curly & Loose",
+      "category": "curly",
+      "confidence": 0.95,
+      "characteristics": [
+        "large loose curls",
+        "springy",
+        "naturally moisturized"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "4A",
+          "label": "Type 4A \u2014 Coily",
+          "confidence": 0.14
+        },
+        {
+          "hair_type": "3C",
+          "label": "Type 3C \u2014 Curly & Tight",
+          "confidence": 0.18
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T04:52:53.290932",
+    "logs": []
+  },
+  "4947b306-b485-45c7-9cb7-c985ba83dd71": {
+    "session_id": "4947b306-b485-45c7-9cb7-c985ba83dd71",
+    "hair_type": "4A",
+    "analysis": {
+      "hair_type": "4A",
+      "hair_type_label": "Type 4A \u2014 Coily",
+      "category": "coily",
+      "confidence": 0.74,
+      "characteristics": [
+        "tightly coiled S-pattern",
+        "highly porous",
+        "needs regular moisture"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "4B",
+          "label": "Type 4B \u2014 Coily & Zigzag",
+          "confidence": 0.12
+        },
+        {
+          "hair_type": "1A",
+          "label": "Type 1A \u2014 Straight & Fine",
+          "confidence": 0.28
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T04:53:26.098055",
+    "logs": []
+  },
+  "bd77a93c-8570-4b10-980e-cebd8be5f3bf": {
+    "session_id": "bd77a93c-8570-4b10-980e-cebd8be5f3bf",
+    "hair_type": "2A",
+    "analysis": {
+      "hair_type": "2A",
+      "hair_type_label": "Type 2A \u2014 Wavy & Fine",
+      "category": "wavy",
+      "confidence": 0.88,
+      "characteristics": [
+        "loose S-waves",
+        "fine texture",
+        "low-to-medium volume"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "1A",
+          "label": "Type 1A \u2014 Straight & Fine",
+          "confidence": 0.16
+        },
+        {
+          "hair_type": "4C",
+          "label": "Type 4C \u2014 Coily & Tight",
+          "confidence": 0.29
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T04:53:58.370174",
+    "logs": []
+  },
+  "bb73b57b-f524-4ed8-849d-336f8b855d8b": {
+    "session_id": "bb73b57b-f524-4ed8-849d-336f8b855d8b",
+    "hair_type": "1A",
+    "analysis": {
+      "hair_type": "1A",
+      "hair_type_label": "Type 1A \u2014 Straight & Fine",
+      "category": "straight",
+      "confidence": 0.75,
+      "characteristics": [
+        "very fine",
+        "pin-straight",
+        "no natural wave or curl"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "1B",
+          "label": "Type 1B \u2014 Straight & Medium",
+          "confidence": 0.26
+        },
+        {
+          "hair_type": "3A",
+          "label": "Type 3A \u2014 Curly & Loose",
+          "confidence": 0.2
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T04:55:17.644762",
+    "logs": []
+  },
+  "b22815c2-d57d-408a-a1c1-3532d9d87e1e": {
+    "session_id": "b22815c2-d57d-408a-a1c1-3532d9d87e1e",
+    "hair_type": "3A",
+    "analysis": {
+      "hair_type": "3A",
+      "hair_type_label": "Type 3A \u2014 Curly & Loose",
+      "category": "curly",
+      "confidence": 0.89,
+      "characteristics": [
+        "large loose curls",
+        "springy",
+        "naturally moisturized"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "4B",
+          "label": "Type 4B \u2014 Coily & Zigzag",
+          "confidence": 0.12
+        },
+        {
+          "hair_type": "1B",
+          "label": "Type 1B \u2014 Straight & Medium",
+          "confidence": 0.23
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T04:55:29.281922",
+    "logs": []
+  },
+  "1177df21-ca90-49bd-b942-b6a316b430b7": {
+    "session_id": "1177df21-ca90-49bd-b942-b6a316b430b7",
+    "hair_type": "1A",
+    "analysis": {
+      "hair_type": "1A",
+      "hair_type_label": "Type 1A \u2014 Straight & Fine",
+      "category": "straight",
+      "confidence": 0.92,
+      "characteristics": [
+        "very fine",
+        "pin-straight",
+        "no natural wave or curl"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "3B",
+          "label": "Type 3B \u2014 Curly & Medium",
+          "confidence": 0.22
+        },
+        {
+          "hair_type": "3C",
+          "label": "Type 3C \u2014 Curly & Tight",
+          "confidence": 0.23
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T04:59:15.249732",
+    "logs": []
+  },
+  "f7b06551-3863-46b0-be4f-454fd07c8f99": {
+    "session_id": "f7b06551-3863-46b0-be4f-454fd07c8f99",
+    "hair_type": "1B",
+    "analysis": {
+      "hair_type": "1B",
+      "hair_type_label": "Type 1B \u2014 Straight & Medium",
+      "category": "straight",
+      "confidence": 0.87,
+      "characteristics": [
+        "medium thickness",
+        "slight volume at roots",
+        "pin-straight"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "4A",
+          "label": "Type 4A \u2014 Coily",
+          "confidence": 0.22
+        },
+        {
+          "hair_type": "1A",
+          "label": "Type 1A \u2014 Straight & Fine",
+          "confidence": 0.17
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T05:52:51.367398",
+    "logs": []
+  },
+  "1600befa-116e-4c52-9bf2-f3578d6c5133": {
+    "session_id": "1600befa-116e-4c52-9bf2-f3578d6c5133",
+    "hair_type": "3B",
+    "analysis": {
+      "hair_type": "3B",
+      "hair_type_label": "Type 3B \u2014 Curly & Medium",
+      "category": "curly",
+      "confidence": 0.92,
+      "characteristics": [
+        "medium ringlets",
+        "lots of volume",
+        "needs moisture"
+      ],
+      "runner_up": [
+        {
+          "hair_type": "2A",
+          "label": "Type 2A \u2014 Wavy & Fine",
+          "confidence": 0.3
+        },
+        {
+          "hair_type": "4C",
+          "label": "Type 4C \u2014 Coily & Tight",
+          "confidence": 0.15
+        }
+      ],
+      "analyzer_version": "mock-1.0"
+    },
+    "created_at": "2026-03-09T05:57:38.452885",
+    "logs": []
+  }
+}
