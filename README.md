@@ -1,160 +1,174 @@
-# 🌸 hAIrly
+# Hairly
 
-**hAIrly** is an AI-powered hair care companion that helps you understand your hair, build personalized routines, and track your journey — all in one place. Upload a photo, get an instant hair analysis, and unlock a custom care plan, style suggestions, and a learning library built around your specific texture.
-
----
-
-## Features
-
-**Hair Analysis**
-Upload a photo of your hair and the AI will identify your hair type, texture characteristics, and moisture profile. Results feed directly into your care plan and style suggestions.
-
-**Personalized Care Plan**
-A structured 8-week plan with daily, weekly, and nightly steps tailored to your hair type. Each step is completable, has a tutorial link, and can be pinned as a reminder. Completing every step earns a bonus coin reward.
-
-**Progress Tracking**
-Log your hair journey with mood ratings, written notes, and a 5-star hair rating. Entries are saved per session and displayed chronologically. Every saved entry extends your streak and earns coins.
-
-**Style Suggestions**
-Get hairstyle recommendations matched to your occasion, available time, current mood, and local weather. Save your favourite looks to Bookmarks for quick access later.
-
-**Learn**
-An interactive library covering hair types (1–4), porosity, and density. Each section includes a care routine, common mistakes, clickable trusted resources, and video links. Visiting the Learn page each day earns coins.
-
-**Streaks & Coins**
-A gamification layer that keeps motivation high. Your streak updates automatically when you log an entry, visit Learn, or complete a task. Coins accumulate across all actions and are displayed on the streak card.
-
-**Reminders**
-Set custom reminders for any care step or routine directly from the Care Plan or Tracking pages.
+**Hairly** is a smart consultation and booking system for textured-hair stylists. Clients complete a structured hair intake form before their appointment. Stylists receive a full profile — hair type, density, porosity, treatment history, preparation status — along with an estimated service time and suggested price range, before anyone sits in the chair.
 
 ---
 
-## Tech Stack
+## The problem it solves
+
+- Clients underestimating their hair density and booking short slots for long styles
+- Arriving unprepared with unwashed, matted hair
+- Stylists having to guess the price mid-appointment
+- Surprise chemical damage discovered at the chair
+
+Hairly moves the consultation out of the chair and into a structured digital form.
+
+---
+
+## How it works
+
+1. **Stylist creates an account** and sets up their services with base prices and estimated hours
+2. **Stylist shares their intake link** — `hairly.app/intake/your-name` — with a client before the appointment
+3. **Client fills out a 5-step intake form** covering hair details, history, preparation status, and style goals
+4. **Hairly estimates** service time, prep time, and suggested price range using rule-based logic
+5. **Stylist reviews** the client profile on their dashboard before confirming the appointment
+
+---
+
+## Tech stack
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 18 (Create React App) |
-| Styling | Tailwind CSS |
+| Frontend | Next.js 14 (App Router) |
+| Styling | Tailwind CSS with custom petal color palette |
 | Icons | Lucide React |
 | HTTP client | Axios |
-| Backend | FastAPI (Python) — runs separately on `localhost:8000` |
-| Persistence | localStorage (streak, coins, reminders) + backend database |
+| Backend | FastAPI (Python) on `localhost:8000` |
+| Database | SQLite (dev) / PostgreSQL (prod) via SQLAlchemy |
+| Auth | JWT (python-jose) + bcrypt (passlib) |
+| Estimation | Rule-based logic — no ML required |
 
 ---
 
-## Getting Started
+## Getting started
 
 ### Prerequisites
 
 - Node.js 18+
-- The hAIrly FastAPI backend running on `http://localhost:8000`
+- Python 3.11+
 
-### Install & run
+### Frontend
 
 ```bash
-# Clone the repo
-git clone <your-repo-url>
-cd hairly-frontend
-
-# Install dependencies
 npm install
-
-# Start the development server
-npm start
+npm run dev
 ```
 
-The app opens at [http://localhost:3000](http://localhost:3000).
+Opens at [http://localhost:3000](http://localhost:3000).
+
+### Backend
+
+```bash
+cd backend
+bash start.sh
+```
+
+Runs at [http://localhost:8000](http://localhost:8000). API docs at [http://localhost:8000/docs](http://localhost:8000/docs).
+
+The backend creates a `hairly.db` SQLite file automatically on first run. No setup required.
 
 ### Environment variables
 
-Create a `.env` file in the project root if your backend runs on a different URL:
-
+`.env.local` (frontend):
 ```
-REACT_APP_API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+Backend environment variables (optional):
+```
+DATABASE_URL=postgresql://user:password@localhost/hairly   # defaults to SQLite
+SECRET_KEY=your-secret-key-here                            # defaults to dev key
 ```
 
 ### Available scripts
 
 | Command | Description |
 |---|---|
-| `npm start` | Start dev server at localhost:3000 |
-| `npm run build` | Build optimised production bundle |
-| `npm test` | Run tests in watch mode |
+| `npm run dev` | Start Next.js dev server |
+| `npm run build` | Build production bundle |
+| `npm start` | Run production server |
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
-src/
-├── api.js                        # Axios instance + all API calls
-├── App.js                        # Root component + page routing
-├── components/
-│   ├── BookmarksPage.js          # Saved hairstyles overlay
-│   ├── CarePlans.js              # 8-week care plan + task completion
-│   ├── HairAnalysis.js           # Photo upload + AI analysis results
-│   ├── Home.js                   # Dashboard / landing for logged-in users
-│   ├── LandingPage.js            # Public marketing landing page
-│   ├── Learn.js                  # Hair education library
-│   ├── Login.js                  # Login form
-│   ├── MoodSelector.js           # Mood picker used in journal
-│   ├── Navigation.js             # Top nav bar
-│   ├── ProgressTracking.js       # Journal, reminders, and history
-│   ├── Signup.js                 # Sign-up form
-│   ├── Streak.js                 # Streak + coin card (used on Home & Learn)
-│   ├── StyleRecommendations.js   # Style recommendation UI
-│   └── StyleSuggestionsPage.js   # Full style suggestions overlay
-├── utils/
-│   ├── moodConfig.js             # Mood emoji mapping
-│   ├── fileUtils.js              # File helpers
-│   └── streakUtils.js            # Streak + coin localStorage logic
-└── index.js
-
-public/
-└── data/
-    └── hair_types.json           # Hair type content (characteristics, routines, links)
+hairly/
+├── app/                              # Next.js App Router pages
+│   ├── page.js                       # Landing page (stylist marketing)
+│   ├── login/page.js                 # Login
+│   ├── signup/page.js                # Stylist signup with slug selection
+│   ├── onboarding/page.js            # Service setup after signup
+│   ├── dashboard/page.js             # Stylist dashboard — intake link + submissions
+│   └── intake/
+│       └── [slug]/
+│           ├── page.js               # Client: choose service + enter details
+│           └── [token]/
+│               ├── page.js           # Client: 5-step hair intake wizard
+│               └── done/page.js      # Client: confirmation + estimate
+├── lib/
+│   └── api.js                        # Axios client with JWT interceptor
+├── backend/
+│   ├── main.py                       # All FastAPI routes
+│   ├── models.py                     # SQLAlchemy ORM models
+│   ├── schemas.py                    # Pydantic request/response schemas
+│   ├── database.py                   # DB connection + session factory
+│   ├── auth.py                       # JWT creation + verification
+│   ├── estimator.py                  # Complexity estimation logic
+│   └── requirements.txt
+└── tailwind.config.js
 ```
 
 ---
 
-## How the Streak & Coins Work
+## The intake wizard (5 steps)
 
-| Action | Coins | Streak |
-|---|---|---|
-| Visiting Learn (once per day) | +5 | ✅ |
-| Saving a progress log entry | +10 | ✅ |
-| Completing a care plan step | +15 | ✅ |
-| Finishing all care plan tasks | +50 bonus | ✅ |
-
-Streak count and coin total are stored in `localStorage` and visible on the streak card on both the Home and Learn pages.
+| Step | Fields |
+|---|---|
+| Hair details | Length, density, porosity, strand thickness, condition |
+| Hair history | Last relaxer, last color, last heat treatment, breakage |
+| Preparation | Washed, detangled, product-free (day of appointment) |
+| Goals | Style inspiration link, preferred duration, scalp issues |
+| Review | Full summary before submit |
 
 ---
 
-## Screenshots
+## Estimation logic
 
-<!-- Replace the placeholder lines below with your actual images -->
-<!-- Tip: drag images into your GitHub repo and paste the generated URLs here -->
+All estimation is rule-based in [`backend/estimator.py`](backend/estimator.py). No machine learning.
 
-### Landing Page
-<!-- ![Landing page](screenshots/landing.png) -->
+```
+estimated_hours = base_service_hours × length_multiplier × density_multiplier + condition_extra
+price_range     = [base_price × 0.9, base_price × 1.1] adjusted by same multipliers
+prep_time       = +20 min if not washed, +30 min if not detangled, +10 min if product-heavy
+```
 
-### Hair Analysis
-<!-- ![Hair analysis](screenshots/analysis.png) -->
+Multipliers:
 
-### Care Plan
-<!-- ![Care plan](screenshots/care-plan.png) -->
+| Factor | Low | Medium | High |
+|---|---|---|---|
+| Length (shoulder = 1.0) | 0.7 (TWA) → 1.6 (waist+) | — | — |
+| Density | 0.85 | 1.0 | 1.3 |
+| Condition extra | 0h (healthy) | 0.5h (dry) / 0.75h (transitioning) | 1.0h (damaged) |
 
-### Progress Tracking
-<!-- ![Progress tracking](screenshots/tracking.png) -->
+---
 
-### Style Suggestions
-<!-- ![Style suggestions](screenshots/styles.png) -->
+## API reference
 
-### Learn
-<!-- ![Learn page](screenshots/learn.png) -->
-
-### Streak & Coins
-<!-- ![Streak card](screenshots/streak.png) -->
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| `POST` | `/auth/register` | — | Create stylist account |
+| `POST` | `/auth/login` | — | Get JWT |
+| `GET` | `/stylist/{slug}` | — | Public profile + service list |
+| `GET` | `/services` | Stylist | List own services |
+| `POST` | `/services` | Stylist | Add a service |
+| `PUT` | `/services/{id}` | Stylist | Edit a service |
+| `DELETE` | `/services/{id}` | Stylist | Remove a service |
+| `POST` | `/intake/{slug}/start` | — | Create intake session, return token |
+| `GET` | `/intake/{token}` | — | Get session info |
+| `POST` | `/intake/{token}/submit` | — | Submit hair profile, run estimation |
+| `GET` | `/dashboard/intakes` | Stylist | All submissions |
+| `GET` | `/dashboard/intakes/{token}` | Stylist | Single submission detail |
 
 ---
 

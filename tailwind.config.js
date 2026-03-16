@@ -1,7 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
+    "./app/**/*.{js,jsx,ts,tsx,mdx}",
+    "./components/**/*.{js,jsx,ts,tsx,mdx}",
+    "./lib/**/*.{js,jsx,ts,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -9,26 +11,39 @@ module.exports = {
         'display': ['"Cormorant Garamond"', 'Georgia', 'serif'],
         'body':    ['Nunito', 'system-ui', 'sans-serif'],
         'brand':   ['"Dancing Script"', 'cursive'],
-        'impact':  ['Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
       },
       colors: {
-        petal: {
-          50:  '#fff8f5',
-          100: '#ffe8ee',
-          200: '#ffd0dc',
-          300: '#f4a7b9',
-          400: '#e8789a',
-          500: '#d4607f',
-          600: '#c04567',
-          700: '#a33354',
-          800: '#7a2d45',
-          900: '#5c1f33',
+        // Caramel · coffee · shea butter
+        warm: {
+          50:  '#fdfaf5',
+          100: '#f8f0e0',
+          200: '#f0dfc4',
+          300: '#e5c99a',
+          400: '#d4a86a',
+          500: '#c08840',   // golden caramel
+          600: '#a06d2e',   // coffee caramel
+          700: '#7a4f20',   // rich coffee
+          800: '#523318',   // dark coffee
+          900: '#2e1c0a',   // espresso
+        },
+        // Lavender · coconut · soft purple
+        lav: {
+          50:  '#f7f5fc',
+          100: '#eeeaf8',
+          200: '#dcd4f2',
+          300: '#c3b8e8',
+          400: '#a796d8',   // soft lavender
+          500: '#8b74c8',   // lavender
+          600: '#7260b2',
+          700: '#584890',
+          800: '#3c3166',
+          900: '#221c3a',
         },
       },
       boxShadow: {
-        'petal':    '0 4px 24px rgba(232, 120, 154, 0.10)',
-        'petal-md': '0 6px 32px rgba(232, 120, 154, 0.15)',
-        'petal-lg': '0 8px 40px rgba(232, 120, 154, 0.20)',
+        'warm':    '0 4px 24px rgba(160, 109, 46, 0.10)',
+        'warm-md': '0 6px 32px rgba(160, 109, 46, 0.14)',
+        'warm-lg': '0 8px 48px rgba(160, 109, 46, 0.18)',
       },
     },
   },

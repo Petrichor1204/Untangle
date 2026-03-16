@@ -1,36 +1,23 @@
 """
-main.py — hAIrly FastAPI backend
+main.py — hAIrly API v2
 Run with:  uvicorn main:app --reload --port 8000
-
-All endpoints match the calls already made by the frontend's src/api.js
 """
 
-import os
 import uuid
-import random
-from pathlib import Path
-from typing import Optional
-
-from fastapi import FastAPI, File, UploadFile, HTTPException, Query
+from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
-from analyzer import analyze_image
-from care_plans import get_plan_for_session
-from storage import (
-    create_session,
-    get_session,
-    add_log,
-    get_logs,
-    get_bookmarks,
-    add_bookmark,
-    remove_bookmark,
-)
+from database import engine, get_db, Base
+import models
+import schemas
+import auth
+from estimator import estimate_complexity
 
-# ── App setup ────────────────────────────────────────────────────────────────
+# Create all tables on startup
+Base.metadata.create_all(bind=engine)
 
-app = FastAPI(title="hAIrly API", version="1.0.0")
+app = FastAPI(title="hAIrly API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -40,276 +27,369 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-UPLOADS_DIR = Path(__file__).parent / "uploads"
-UPLOADS_DIR.mkdir(exist_ok=True)
 
-
-# ── Pydantic models ───────────────────────────────────────────────────────────
-
-class LogRequest(BaseModel):
-    session_id: str
-    notes: str = ""
-    mood: str = "neutral"
-    rating: int = 3
-
-
-class StyleRequest(BaseModel):
-    session_id: str
-    occasion: str = "everyday"
-    time_available: str = "15 minutes"
-    current_mood: str = "relaxed"
-
-
-class BookmarkRequest(BaseModel):
-    session_id: str
-    style: dict
-
-
-class BookmarkDeleteRequest(BaseModel):
-    session_id: str
-    style_id: str
-
-
-# ── Style suggestion data ────────────────────────────────────────────────────
-
-STYLE_LIBRARY = {
-    "straight": [
-        {"id": "s1", "name": "Sleek High Pony", "description": "A polished high ponytail with a smooth finish — effortlessly chic.", "time_required": "10 min", "difficulty": "easy", "occasions": ["work", "everyday", "date"]},
-        {"id": "s2", "name": "Blowout Waves", "description": "Soft, bouncy waves created with a round brush blow-dry.", "time_required": "20 min", "difficulty": "medium", "occasions": ["date", "event", "everyday"]},
-        {"id": "s3", "name": "Half-Up Twist", "description": "Top half twisted back and pinned — sweet and simple.", "time_required": "5 min", "difficulty": "easy", "occasions": ["everyday", "casual", "school"]},
-        {"id": "s4", "name": "Straight & Glossy", "description": "Flat-ironed with a shine serum for mirror-like finish.", "time_required": "15 min", "difficulty": "easy", "occasions": ["work", "event", "date"]},
-        {"id": "s5", "name": "French Tuck Braid", "description": "A loose French braid tucked and pinned at the nape.", "time_required": "10 min", "difficulty": "medium", "occasions": ["casual", "everyday", "event"]},
-    ],
-    "wavy": [
-        {"id": "w1", "name": "Beach Wave Refresh", "description": "Scrunch in sea salt spray and diffuse for effortless beachy texture.", "time_required": "10 min", "difficulty": "easy", "occasions": ["casual", "everyday", "beach"]},
-        {"id": "w2", "name": "Messy Bun", "description": "Gather waves into a loose, textured bun — perfectly undone.", "time_required": "3 min", "difficulty": "easy", "occasions": ["everyday", "casual", "quick"]},
-        {"id": "w3", "name": "Twisted Half-Up", "description": "Twist the top sections back for a romantic, soft look.", "time_required": "8 min", "difficulty": "easy", "occasions": ["date", "event", "everyday"]},
-        {"id": "w4", "name": "Diffused Wave Definition", "description": "Apply mousse and diffuse for maximum wave clumping and volume.", "time_required": "25 min", "difficulty": "medium", "occasions": ["event", "date", "work"]},
-        {"id": "w5", "name": "Braided Crown", "description": "Two Dutch braids wrapped and pinned for a crown effect.", "time_required": "15 min", "difficulty": "medium", "occasions": ["event", "festival", "date"]},
-    ],
-    "curly": [
-        {"id": "c1", "name": "Wash-and-Go", "description": "Define curls with cream and gel on soaking wet hair, then air-dry.", "time_required": "30 min (dry time)", "difficulty": "medium", "occasions": ["everyday", "casual", "work"]},
-        {"id": "c2", "name": "Twist-Out", "description": "Two-strand twists overnight, unraveled in the morning for stretched curls.", "time_required": "20 min (+ overnight)", "difficulty": "medium", "occasions": ["work", "event", "everyday"]},
-        {"id": "c3", "name": "Pineapple Updo", "description": "Gather curls to crown of head in a loose pineapple bun.", "time_required": "2 min", "difficulty": "easy", "occasions": ["quick", "casual", "everyday"]},
-        {"id": "c4", "name": "Braid-Out", "description": "Cornrows or box braids unraveled for a stretched, defined pattern.", "time_required": "30 min (+ overnight)", "difficulty": "hard", "occasions": ["event", "date", "special"]},
-        {"id": "c5", "name": "Defined Bantu Knots", "description": "Small coiled knots pinned close to scalp — bold and beautiful.", "time_required": "45 min", "difficulty": "hard", "occasions": ["event", "festival", "special"]},
-    ],
-    "coily": [
-        {"id": "k1", "name": "Two-Strand Twist Style", "description": "Defined two-strand twists for a versatile, moisturized protective style.", "time_required": "60 min", "difficulty": "medium", "occasions": ["everyday", "work", "casual"]},
-        {"id": "k2", "name": "Flat Twist Updo", "description": "Flat twists pinned up into an elegant updo with coil ends.", "time_required": "45 min", "difficulty": "hard", "occasions": ["event", "work", "date"]},
-        {"id": "k3", "name": "Stretched Afro Puff", "description": "Banded, stretched afro puff for volume without shrinkage.", "time_required": "15 min", "difficulty": "easy", "occasions": ["everyday", "casual", "quick"]},
-        {"id": "k4", "name": "Mini Braids", "description": "Small braids throughout for a long-lasting protective style.", "time_required": "120 min", "difficulty": "hard", "occasions": ["protective", "travel", "low-maintenance"]},
-        {"id": "k5", "name": "Bantu Knot-Out", "description": "Bantu knots overnight, released for a defined coily pattern.", "time_required": "30 min (+ overnight)", "difficulty": "medium", "occasions": ["event", "date", "special"]},
-    ],
-}
-
-# Mood → style characteristic mappings
-MOOD_STYLE_MAP = {
-    "relaxed": ["easy", "easy", "medium"],
-    "energetic": ["medium", "hard", "medium"],
-    "romantic": ["medium", "medium", "easy"],
-    "professional": ["easy", "medium", "medium"],
-    "creative": ["hard", "medium", "hard"],
-    "tired": ["easy", "easy", "easy"],
-}
-
-WEATHER_CONDITIONS = ["sunny", "cloudy", "humid", "windy", "rainy", "dry"]
-
-
-# ── Routes ───────────────────────────────────────────────────────────────────
+# ── Health ────────────────────────────────────────────────────────────────────
 
 @app.get("/")
-def root():
-    return {"message": "hAIrly API is running", "docs": "/docs"}
+def health():
+    return {"status": "ok", "service": "hAIrly API", "version": "2.0.0"}
 
 
-@app.post("/upload")
-async def upload_hair_photo(file: UploadFile = File(...)):
-    """
-    Accept a hair photo, run the analyzer, create a session, return results.
-    Frontend: HairAnalysis.js → uploadHairPhoto()
-    """
-    if not file.content_type or not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="File must be an image.")
+# ── Auth ──────────────────────────────────────────────────────────────────────
 
-    session_id = str(uuid.uuid4())
-    ext = Path(file.filename).suffix if file.filename else ".jpg"
-    save_path = UPLOADS_DIR / f"{session_id}{ext}"
+@app.post("/auth/register", response_model=schemas.TokenResponse)
+def register(req: schemas.RegisterRequest, db: Session = Depends(get_db)):
+    if db.query(models.User).filter(models.User.email == req.email).first():
+        raise HTTPException(400, "Email already registered")
 
-    content = await file.read()
-    with open(save_path, "wb") as f:
-        f.write(content)
+    if req.role == "stylist":
+        if not req.slug:
+            raise HTTPException(400, "A URL slug is required for stylist accounts")
+        slug = req.slug.lower().strip()
+        if not slug.replace("-", "").isalnum():
+            raise HTTPException(400, "Slug may only contain letters, numbers, and hyphens")
+        if db.query(models.StylistProfile).filter(models.StylistProfile.slug == slug).first():
+            raise HTTPException(400, "That URL slug is already taken")
 
-    analysis = analyze_image(save_path)
-    session = create_session(session_id, analysis["hair_type"], analysis)
-
-    return {
-        "session_id": session_id,
-        "analysis": analysis,
-        "message": "Hair photo analyzed successfully.",
-    }
-
-
-@app.get("/plan")
-def get_care_plan(session_id: str = Query(...)):
-    """
-    Return a full care plan for the session's detected hair type.
-    Frontend: CarePlans.js → getCarePlan()
-    """
-    session = get_session(session_id)
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found. Please upload a hair photo first.")
-
-    plan = get_plan_for_session(session)
-    return plan
-
-
-@app.post("/log")
-def log_progress(body: LogRequest):
-    """
-    Save a progress journal entry for the session.
-    Frontend: ProgressTracking.js → saveProgressLog()
-    """
-    entry = add_log(
-        session_id=body.session_id,
-        notes=body.notes,
-        mood=body.mood,
-        rating=max(1, min(5, body.rating)),
+    user = models.User(
+        id=str(uuid.uuid4()),
+        email=req.email,
+        password_hash=auth.hash_password(req.password),
+        name=req.name,
+        role=req.role,
     )
-    return {"success": True, "entry": entry}
+    db.add(user)
+    db.flush()
+
+    stylist_slug = None
+    if req.role == "stylist":
+        profile = models.StylistProfile(
+            id=str(uuid.uuid4()),
+            user_id=user.id,
+            slug=slug,
+            location=req.location,
+        )
+        db.add(profile)
+        stylist_slug = slug
+
+    db.commit()
+    db.refresh(user)
+
+    token = auth.create_access_token({"sub": user.id})
+    return schemas.TokenResponse(
+        access_token=token,
+        user_id=user.id,
+        name=user.name,
+        role=user.role,
+        slug=stylist_slug,
+    )
 
 
-@app.get("/history")
-def get_history(session_id: str = Query(...)):
-    """
-    Return all progress log entries for the session.
-    Frontend: ProgressTracking.js → getHistory()
-    """
-    logs = get_logs(session_id)
+@app.post("/auth/login", response_model=schemas.TokenResponse)
+def login(req: schemas.LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.email == req.email).first()
+    if not user or not auth.verify_password(req.password, user.password_hash):
+        raise HTTPException(401, "Invalid email or password")
+
+    slug = user.stylist_profile.slug if user.stylist_profile else None
+    token = auth.create_access_token({"sub": user.id})
+    return schemas.TokenResponse(
+        access_token=token,
+        user_id=user.id,
+        name=user.name,
+        role=user.role,
+        slug=slug,
+    )
+
+
+# ── Stylist public profile ────────────────────────────────────────────────────
+
+@app.get("/stylist/{slug}", response_model=schemas.StylistPublicProfile)
+def get_stylist_profile(slug: str, db: Session = Depends(get_db)):
+    profile = db.query(models.StylistProfile).filter(models.StylistProfile.slug == slug).first()
+    if not profile:
+        raise HTTPException(404, "Stylist not found")
+    return schemas.StylistPublicProfile(
+        name=profile.user.name,
+        slug=profile.slug,
+        bio=profile.bio,
+        location=profile.location,
+        services=[schemas.ServiceOut.model_validate(s) for s in profile.services],
+    )
+
+
+# ── Services (stylist only) ───────────────────────────────────────────────────
+
+@app.get("/services", response_model=list[schemas.ServiceOut])
+def list_services(
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    return db.query(models.Service).filter(
+        models.Service.stylist_id == user.stylist_profile.id
+    ).all()
+
+
+@app.post("/services", response_model=schemas.ServiceOut)
+def create_service(
+    req: schemas.ServiceCreate,
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    service = models.Service(
+        id=str(uuid.uuid4()),
+        stylist_id=user.stylist_profile.id,
+        **req.model_dump(),
+    )
+    db.add(service)
+    db.commit()
+    db.refresh(service)
+    return service
+
+
+@app.put("/services/{service_id}", response_model=schemas.ServiceOut)
+def update_service(
+    service_id: str,
+    req: schemas.ServiceUpdate,
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    service = db.query(models.Service).filter(
+        models.Service.id == service_id,
+        models.Service.stylist_id == user.stylist_profile.id,
+    ).first()
+    if not service:
+        raise HTTPException(404, "Service not found")
+    for k, v in req.model_dump(exclude_none=True).items():
+        setattr(service, k, v)
+    db.commit()
+    db.refresh(service)
+    return service
+
+
+@app.delete("/services/{service_id}")
+def delete_service(
+    service_id: str,
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    service = db.query(models.Service).filter(
+        models.Service.id == service_id,
+        models.Service.stylist_id == user.stylist_profile.id,
+    ).first()
+    if not service:
+        raise HTTPException(404, "Service not found")
+    db.delete(service)
+    db.commit()
+    return {"ok": True}
+
+
+# ── Stylist own profile ───────────────────────────────────────────────────────
+
+@app.get("/stylist/me/profile")
+def get_own_profile(user: models.User = Depends(auth.require_stylist)):
     return {
-        "session_id": session_id,
-        "total_entries": len(logs),
-        "logs": logs,
+        "name": user.name,
+        "email": user.email,
+        "slug": user.stylist_profile.slug,
+        "bio": user.stylist_profile.bio,
+        "location": user.stylist_profile.location,
+        "instagram": user.stylist_profile.instagram,
     }
 
 
-@app.post("/style-suggestions")
-def get_style_suggestions(body: StyleRequest):
-    """
-    Return 3–5 style suggestions based on hair type, mood, occasion, and time.
-    Frontend: StyleSuggestionsPage.js
-    """
-    session = get_session(body.session_id)
-    category = "curly"  # default fallback
-    if session:
-        category = session.get("analysis", {}).get("category", "curly")
+@app.put("/stylist/me/profile")
+def update_own_profile(
+    req: schemas.ProfileUpdate,
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    for k, v in req.model_dump(exclude_none=True).items():
+        setattr(user.stylist_profile, k, v)
+    db.commit()
+    return {"ok": True}
 
-    styles = STYLE_LIBRARY.get(category, STYLE_LIBRARY["curly"])
 
-    # Filter by time available (very basic)
-    time_minutes = 60
-    time_str = body.time_available.lower()
-    for word in time_str.split():
-        if word.isdigit():
-            time_minutes = int(word)
-            break
+# ── Intake ────────────────────────────────────────────────────────────────────
 
-    # Filter and score
-    preferred_difficulties = MOOD_STYLE_MAP.get(body.current_mood.lower(), ["easy", "medium", "medium"])
+@app.post("/intake/{slug}/start", response_model=schemas.StartIntakeResponse)
+def start_intake(slug: str, req: schemas.StartIntakeRequest, db: Session = Depends(get_db)):
+    profile = db.query(models.StylistProfile).filter(
+        models.StylistProfile.slug == slug
+    ).first()
+    if not profile:
+        raise HTTPException(404, "Stylist not found")
 
-    def score(style):
-        s = 0
-        if style["difficulty"] in preferred_difficulties:
-            s += 2
-        if body.occasion.lower() in style.get("occasions", []):
-            s += 3
-        return s
+    service = db.query(models.Service).filter(
+        models.Service.id == req.service_id,
+        models.Service.stylist_id == profile.id,
+    ).first()
+    if not service:
+        raise HTTPException(404, "Service not found")
 
-    filtered = sorted(styles, key=score, reverse=True)[:5]
+    session = models.IntakeSession(
+        id=str(uuid.uuid4()),
+        token=str(uuid.uuid4()),
+        stylist_id=profile.id,
+        service_id=service.id,
+        client_name=req.client_name,
+        client_email=req.client_email,
+        status="pending",
+    )
+    db.add(session)
+    db.commit()
 
-    weather = random.choice(WEATHER_CONDITIONS)
+    return schemas.StartIntakeResponse(
+        token=session.token,
+        service=schemas.ServiceOut.model_validate(service),
+        stylist_name=profile.user.name,
+    )
+
+
+@app.get("/intake/{token}")
+def get_intake_session(token: str, db: Session = Depends(get_db)):
+    session = db.query(models.IntakeSession).filter(
+        models.IntakeSession.token == token
+    ).first()
+    if not session:
+        raise HTTPException(404, "Intake session not found")
+    return {
+        "token": session.token,
+        "client_name": session.client_name,
+        "service": schemas.ServiceOut.model_validate(session.service) if session.service else None,
+        "stylist_name": session.stylist.user.name,
+        "stylist_slug": session.stylist.slug,
+        "status": session.status,
+        "submitted": session.hair_profile is not None,
+    }
+
+
+@app.post("/intake/{token}/submit", response_model=schemas.IntakeSubmitResponse)
+def submit_intake(token: str, req: schemas.HairProfileSubmit, db: Session = Depends(get_db)):
+    session = db.query(models.IntakeSession).filter(
+        models.IntakeSession.token == token
+    ).first()
+    if not session:
+        raise HTTPException(404, "Intake session not found")
+    if session.hair_profile:
+        raise HTTPException(400, "This intake has already been submitted")
+
+    hair = models.HairProfile(
+        id=str(uuid.uuid4()),
+        session_id=session.id,
+        **req.model_dump(),
+    )
+    db.add(hair)
+    db.flush()
+
+    service = session.service
+    est_hours, prep_mins, price_min, price_max, score = estimate_complexity(service, hair)
+
+    estimate = models.ComplexityEstimate(
+        id=str(uuid.uuid4()),
+        session_id=session.id,
+        estimated_service_hours=est_hours,
+        prep_time_minutes=prep_mins,
+        suggested_price_min=price_min,
+        suggested_price_max=price_max,
+        complexity_score=score,
+    )
+    db.add(estimate)
+    db.commit()
+
+    return schemas.IntakeSubmitResponse(
+        message="Intake submitted successfully",
+        client_name=session.client_name,
+        service_name=service.name,
+        stylist_name=session.stylist.user.name,
+        estimate=schemas.EstimateOut(
+            estimated_service_hours=est_hours,
+            prep_time_minutes=prep_mins,
+            suggested_price_min=price_min,
+            suggested_price_max=price_max,
+            complexity_score=score,
+        ),
+    )
+
+
+# ── Dashboard ─────────────────────────────────────────────────────────────────
+
+@app.get("/dashboard/intakes")
+def list_intakes(
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    sessions = (
+        db.query(models.IntakeSession)
+        .filter(models.IntakeSession.stylist_id == user.stylist_profile.id)
+        .order_by(models.IntakeSession.created_at.desc())
+        .all()
+    )
+    return [
+        {
+            "token": s.token,
+            "client_name": s.client_name,
+            "client_email": s.client_email,
+            "service_name": s.service.name if s.service else None,
+            "status": s.status,
+            "submitted": s.hair_profile is not None,
+            "created_at": s.created_at.isoformat() if s.created_at else None,
+            "estimate": {
+                "estimated_service_hours": s.estimate.estimated_service_hours,
+                "prep_time_minutes": s.estimate.prep_time_minutes,
+                "suggested_price_min": s.estimate.suggested_price_min,
+                "suggested_price_max": s.estimate.suggested_price_max,
+            } if s.estimate else None,
+        }
+        for s in sessions
+    ]
+
+
+@app.get("/dashboard/intakes/{token}")
+def get_intake_detail(
+    token: str,
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    session = db.query(models.IntakeSession).filter(
+        models.IntakeSession.token == token,
+        models.IntakeSession.stylist_id == user.stylist_profile.id,
+    ).first()
+    if not session:
+        raise HTTPException(404, "Intake not found")
+
+    hair = session.hair_profile
+    est = session.estimate
 
     return {
-        "session_id": body.session_id,
-        "suggestions": filtered,
-        "weather": weather,
-        "weather_tip": _weather_tip(weather, category),
-        "occasion": body.occasion,
-        "mood": body.current_mood,
+        "token": session.token,
+        "client_name": session.client_name,
+        "client_email": session.client_email,
+        "service": schemas.ServiceOut.model_validate(session.service) if session.service else None,
+        "status": session.status,
+        "created_at": session.created_at.isoformat() if session.created_at else None,
+        "hair_profile": {
+            "length": hair.length,
+            "density": hair.density,
+            "porosity": hair.porosity,
+            "thickness": hair.thickness,
+            "condition": hair.condition,
+            "last_relaxer": hair.last_relaxer,
+            "last_color": hair.last_color,
+            "last_heat": hair.last_heat,
+            "has_breakage": hair.has_breakage,
+            "is_washed": hair.is_washed,
+            "is_detangled": hair.is_detangled,
+            "is_product_free": hair.is_product_free,
+            "style_inspiration": hair.style_inspiration,
+            "preferred_duration_hours": hair.preferred_duration_hours,
+            "scalp_issues": hair.scalp_issues,
+        } if hair else None,
+        "estimate": {
+            "estimated_service_hours": est.estimated_service_hours,
+            "prep_time_minutes": est.prep_time_minutes,
+            "suggested_price_min": est.suggested_price_min,
+            "suggested_price_max": est.suggested_price_max,
+            "complexity_score": est.complexity_score,
+        } if est else None,
     }
-
-
-@app.get("/bookmarks")
-def list_bookmarks(session_id: str = Query(...)):
-    """
-    Return all bookmarked styles for the session.
-    Frontend: BookmarksPage.js
-    """
-    bookmarks = get_bookmarks(session_id)
-    return {"session_id": session_id, "bookmarks": bookmarks}
-
-
-@app.post("/bookmark-style")
-def save_bookmark(body: BookmarkRequest):
-    """
-    Add a style to bookmarks.
-    Frontend: StyleSuggestionsPage.js → bookmark toggle
-    """
-    bookmark = add_bookmark(body.session_id, body.style)
-    return {"success": True, "bookmark": bookmark}
-
-
-@app.delete("/bookmark-style")
-def delete_bookmark(body: BookmarkDeleteRequest):
-    """
-    Remove a style from bookmarks.
-    Frontend: StyleSuggestionsPage.js → bookmark toggle (remove)
-    """
-    removed = remove_bookmark(body.session_id, body.style_id)
-    if not removed:
-        raise HTTPException(status_code=404, detail="Bookmark not found.")
-    return {"success": True, "message": "Bookmark removed."}
-
-
-# ── Helpers ──────────────────────────────────────────────────────────────────
-
-def _weather_tip(weather: str, category: str) -> str:
-    tips = {
-        "humid": {
-            "straight": "Humidity can cause frizz — use an anti-humidity spray today.",
-            "wavy": "Humidity is your friend! Embrace the extra wave definition.",
-            "curly": "Seal your curls with a strong hold gel to combat humidity frizz.",
-            "coily": "Use extra sealing oil today to lock out humidity.",
-        },
-        "windy": {
-            "straight": "Consider a sleek updo to avoid tangles in the wind.",
-            "wavy": "A loose braid is perfect for windy days — pretty and tangle-free.",
-            "curly": "Pin your curls up or try a puff to keep them defined in wind.",
-            "coily": "A protective updo or bun is ideal for windy weather.",
-        },
-        "rainy": {
-            "straight": "Rain can flatten straight hair — a high pony or bun is your best bet.",
-            "wavy": "Rain will enhance your waves! Let them air-dry naturally.",
-            "curly": "Embrace the moisture — apply extra gel and let rain enhance your curls.",
-            "coily": "Protect coily hair from rain with a satin-lined hat or umbrella.",
-        },
-        "dry": {
-            "straight": "Add extra shine serum today to combat static in dry air.",
-            "wavy": "Spritz with a water/leave-in mix to keep waves hydrated.",
-            "curly": "Use a heavier cream today — dry air steals moisture fast.",
-            "coily": "Layer extra butter and oil today to combat dry air.",
-        },
-        "sunny": {
-            "straight": "UV rays can fade color — use a UV-protectant spray if colored.",
-            "wavy": "Sunny days are perfect for wash-and-air-dry — enjoy the natural texture.",
-            "curly": "Sun can dry out curls — keep a spritz bottle handy for refreshing.",
-            "coily": "Wear a hat or use UV-protecting products in direct sun.",
-        },
-        "cloudy": {
-            "straight": "Great day for any style — no humidity or UV to worry about!",
-            "wavy": "Ideal conditions for defined waves — go with your usual routine.",
-            "curly": "Cloudy days are perfect for air-drying without heat.",
-            "coily": "Great styling day — no extreme weather to work around.",
-        },
-    }
-    return tips.get(weather, {}).get(category, "Check the forecast and adjust your routine accordingly.")
