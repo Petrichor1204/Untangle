@@ -175,3 +175,9 @@ Multipliers:
 ## License
 
 MIT
+
+## Screenshots
+
+<img width="1470" height="956" alt="Screenshot 2026-03-16 at 11 18 57 AM" src="https://github.com/user-attachments/assets/227b8faa-d1eb-469c-8646-85af48c22d0e" />
+
+<img width="1470" height="885" alt="Screenshot 2026-03-16 at 11 20 42 AM" src="https://github.com/user-attachments/assets/1d3dd990-9c76-4e15-969b-858a686f6f07" />
