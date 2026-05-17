@@ -1,62 +1,57 @@
 # Untangle Backend
 
-FastAPI backend for the Untangle hair care app.
-
-## Setup
-
-```bash
-cd backend
-pip install -r requirements.txt
-```
+FastAPI backend for the Untangle stylist-intake app. See the [root README](../README.md) for the product overview, full API reference, and email notification details. This file covers backend-specific setup and layout.
 
 ## Run
 
 ```bash
-uvicorn main:app --reload --port 8000
-```
-
-Or use the startup script:
-
-```bash
+cd backend
 bash start.sh
 ```
 
-API docs available at: http://localhost:8000/docs
+The script creates a `venv/` on first run, installs deps, and starts uvicorn on `http://127.0.0.1:8000`. API docs at `/docs`.
 
-## Endpoints
+To run without the script:
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/upload` | Upload hair photo, get analysis + session_id |
-| GET | `/plan?session_id=` | Get care plan for your hair type |
-| POST | `/log` | Save a progress journal entry |
-| GET | `/history?session_id=` | Get all journal entries |
-| POST | `/style-suggestions` | Get style suggestions by mood/occasion |
-| GET | `/bookmarks?session_id=` | List saved style bookmarks |
-| POST | `/bookmark-style` | Save a bookmark |
-| DELETE | `/bookmark-style` | Remove a bookmark |
+```bash
+./venv/bin/uvicorn main:app --reload --port 8000
+```
 
-## Upgrading the ML model
+## Layout
 
-The analyzer is in `analyzer.py`. To swap in a real TensorFlow model:
+| File | Purpose |
+|---|---|
+| `main.py` | All FastAPI routes, SQLite-safe migrations, and the lifespan hook that starts APScheduler |
+| `models.py` | SQLAlchemy ORM models (`User`, `StylistProfile`, `Service`, `IntakeSession`, `HairProfile`, `ComplexityEstimate`) |
+| `schemas.py` | Pydantic request/response schemas |
+| `database.py` | Engine + `SessionLocal` + `get_db` dependency |
+| `auth.py` | JWT creation/verification + `require_stylist` dependency |
+| `estimator.py` | Rule-based complexity estimation — see root README for the formula |
+| `email_service.py` | `send_email()` — Resend if `RESEND_API_KEY` is set, otherwise console fallback |
+| `email_templates.py` | HTML/text bodies for the 4 transactional emails |
+| `scheduler.py` | APScheduler jobs: 24h appointment reminder, 48h stylist follow-up |
+| `tests/` | pytest suite |
 
-1. Train/download your model and save as `model.h5` in the `backend/` folder
-2. In `analyzer.py`, replace the body of `analyze_image()`:
-   ```python
-   import tensorflow as tf
-   model = tf.keras.models.load_model("model.h5")
+## Environment
 
-   def analyze_image(image_path):
-       img = preprocess(image_path)  # resize to model input size
-       predictions = model.predict(img)
-       # map predictions to hair type keys...
-   ```
-3. Change `"analyzer_version": "mock-1.0"` to `"tensorflow-2.x"`
-4. No other files need to change — the return shape stays the same
+All env vars are optional in development:
 
-## Upgrading storage
+```
+DATABASE_URL=sqlite:///./untangle.db            # default; set to a postgres URL in prod
+SECRET_KEY=...                                  # JWT signing key; defaults to a dev value
+RESEND_API_KEY=re_...                           # if unset, emails print to stdout
+EMAIL_FROM=Untangle <hello@yourdomain.com>      # must be Resend-verified
+FRONTEND_URL=http://localhost:3000              # used to build dashboard links in emails
+```
 
-Data is stored in `data/sessions.json` and `data/bookmarks.json` for MVP.
-To upgrade to a real database, replace the `_load` / `_save` helpers in `storage.py`
-with SQLAlchemy (PostgreSQL) or Motor (MongoDB) calls. All public functions
-(`create_session`, `add_log`, etc.) keep the same signatures.
+## Migrations
+
+Schema changes are applied at startup by `_run_migrations()` in `main.py` — a list of `ALTER TABLE ... ADD COLUMN` statements that fail silently if the column already exists. This keeps SQLite dev databases moving without a separate migration tool. When moving to Postgres in production, swap this for Alembic.
+
+## Tests
+
+```bash
+./venv/bin/python -m pytest -q
+```
+
+Tests use an in-memory SQLite per test and auto-mock `email_service.send_email`. See [the root README](../README.md#testing) for what each suite covers.

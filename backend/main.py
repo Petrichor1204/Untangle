@@ -4,7 +4,8 @@ Run with:  uvicorn main:app --reload --port 8000
 """
 
 import uuid
-from fastapi import FastAPI, Depends, HTTPException
+from contextlib import asynccontextmanager
+from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlalchemy.orm import Session
@@ -13,6 +14,9 @@ from database import engine, get_db, Base
 import models
 import schemas
 import auth
+import email_service
+import email_templates
+import scheduler as scheduler_module
 from estimator import estimate_complexity
 
 # Create all tables on startup
@@ -25,6 +29,9 @@ def _run_migrations():
             ("stylist_note", "TEXT"),
             ("adjusted_price_min", "REAL"),
             ("adjusted_price_max", "REAL"),
+            ("appointment_at", "DATETIME"),
+            ("reminder_sent_at", "DATETIME"),
+            ("followup_sent_at", "DATETIME"),
         ]:
             try:
                 conn.execute(text(f"ALTER TABLE intake_sessions ADD COLUMN {col} {defn}"))
@@ -34,7 +41,14 @@ def _run_migrations():
 
 _run_migrations()
 
-app = FastAPI(title="Untangle API", version="2.0.0")
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    scheduler_module.start_scheduler()
+    yield
+
+
+app = FastAPI(title="Untangle API", version="2.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -251,6 +265,7 @@ def start_intake(slug: str, req: schemas.StartIntakeRequest, db: Session = Depen
         service_id=service.id,
         client_name=req.client_name,
         client_email=req.client_email,
+        appointment_at=req.appointment_at,
         status="pending",
     )
     db.add(session)
@@ -282,7 +297,12 @@ def get_intake_session(token: str, db: Session = Depends(get_db)):
 
 
 @app.post("/intake/{token}/submit", response_model=schemas.IntakeSubmitResponse)
-def submit_intake(token: str, req: schemas.HairProfileSubmit, db: Session = Depends(get_db)):
+def submit_intake(
+    token: str,
+    req: schemas.HairProfileSubmit,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
     session = db.query(models.IntakeSession).filter(
         models.IntakeSession.token == token
     ).first()
@@ -313,6 +333,19 @@ def submit_intake(token: str, req: schemas.HairProfileSubmit, db: Session = Depe
     )
     db.add(estimate)
     db.commit()
+
+    stylist_user = session.stylist.user
+    payload = email_templates.new_intake_for_stylist(
+        stylist_name=stylist_user.name,
+        client_name=session.client_name or "A client",
+        token=session.token,
+        estimated_hours=est_hours,
+        complexity_score=score,
+    )
+    background_tasks.add_task(
+        email_service.send_email,
+        stylist_user.email, payload["subject"], payload["html"], payload["text"],
+    )
 
     return schemas.IntakeSubmitResponse(
         message="Intake submitted successfully",
@@ -353,6 +386,7 @@ def list_intakes(
             "stylist_note": s.stylist_note,
             "adjusted_price_min": s.adjusted_price_min,
             "adjusted_price_max": s.adjusted_price_max,
+            "appointment_at": s.appointment_at.isoformat() if s.appointment_at else None,
             "created_at": s.created_at.isoformat() if s.created_at else None,
             "estimate": {
                 "estimated_service_hours": s.estimate.estimated_service_hours,
@@ -370,6 +404,7 @@ def list_intakes(
 def update_intake_decision(
     token: str,
     req: schemas.DecisionRequest,
+    background_tasks: BackgroundTasks,
     user: models.User = Depends(auth.require_stylist),
     db: Session = Depends(get_db),
 ):
@@ -389,6 +424,22 @@ def update_intake_decision(
         session.adjusted_price_max = req.adjusted_price_max
 
     db.commit()
+
+    price_min = session.adjusted_price_min or (session.estimate.suggested_price_min if session.estimate else None)
+    price_max = session.adjusted_price_max or (session.estimate.suggested_price_max if session.estimate else None)
+    payload = email_templates.decision_for_client(
+        client_name=session.client_name or "there",
+        stylist_name=user.name,
+        status=session.status,
+        price_min=price_min,
+        price_max=price_max,
+        stylist_note=session.stylist_note,
+    )
+    background_tasks.add_task(
+        email_service.send_email,
+        session.client_email, payload["subject"], payload["html"], payload["text"],
+    )
+
     return {"ok": True, "status": session.status}
 
 
@@ -417,6 +468,7 @@ def get_intake_detail(
         "stylist_note": session.stylist_note,
         "adjusted_price_min": session.adjusted_price_min,
         "adjusted_price_max": session.adjusted_price_max,
+        "appointment_at": session.appointment_at.isoformat() if session.appointment_at else None,
         "created_at": session.created_at.isoformat() if session.created_at else None,
         "hair_profile": {
             "length": hair.length,

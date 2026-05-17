@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import {
   ArrowLeft, Clock, DollarSign, AlertTriangle, CheckCircle,
-  Calendar, Droplets, Scissors, X, Send,
+  Calendar, Droplets, X, Send,
 } from 'lucide-react'
 import api from '@/lib/api'
 
@@ -144,6 +144,19 @@ export default function IntakeDetailPage() {
         {est && (
           <div className="bg-white border border-warm-100 rounded-3xl p-6 shadow-warm space-y-4">
             <h2 className="font-display text-lg text-warm-900">Complexity estimate</h2>
+
+            {intake.appointment_at && (
+              <div className="flex items-center gap-2 bg-warm-50 border border-warm-100 rounded-2xl px-4 py-3">
+                <Calendar size={14} className="text-warm-500" />
+                <span className="text-xs text-warm-400 font-bold uppercase tracking-wider">Appointment</span>
+                <span className="text-sm text-warm-800 font-semibold ml-auto">
+                  {new Date(intake.appointment_at).toLocaleString([], {
+                    weekday: 'short', month: 'short', day: 'numeric',
+                    hour: 'numeric', minute: '2-digit',
+                  })}
+                </span>
+              </div>
+            )}
 
             <ScoreBar score={est.complexity_score} />
 

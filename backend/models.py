@@ -64,6 +64,9 @@ class IntakeSession(Base):
     stylist_note = Column(Text, nullable=True)
     adjusted_price_min = Column(Float, nullable=True)
     adjusted_price_max = Column(Float, nullable=True)
+    appointment_at = Column(DateTime(timezone=True), nullable=True)
+    reminder_sent_at = Column(DateTime(timezone=True), nullable=True)
+    followup_sent_at = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     stylist = relationship("StylistProfile", back_populates="intake_sessions")

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Copy, Check, LogOut, ExternalLink, Clock, DollarSign, AlertTriangle, ChevronRight, Scissors } from 'lucide-react'
+import { Copy, Check, LogOut, ExternalLink, Clock, DollarSign, AlertTriangle, ChevronRight, Scissors, Calendar } from 'lucide-react'
 import api from '@/lib/api'
 
 const STATUS_STYLES = {
@@ -181,9 +181,16 @@ export default function DashboardPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-xs text-warm-300">
-                        {intake.created_at ? new Date(intake.created_at).toLocaleDateString() : '—'}
-                      </span>
+                      {intake.appointment_at ? (
+                        <span className="flex items-center gap-1 text-xs text-warm-500 font-semibold">
+                          <Calendar size={11} className="text-warm-400" />
+                          {new Date(intake.appointment_at).toLocaleString([], {
+                            month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit',
+                          })}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-warm-300">no time set</span>
+                      )}
                       <ChevronRight size={14} className="text-warm-300" />
                     </div>
                   </div>

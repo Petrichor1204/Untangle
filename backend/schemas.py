@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional, List
 
@@ -69,6 +70,7 @@ class StartIntakeRequest(BaseModel):
     client_name: str
     client_email: str
     service_id: str
+    appointment_at: Optional[datetime] = None
 
 
 class StartIntakeResponse(BaseModel):

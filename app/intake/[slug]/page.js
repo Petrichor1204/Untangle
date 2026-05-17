@@ -10,7 +10,7 @@ export default function StylePickerPage() {
   const router = useRouter()
   const [stylist, setStylist] = useState(null)
   const [notFound, setNotFound] = useState(false)
-  const [form, setForm] = useState({ client_name: '', client_email: '', service_id: '' })
+  const [form, setForm] = useState({ client_name: '', client_email: '', service_id: '', appointment_at: '' })
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -25,10 +25,15 @@ export default function StylePickerPage() {
   const handleStart = async (e) => {
     e.preventDefault()
     if (!form.service_id) { setError('Please choose a service to continue.'); return }
+    if (!form.appointment_at) { setError('Please pick a date and time for your appointment.'); return }
     setError('')
     setSubmitting(true)
     try {
-      const res = await api.post(`/intake/${slug}/start`, form)
+      const payload = {
+        ...form,
+        appointment_at: new Date(form.appointment_at).toISOString(),
+      }
+      const res = await api.post(`/intake/${slug}/start`, payload)
       router.push(`/intake/${slug}/${res.data.token}`)
     } catch (err) {
       setError(err.response?.data?.detail || 'Could not start. Please try again.')
@@ -146,6 +151,24 @@ export default function StylePickerPage() {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Appointment time */}
+          <div className="bg-white border border-warm-100 rounded-3xl p-7 shadow-warm">
+            <h2 className="font-display text-2xl text-warm-900 mb-5">When's your appointment?</h2>
+            <label className="block text-xs font-bold text-warm-500 uppercase tracking-widest mb-1.5">
+              Date and time
+            </label>
+            <input
+              type="datetime-local"
+              required
+              value={form.appointment_at}
+              onChange={(e) => setForm({ ...form, appointment_at: e.target.value })}
+              className="w-full border border-warm-200 focus:border-warm-500 rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors bg-warm-50 text-warm-900"
+            />
+            <p className="text-xs text-warm-400 mt-2">
+              We'll send you a prep reminder 24 hours before.
+            </p>
           </div>
 
           {error && (
