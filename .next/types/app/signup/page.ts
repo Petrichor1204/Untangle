@@ -1,4 +1,4 @@
-// File: /Users/abrokwa/projects/hAIrly/app/signup/page.js
+// File: /Users/abrokwa/projects/Untangle/app/signup/page.js
 import * as entry from '../../../../app/signup/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

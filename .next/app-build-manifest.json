@@ -45,6 +45,11 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/intake/[slug]/[token]/done/page.js"
+    ],
+    "/dashboard/intake/[token]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/dashboard/intake/[token]/page.js"
     ]
   }
 }
