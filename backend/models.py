@@ -61,6 +61,9 @@ class IntakeSession(Base):
     client_name = Column(String, nullable=True)
     client_email = Column(String, nullable=True)
     status = Column(String, default="pending")
+    stylist_note = Column(Text, nullable=True)
+    adjusted_price_min = Column(Float, nullable=True)
+    adjusted_price_max = Column(Float, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     stylist = relationship("StylistProfile", back_populates="intake_sessions")

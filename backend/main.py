@@ -6,6 +6,7 @@ Run with:  uvicorn main:app --reload --port 8000
 import uuid
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from database import engine, get_db, Base
@@ -16,6 +17,22 @@ from estimator import estimate_complexity
 
 # Create all tables on startup
 Base.metadata.create_all(bind=engine)
+
+# SQLite-safe migrations for new nullable columns
+def _run_migrations():
+    with engine.connect() as conn:
+        for col, defn in [
+            ("stylist_note", "TEXT"),
+            ("adjusted_price_min", "REAL"),
+            ("adjusted_price_max", "REAL"),
+        ]:
+            try:
+                conn.execute(text(f"ALTER TABLE intake_sessions ADD COLUMN {col} {defn}"))
+                conn.commit()
+            except Exception:
+                pass  # Column already exists
+
+_run_migrations()
 
 app = FastAPI(title="hAIrly API", version="2.0.0")
 
@@ -333,16 +350,46 @@ def list_intakes(
             "service_name": s.service.name if s.service else None,
             "status": s.status,
             "submitted": s.hair_profile is not None,
+            "stylist_note": s.stylist_note,
+            "adjusted_price_min": s.adjusted_price_min,
+            "adjusted_price_max": s.adjusted_price_max,
             "created_at": s.created_at.isoformat() if s.created_at else None,
             "estimate": {
                 "estimated_service_hours": s.estimate.estimated_service_hours,
                 "prep_time_minutes": s.estimate.prep_time_minutes,
                 "suggested_price_min": s.estimate.suggested_price_min,
                 "suggested_price_max": s.estimate.suggested_price_max,
+                "complexity_score": s.estimate.complexity_score,
             } if s.estimate else None,
         }
         for s in sessions
     ]
+
+
+@app.patch("/dashboard/intakes/{token}/decision")
+def update_intake_decision(
+    token: str,
+    req: schemas.DecisionRequest,
+    user: models.User = Depends(auth.require_stylist),
+    db: Session = Depends(get_db),
+):
+    session = db.query(models.IntakeSession).filter(
+        models.IntakeSession.token == token,
+        models.IntakeSession.stylist_id == user.stylist_profile.id,
+    ).first()
+    if not session:
+        raise HTTPException(404, "Intake not found")
+
+    session.status = req.status
+    if req.stylist_note is not None:
+        session.stylist_note = req.stylist_note
+    if req.adjusted_price_min is not None:
+        session.adjusted_price_min = req.adjusted_price_min
+    if req.adjusted_price_max is not None:
+        session.adjusted_price_max = req.adjusted_price_max
+
+    db.commit()
+    return {"ok": True, "status": session.status}
 
 
 @app.get("/dashboard/intakes/{token}")
@@ -367,6 +414,9 @@ def get_intake_detail(
         "client_email": session.client_email,
         "service": schemas.ServiceOut.model_validate(session.service) if session.service else None,
         "status": session.status,
+        "stylist_note": session.stylist_note,
+        "adjusted_price_min": session.adjusted_price_min,
+        "adjusted_price_max": session.adjusted_price_max,
         "created_at": session.created_at.isoformat() if session.created_at else None,
         "hair_profile": {
             "length": hair.length,

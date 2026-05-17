@@ -115,6 +115,15 @@ class IntakeSubmitResponse(BaseModel):
     estimate: EstimateOut
 
 
+# ── Decision ──────────────────────────────────────────────────────────────────
+
+class DecisionRequest(BaseModel):
+    status: str  # confirmed | rescheduled | prep_requested | reviewed
+    stylist_note: Optional[str] = None
+    adjusted_price_min: Optional[float] = None
+    adjusted_price_max: Optional[float] = None
+
+
 # ── Profile management ────────────────────────────────────────────────────────
 
 class ProfileUpdate(BaseModel):

@@ -2,14 +2,15 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { Copy, Check, LogOut, ExternalLink, Clock, DollarSign, AlertTriangle } from 'lucide-react'
+import { Copy, Check, LogOut, ExternalLink, Clock, DollarSign, AlertTriangle, ChevronRight, Scissors } from 'lucide-react'
 import api from '@/lib/api'
 
 const STATUS_STYLES = {
-  pending:     'bg-amber-50 text-amber-700 border-amber-200',
-  reviewed:    'bg-blue-50 text-blue-700 border-blue-200',
-  confirmed:   'bg-green-50 text-green-700 border-green-200',
-  rescheduled: 'bg-lav-100 text-lav-600 border-lav-200',
+  pending:        'bg-amber-50 text-amber-700 border-amber-200',
+  reviewed:       'bg-blue-50 text-blue-700 border-blue-200',
+  confirmed:      'bg-green-50 text-green-700 border-green-200',
+  rescheduled:    'bg-purple-50 text-purple-700 border-purple-200',
+  prep_requested: 'bg-orange-50 text-orange-700 border-orange-200',
 }
 
 export default function DashboardPage() {
@@ -64,6 +65,12 @@ export default function DashboardPage() {
       <header className="bg-white border-b border-warm-100 px-8 py-4 flex items-center justify-between shadow-warm">
         <span className="font-brand text-2xl text-warm-700">Hairly</span>
         <div className="flex items-center gap-6">
+          <button
+            onClick={() => router.push('/dashboard/services')}
+            className="text-sm text-warm-500 hover:text-warm-800 flex items-center gap-1.5 transition-colors font-semibold"
+          >
+            <Scissors size={14} /> Services
+          </button>
           <span className="text-sm text-warm-600 font-medium">{user.name}</span>
           <button
             onClick={logout}
@@ -133,7 +140,11 @@ export default function DashboardPage() {
           ) : (
             <div className="divide-y divide-warm-50">
               {intakes.map((intake) => (
-                <div key={intake.token} className="px-8 py-5 hover:bg-warm-50 transition-colors">
+                <button
+                  key={intake.token}
+                  onClick={() => router.push(`/dashboard/intake/${intake.token}`)}
+                  className="w-full text-left px-8 py-5 hover:bg-warm-50 transition-colors"
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2.5 mb-1">
@@ -143,7 +154,7 @@ export default function DashboardPage() {
                             ? STATUS_STYLES[intake.status] || STATUS_STYLES.pending
                             : 'bg-warm-50 text-warm-400 border-warm-100'
                         }`}>
-                          {intake.submitted ? intake.status : 'not submitted'}
+                          {intake.submitted ? intake.status.replace('_', ' ') : 'not submitted'}
                         </span>
                       </div>
                       <p className="text-xs text-warm-400">
@@ -156,21 +167,27 @@ export default function DashboardPage() {
                           </span>
                           <span className="flex items-center gap-1 text-xs font-semibold text-warm-600">
                             <DollarSign size={11} />
-                            ${intake.estimate.suggested_price_min}–${intake.estimate.suggested_price_max}
+                            ${intake.adjusted_price_min ?? intake.estimate.suggested_price_min}–${intake.adjusted_price_max ?? intake.estimate.suggested_price_max}
                           </span>
                           {intake.estimate.prep_time_minutes > 0 && (
                             <span className="flex items-center gap-1 text-xs text-amber-600 font-semibold">
                               <AlertTriangle size={11} /> +{intake.estimate.prep_time_minutes}m prep
                             </span>
                           )}
+                          <span className="text-xs text-warm-300 font-medium">
+                            score {intake.estimate.complexity_score}
+                          </span>
                         </div>
                       )}
                     </div>
-                    <span className="text-xs text-warm-300 shrink-0">
-                      {intake.created_at ? new Date(intake.created_at).toLocaleDateString() : '—'}
-                    </span>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span className="text-xs text-warm-300">
+                        {intake.created_at ? new Date(intake.created_at).toLocaleDateString() : '—'}
+                      </span>
+                      <ChevronRight size={14} className="text-warm-300" />
+                    </div>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           )}
