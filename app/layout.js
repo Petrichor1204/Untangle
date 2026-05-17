@@ -1,8 +1,8 @@
 import './globals.css'
 
 export const metadata = {
-  title: 'Hairly — Smarter Consultations for Textured-Hair Stylists',
-  description: 'Send clients a Hairly intake link before their appointment. Get their full hair profile before they sit in your chair.',
+  title: 'Untangle — Smarter Consultations for Textured-Hair Stylists',
+  description: 'Send clients a Untangle intake link before their appointment. Get their full hair profile before they sit in your chair.',
 }
 
 export default function RootLayout({ children }) {

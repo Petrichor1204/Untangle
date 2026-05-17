@@ -12,7 +12,7 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
 
   const slugPreview = form.slug
-    ? `hairly.app/intake/${form.slug.toLowerCase().replace(/\s+/g, '-')}`
+    ? `untangle.app/intake/${form.slug.toLowerCase().replace(/\s+/g, '-')}`
     : null
 
   const handleSubmit = async (e) => {
@@ -27,8 +27,8 @@ export default function SignupPage() {
         role: 'stylist',
         slug: form.slug.toLowerCase().replace(/\s+/g, '-'),
       })
-      localStorage.setItem('hairly_token', res.data.access_token)
-      localStorage.setItem('hairly_user', JSON.stringify({
+      localStorage.setItem('untangle_token', res.data.access_token)
+      localStorage.setItem('untangle_user', JSON.stringify({
         id: res.data.user_id,
         name: res.data.name,
         role: res.data.role,
@@ -46,7 +46,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center px-4 py-16">
-      <Link href="/" className="font-brand text-3xl text-warm-700 mb-10">Hairly</Link>
+      <Link href="/" className="font-brand text-3xl text-warm-700 mb-10">Untangle</Link>
 
       <div className="bg-white border border-warm-200 rounded-3xl p-10 w-full max-w-sm shadow-warm">
         <h1 className="font-display text-4xl text-warm-900 mb-1">Let's get you set up.</h1>

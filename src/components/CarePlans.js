@@ -25,7 +25,7 @@ const CarePlans = ({
   // Fetch care plan when component mounts
   useEffect(() => {
     const fetchCarePlan = async () => {
-      const sid = sessionId || localStorage.getItem('hairly_session_id');
+      const sid = sessionId || localStorage.getItem('untangle_session_id');
       if (!sid) {
         setError('No hair analysis found. Please analyze your hair first.');
         setLoading(false);

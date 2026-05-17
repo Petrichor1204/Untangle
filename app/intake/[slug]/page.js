@@ -44,7 +44,7 @@ export default function StylePickerPage() {
 
   if (notFound) return (
     <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center px-4 text-center">
-      <span className="font-brand text-3xl text-warm-600 mb-6">Hairly</span>
+      <span className="font-brand text-3xl text-warm-600 mb-6">Untangle</span>
       <h1 className="font-display text-3xl text-warm-900 mb-2">Stylist not found.</h1>
       <p className="text-sm text-warm-400">Double-check the link you were sent.</p>
     </div>
@@ -56,7 +56,7 @@ export default function StylePickerPage() {
       {/* Warm header band */}
       <div className="bg-warm-700 px-8 py-6">
         <div className="max-w-lg mx-auto">
-          <span className="font-brand text-2xl text-warm-100 block mb-3">Hairly</span>
+          <span className="font-brand text-2xl text-warm-100 block mb-3">Untangle</span>
           <p className="text-warm-300 text-xs font-semibold uppercase tracking-widest mb-1">
             You're booking with
           </p>

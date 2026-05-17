@@ -17,8 +17,8 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const res = await api.post('/auth/login', form)
-      localStorage.setItem('hairly_token', res.data.access_token)
-      localStorage.setItem('hairly_user', JSON.stringify({
+      localStorage.setItem('untangle_token', res.data.access_token)
+      localStorage.setItem('untangle_user', JSON.stringify({
         id: res.data.user_id,
         name: res.data.name,
         role: res.data.role,
@@ -34,7 +34,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center px-4">
-      <Link href="/" className="font-brand text-3xl text-warm-700 mb-10">Hairly</Link>
+      <Link href="/" className="font-brand text-3xl text-warm-700 mb-10">Untangle</Link>
 
       <div className="bg-white border border-warm-200 rounded-3xl p-10 w-full max-w-sm shadow-warm">
         <h1 className="font-display text-4xl text-warm-900 mb-1">Welcome back.</h1>

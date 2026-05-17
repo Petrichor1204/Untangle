@@ -11,9 +11,9 @@ const Learn = ({ currentPage, navigateToPage, handleLogout }) => {
   // Award coins + update streak once per day when the user visits Learn
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
-    const lastLearnDate = localStorage.getItem('hairly_last_learn_date');
+    const lastLearnDate = localStorage.getItem('untangle_last_learn_date');
     if (lastLearnDate !== today) {
-      localStorage.setItem('hairly_last_learn_date', today);
+      localStorage.setItem('untangle_last_learn_date', today);
       updateStreak();
       addCoins(5);
     }

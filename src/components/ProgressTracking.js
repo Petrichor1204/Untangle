@@ -61,14 +61,14 @@ const ProgressTracking = ({
 
   const totalSteps = 4;
   const completionPercent = totalSteps ? Math.round((completedSteps.size / totalSteps) * 100) : 0;
-  const resolvedSessionId = sessionId || (typeof window !== 'undefined' ? localStorage.getItem('hairly_session_id') : null);
+  const resolvedSessionId = sessionId || (typeof window !== 'undefined' ? localStorage.getItem('untangle_session_id') : null);
 
   useEffect(() => {
     fetchHistory();
   }, []);
 
   const handleSaveProgress = async (notes, rating, mood) => {
-    const storedSessionId = sessionId || localStorage.getItem('hairly_session_id');
+    const storedSessionId = sessionId || localStorage.getItem('untangle_session_id');
     if (!storedSessionId) {
       setFormError('You need to analyze your hair before saving a log entry.');
       return;
@@ -96,7 +96,7 @@ const ProgressTracking = ({
   };
 
   const fetchHistory = async () => {
-    const storedSessionId = sessionId || localStorage.getItem('hairly_session_id');
+    const storedSessionId = sessionId || localStorage.getItem('untangle_session_id');
     if (!storedSessionId) return;
     
     setLoading(true);
@@ -163,7 +163,7 @@ const ProgressTracking = ({
   };
 
   const handleOpenStyleIdeas = () => {
-    const storedSessionId = sessionId || localStorage.getItem('hairly_session_id');
+    const storedSessionId = sessionId || localStorage.getItem('untangle_session_id');
     if (!storedSessionId) {
       setError('Please analyze your hair to unlock personalized style ideas.');
       return;
@@ -470,7 +470,7 @@ const ProgressTracking = ({
                 </button>
                 <button
                   onClick={() => {
-                    const sid = sessionId || localStorage.getItem('hairly_session_id');
+                    const sid = sessionId || localStorage.getItem('untangle_session_id');
                     if (!sid) { setError('Please analyze your hair to access saved styles.'); return; }
                     navigateToPage('bookmarks');
                   }}

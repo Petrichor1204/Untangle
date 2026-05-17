@@ -305,7 +305,7 @@ export default function IntakeWizardPage() {
         preferred_duration_hours: data.preferred_duration_hours ? parseFloat(data.preferred_duration_hours) : null,
       }
       const res = await api.post(`/intake/${token}/submit`, payload)
-      localStorage.setItem(`hairly_result_${token}`, JSON.stringify(res.data))
+      localStorage.setItem(`untangle_result_${token}`, JSON.stringify(res.data))
       router.push(`/intake/${slug}/${token}/done`)
     } catch (err) {
       setError(err.response?.data?.detail || 'Submission failed. Please try again.')
@@ -321,7 +321,7 @@ export default function IntakeWizardPage() {
 
   if (error && !sessionInfo) return (
     <div className="min-h-screen bg-warm-50 flex flex-col items-center justify-center px-4 text-center">
-      <span className="font-brand text-3xl text-warm-600 mb-6">Hairly</span>
+      <span className="font-brand text-3xl text-warm-600 mb-6">Untangle</span>
       <h1 className="font-display text-2xl text-warm-900 mb-2">Invalid link</h1>
       <p className="text-sm text-warm-400">{error}</p>
     </div>
@@ -342,7 +342,7 @@ export default function IntakeWizardPage() {
       <div className="bg-white border-b border-warm-100 shadow-warm sticky top-0 z-10">
         <div className="max-w-lg mx-auto px-6 py-3">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-brand text-xl text-warm-700">Hairly</span>
+            <span className="font-brand text-xl text-warm-700">Untangle</span>
             {sessionInfo && (
               <span className="text-xs text-warm-400 font-medium">
                 {sessionInfo.stylist_name} · {sessionInfo.service?.name}

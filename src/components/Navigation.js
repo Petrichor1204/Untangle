@@ -10,7 +10,7 @@ const Navigation = ({ currentPage, navigateToPage, handleLogout }) => {
         <div className="flex items-center gap-8 py-4">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <span className="font-brand text-2xl text-[#d4607f]">hAIrly</span>
+            <span className="font-brand text-2xl text-[#d4607f]">Untangle</span>
           </div>
 
           {/* Desktop Navigation */}

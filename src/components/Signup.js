@@ -34,7 +34,7 @@ const Signup = ({ onSignup, navigateToPage }) => {
       <div className="max-w-lg w-full space-y-6 relative">
         <div className="text-center space-y-3">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-[#ffd0dc] text-sm font-semibold tracking-[0.25em] uppercase text-[#e8789a]">
-            🌷 Join hAIrly
+            🌷 Join Untangle
           </div>
           <h1 className="text-4xl font-display font-medium text-[#7a2d45]">Create your account</h1>
           <p className="text-sm text-[#b06070]">

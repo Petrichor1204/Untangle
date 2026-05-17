@@ -1,5 +1,5 @@
 """
-main.py — hAIrly API v2
+main.py — Untangle API v2
 Run with:  uvicorn main:app --reload --port 8000
 """
 
@@ -34,7 +34,7 @@ def _run_migrations():
 
 _run_migrations()
 
-app = FastAPI(title="hAIrly API", version="2.0.0")
+app = FastAPI(title="Untangle API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,7 +49,7 @@ app.add_middleware(
 
 @app.get("/")
 def health():
-    return {"status": "ok", "service": "hAIrly API", "version": "2.0.0"}
+    return {"status": "ok", "service": "Untangle API", "version": "2.0.0"}
 
 
 # ── Auth ──────────────────────────────────────────────────────────────────────

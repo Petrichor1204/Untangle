@@ -30,7 +30,7 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
-    const stored = localStorage.getItem('hairly_user')
+    const stored = localStorage.getItem('untangle_user')
     if (!stored) { router.push('/login'); return }
     setUser(JSON.parse(stored))
     loadIntakes()
@@ -48,8 +48,8 @@ export default function DashboardPage() {
   }
 
   const logout = () => {
-    localStorage.removeItem('hairly_token')
-    localStorage.removeItem('hairly_user')
+    localStorage.removeItem('untangle_token')
+    localStorage.removeItem('untangle_user')
     router.push('/')
   }
 
@@ -63,7 +63,7 @@ export default function DashboardPage() {
 
       {/* Header */}
       <header className="bg-white border-b border-warm-100 px-8 py-4 flex items-center justify-between shadow-warm">
-        <span className="font-brand text-2xl text-warm-700">Hairly</span>
+        <span className="font-brand text-2xl text-warm-700">Untangle</span>
         <div className="flex items-center gap-6">
           <button
             onClick={() => router.push('/dashboard/services')}

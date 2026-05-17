@@ -1,6 +1,6 @@
-# hAIrly Backend
+# Untangle Backend
 
-FastAPI backend for the hAIrly hair care app.
+FastAPI backend for the Untangle hair care app.
 
 ## Setup
 

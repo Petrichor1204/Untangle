@@ -90,7 +90,7 @@ export default function ServicesPage() {
   const [editingId, setEditingId] = useState(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem('hairly_user')
+    const stored = localStorage.getItem('untangle_user')
     if (!stored) { router.push('/login'); return }
     load()
   }, [router])

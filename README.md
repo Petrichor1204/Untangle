@@ -1,6 +1,6 @@
-# Hairly
+# Untangle
 
-**Hairly** is a smart consultation and booking system for textured-hair stylists. Clients complete a structured hair intake form before their appointment. Stylists receive a full profile — hair type, density, porosity, treatment history, preparation status — along with an estimated service time and suggested price range, before anyone sits in the chair.
+**Untangle** is a smart consultation and booking system for textured-hair stylists. Clients complete a structured hair intake form before their appointment. Stylists receive a full profile — hair type, density, porosity, treatment history, preparation status — along with an estimated service time and suggested price range, before anyone sits in the chair.
 
 ---
 
@@ -11,16 +11,16 @@
 - Stylists having to guess the price mid-appointment
 - Surprise chemical damage discovered at the chair
 
-Hairly moves the consultation out of the chair and into a structured digital form.
+Untangle moves the consultation out of the chair and into a structured digital form.
 
 ---
 
 ## How it works
 
 1. **Stylist creates an account** and sets up their services with base prices and estimated hours
-2. **Stylist shares their intake link** — `hairly.app/intake/your-name` — with a client before the appointment
+2. **Stylist shares their intake link** — `untangle.app/intake/your-name` — with a client before the appointment
 3. **Client fills out a 5-step intake form** covering hair details, history, preparation status, and style goals
-4. **Hairly estimates** service time, prep time, and suggested price range using rule-based logic
+4. **Untangle estimates** service time, prep time, and suggested price range using rule-based logic
 5. **Stylist reviews** the client profile on their dashboard before confirming the appointment
 
 ---
@@ -65,7 +65,7 @@ bash start.sh
 
 Runs at [http://localhost:8000](http://localhost:8000). API docs at [http://localhost:8000/docs](http://localhost:8000/docs).
 
-The backend creates a `hairly.db` SQLite file automatically on first run. No setup required.
+The backend creates a `untangle.db` SQLite file automatically on first run. No setup required.
 
 ### Environment variables
 
@@ -76,7 +76,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 Backend environment variables (optional):
 ```
-DATABASE_URL=postgresql://user:password@localhost/hairly   # defaults to SQLite
+DATABASE_URL=postgresql://user:password@localhost/untangle   # defaults to SQLite
 SECRET_KEY=your-secret-key-here                            # defaults to dev key
 ```
 
@@ -93,7 +93,7 @@ SECRET_KEY=your-secret-key-here                            # defaults to dev key
 ## Project structure
 
 ```
-hairly/
+untangle/
 ├── app/                              # Next.js App Router pages
 │   ├── page.js                       # Landing page (stylist marketing)
 │   ├── login/page.js                 # Login

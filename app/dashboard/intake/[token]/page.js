@@ -74,7 +74,7 @@ export default function IntakeDetailPage() {
   const [prepNote, setPrepNote] = useState('')
 
   useEffect(() => {
-    const stored = localStorage.getItem('hairly_user')
+    const stored = localStorage.getItem('untangle_user')
     if (!stored) { router.push('/login'); return }
     api.get(`/dashboard/intakes/${token}`)
       .then(r => setIntake(r.data))

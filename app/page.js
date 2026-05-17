@@ -6,7 +6,7 @@ export default function LandingPage() {
 
       {/* Nav */}
       <nav className="flex items-center justify-between px-8 py-5 border-b border-warm-100">
-        <span className="font-brand text-3xl text-warm-700">Hairly</span>
+        <span className="font-brand text-3xl text-warm-700">Untangle</span>
         <div className="flex items-center gap-6">
           <Link href="/login" className="text-sm text-warm-600 hover:text-warm-800 transition-colors font-medium">
             Log in
@@ -30,7 +30,7 @@ export default function LandingPage() {
           <span className="italic text-warm-600">who already knows their hair.</span>
         </h1>
         <p className="text-warm-600 text-lg max-w-xl mx-auto leading-relaxed mb-10">
-          Hairly gathers your client's full hair profile before the appointment —
+          Untangle gathers your client's full hair profile before the appointment —
           so you can walk in prepared, price it right, and do the work you're built for.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4">
@@ -47,7 +47,7 @@ export default function LandingPage() {
       {/* Warm divider quote */}
       <div className="bg-warm-100 border-y border-warm-200 py-8 px-8">
         <p className="font-display text-2xl italic text-warm-700 text-center max-w-2xl mx-auto leading-relaxed">
-          "Your clients trust you with their crown. Hairly helps you honour that trust
+          "Your clients trust you with their crown. Untangle helps you honour that trust
           before they even sit down."
         </p>
       </div>
@@ -65,7 +65,7 @@ export default function LandingPage() {
             {
               n: '01',
               title: 'Share your link',
-              body: 'You get a personal intake URL — hairly.app/intake/you. Send it to your client before every appointment. That\'s it.',
+              body: 'You get a personal intake URL — untangle.app/intake/you. Send it to your client before every appointment. That\'s it.',
               color: 'bg-warm-100 border-warm-200',
             },
             {
@@ -102,7 +102,7 @@ export default function LandingPage() {
               <span className="italic text-warm-300">No one was asking for it.</span>
             </h2>
             <p className="text-warm-300 text-sm leading-relaxed">
-              Hairly doesn't replace the relationship between you and your client.
+              Untangle doesn't replace the relationship between you and your client.
               It just makes sure you have what you need to show up fully for them.
             </p>
           </div>
@@ -133,7 +133,7 @@ export default function LandingPage() {
               A full picture,<br />before you begin.
             </h2>
             <p className="text-warm-600 text-sm leading-relaxed mb-6">
-              Hairly uses your client's hair length, density, condition, and prep status
+              Untangle uses your client's hair length, density, condition, and prep status
               to estimate service time and suggest a price range.
               No algorithms. Just the logic you already carry in your head — written down.
             </p>
@@ -148,7 +148,7 @@ export default function LandingPage() {
           {/* Sample card */}
           <div className="bg-warm-100 border border-warm-200 rounded-3xl p-7 shadow-warm">
             <p className="text-xs font-bold text-warm-500 uppercase tracking-widest mb-5">
-              Sample Hairly estimate
+              Sample Untangle estimate
             </p>
             <div className="space-y-3">
               {[
@@ -180,7 +180,7 @@ export default function LandingPage() {
           Your clients come to you<br />because they trust you.
         </h2>
         <p className="text-warm-600 mb-10 max-w-md mx-auto text-sm leading-relaxed">
-          Hairly gives you the information to honour that trust.
+          Untangle gives you the information to honour that trust.
           Set up your intake link in under two minutes.
         </p>
         <Link
@@ -193,7 +193,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-8 px-8 flex items-center justify-between border-t border-warm-100">
-        <span className="font-brand text-xl text-warm-600">Hairly</span>
+        <span className="font-brand text-xl text-warm-600">Untangle</span>
         <span className="text-xs text-warm-400">© {new Date().getFullYear()} · For textured-hair stylists</span>
       </footer>
     </div>

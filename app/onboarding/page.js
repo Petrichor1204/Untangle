@@ -25,7 +25,7 @@ export default function OnboardingPage() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    const stored = localStorage.getItem('hairly_user')
+    const stored = localStorage.getItem('untangle_user')
     if (!stored) { router.push('/login'); return }
     setUser(JSON.parse(stored))
   }, [router])
@@ -71,7 +71,7 @@ export default function OnboardingPage() {
       <div className="max-w-lg mx-auto">
 
         <div className="text-center mb-10">
-          <span className="font-brand text-3xl text-warm-700 block mb-5">Hairly</span>
+          <span className="font-brand text-3xl text-warm-700 block mb-5">Untangle</span>
           <h1 className="font-display text-5xl text-warm-900 mb-3">What do you offer?</h1>
           <p className="text-warm-500 text-sm leading-relaxed">
             Clients will choose from these when filling out their intake form.

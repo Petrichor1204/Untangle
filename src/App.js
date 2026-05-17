@@ -23,7 +23,7 @@ function App() {
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const [activeReminders, setActiveReminders] = useState(() => {
     try {
-      const stored = localStorage.getItem('hairly_reminders');
+      const stored = localStorage.getItem('untangle_reminders');
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
@@ -32,7 +32,7 @@ function App() {
 
   // Persist reminders to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('hairly_reminders', JSON.stringify(activeReminders));
+    localStorage.setItem('untangle_reminders', JSON.stringify(activeReminders));
   }, [activeReminders]);
 
   // Navigation handler
@@ -53,7 +53,7 @@ function App() {
     setCarePlan(null);
     setCapturedImage(null);
     setActiveReminders([]);
-    localStorage.removeItem('hairly_reminders');
+    localStorage.removeItem('untangle_reminders');
     navigateToPage('login');
   };
 
@@ -138,7 +138,7 @@ function App() {
     case 'bookmarks':
       return (
         <BookmarksPage
-          sessionId={sessionId || localStorage.getItem('hairly_session_id')}
+          sessionId={sessionId || localStorage.getItem('untangle_session_id')}
           onClose={() => navigateToPage('tracking')}
         />
       );

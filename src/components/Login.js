@@ -32,7 +32,7 @@ const Login = ({ onLogin, navigateToPage }) => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 border border-[#ffd0dc] text-sm font-semibold tracking-[0.25em] uppercase text-[#e8789a]">
             🌸 Welcome back
           </div>
-          <h1 className="text-4xl font-display font-medium text-[#7a2d45]">Sign in to hAIrly</h1>
+          <h1 className="text-4xl font-display font-medium text-[#7a2d45]">Sign in to Untangle</h1>
           <p className="text-sm text-[#b06070]">
             Keep tracking routines, log new entries, and get style cues tuned to your day.
           </p>

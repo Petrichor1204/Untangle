@@ -1,5 +1,5 @@
-const STREAK_KEY = 'hairly_streak_v2';
-const COINS_KEY = 'hairly_coins';
+const STREAK_KEY = 'untangle_streak_v2';
+const COINS_KEY = 'untangle_coins';
 
 // ── Streak helpers ──────────────────────────────────────────────
 

@@ -9,7 +9,7 @@ export default function IntakeDonePage() {
   const [result, setResult] = useState(null)
 
   useEffect(() => {
-    const stored = localStorage.getItem(`hairly_result_${token}`)
+    const stored = localStorage.getItem(`untangle_result_${token}`)
     if (stored) setResult(JSON.parse(stored))
   }, [token])
 
@@ -19,7 +19,7 @@ export default function IntakeDonePage() {
       {/* Header */}
       <div className="bg-warm-700 px-8 py-6">
         <div className="max-w-md mx-auto text-center">
-          <span className="font-brand text-2xl text-warm-100 block mb-5">Hairly</span>
+          <span className="font-brand text-2xl text-warm-100 block mb-5">Untangle</span>
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-warm-600 mb-4">
             <CheckCircle size={28} className="text-warm-100" />
           </div>
@@ -44,7 +44,7 @@ export default function IntakeDonePage() {
           <div className="bg-white border border-warm-100 rounded-3xl overflow-hidden shadow-warm">
             <div className="bg-warm-100 px-6 py-4 border-b border-warm-200">
               <p className="text-xs font-bold text-warm-600 uppercase tracking-widest">
-                Hairly estimate
+                Untangle estimate
               </p>
               <p className="text-xs text-warm-400 mt-0.5">
                 Based on your profile. Your stylist sets the final price.
@@ -88,7 +88,7 @@ export default function IntakeDonePage() {
           <h2 className="font-display text-2xl text-warm-900 mb-5">What happens next</h2>
           <div className="space-y-4">
             {[
-              'Your stylist receives your full hair profile and the Hairly estimate.',
+              'Your stylist receives your full hair profile and the Untangle estimate.',
               'They\'ll confirm the appointment — or reach out if they need to adjust the time or price.',
               'You show up. They\'re ready. Everything\'s been handled.',
             ].map((text, i) => (
@@ -103,7 +103,7 @@ export default function IntakeDonePage() {
         </div>
 
         <p className="text-center text-xs text-warm-300 pt-2">
-          Powered by <span className="font-brand text-warm-500">Hairly</span>
+          Powered by <span className="font-brand text-warm-500">Untangle</span>
         </p>
       </div>
     </div>

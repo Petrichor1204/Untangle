@@ -39,7 +39,7 @@ const HairAnalysis = ({
         setSessionId(result.sessionId);
         setHairAnalysis(result.analysis);
         // Store sessionId for other components to use
-        localStorage.setItem('hairly_session_id', result.sessionId);
+        localStorage.setItem('untangle_session_id', result.sessionId);
       } else {
         setError(result.error);
         setCapturedImage(null); // Clear image on error
