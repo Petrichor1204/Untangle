@@ -5,6 +5,15 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import api from '@/lib/api'
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const passwordChecks = (pw) => ({
+  length: pw.length >= 8,
+  lower: /[a-z]/.test(pw),
+  upper: /[A-Z]/.test(pw),
+  digit: /\d/.test(pw),
+})
+
 export default function SignupPage() {
   const router = useRouter()
   const [form, setForm] = useState({ name: '', email: '', password: '', slug: '', location: '' })
@@ -15,10 +24,15 @@ export default function SignupPage() {
     ? `untangle.app/intake/${form.slug.toLowerCase().replace(/\s+/g, '-')}`
     : null
 
+  const pwChecks = passwordChecks(form.password)
+  const pwValid = Object.values(pwChecks).every(Boolean)
+  const emailValid = EMAIL_RE.test(form.email)
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
-    if (form.password.length < 8) { setError('Password must be at least 8 characters.'); return }
+    if (!emailValid) { setError('Please enter a valid email address.'); return }
+    if (!pwValid) { setError('Password must meet all requirements below.'); return }
     if (!form.slug.trim()) { setError('A URL slug is required.'); return }
     setLoading(true)
     try {
@@ -62,8 +76,6 @@ export default function SignupPage() {
           {[
             { field: 'name', label: 'Full name', type: 'text', placeholder: 'Nia Carter' },
             { field: 'email', label: 'Email', type: 'email', placeholder: 'nia@example.com' },
-            { field: 'password', label: 'Password', type: 'password', placeholder: 'Min. 8 characters' },
-            { field: 'location', label: 'Location (optional)', type: 'text', placeholder: 'Atlanta, GA' },
           ].map(({ field, label, type, placeholder }) => (
             <div key={field}>
               <label className="block text-xs font-bold text-warm-500 uppercase tracking-widest mb-2">
@@ -71,14 +83,58 @@ export default function SignupPage() {
               </label>
               <input
                 type={type}
-                required={field !== 'location'}
+                required
                 value={form[field]}
                 onChange={set(field)}
                 placeholder={placeholder}
                 className="w-full border border-warm-200 focus:border-warm-500 rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors bg-warm-50 text-warm-900 placeholder:text-warm-300"
               />
+              {field === 'email' && form.email && !emailValid && (
+                <p className="text-xs text-red-500 mt-1.5">Please enter a valid email address.</p>
+              )}
             </div>
           ))}
+
+          <div>
+            <label className="block text-xs font-bold text-warm-500 uppercase tracking-widest mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              required
+              value={form.password}
+              onChange={set('password')}
+              placeholder="At least 8 characters"
+              className="w-full border border-warm-200 focus:border-warm-500 rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors bg-warm-50 text-warm-900 placeholder:text-warm-300"
+            />
+            {form.password && (
+              <ul className="mt-2 space-y-0.5 text-xs">
+                {[
+                  ['length', '8+ characters'],
+                  ['lower', 'a lowercase letter'],
+                  ['upper', 'an uppercase letter'],
+                  ['digit', 'a number'],
+                ].map(([key, label]) => (
+                  <li key={key} className={pwChecks[key] ? 'text-green-600' : 'text-warm-400'}>
+                    {pwChecks[key] ? '✓' : '○'} {label}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-xs font-bold text-warm-500 uppercase tracking-widest mb-2">
+              Location (optional)
+            </label>
+            <input
+              type="text"
+              value={form.location}
+              onChange={set('location')}
+              placeholder="Atlanta, GA"
+              className="w-full border border-warm-200 focus:border-warm-500 rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors bg-warm-50 text-warm-900 placeholder:text-warm-300"
+            />
+          </div>
 
           <div>
             <label className="block text-xs font-bold text-warm-500 uppercase tracking-widest mb-2">
@@ -101,8 +157,8 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-warm-700 text-warm-50 font-semibold py-3 rounded-xl hover:bg-warm-800 transition-colors disabled:opacity-50 mt-2"
+            disabled={loading || !emailValid || !pwValid || !form.slug.trim() || !form.name.trim()}
+            className="w-full bg-warm-700 text-warm-50 font-semibold py-3 rounded-xl hover:bg-warm-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-2"
           >
             {loading ? 'Creating account…' : 'Create account →'}
           </button>

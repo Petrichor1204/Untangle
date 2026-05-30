@@ -12,7 +12,7 @@ def _register_stylist(client, slug, email):
     res = client.post("/auth/register", json={
         "name": f"Stylist {slug}",
         "email": email,
-        "password": "hunter22",
+        "password": "Hunter22Pass",
         "role": "stylist",
         "slug": slug,
     })

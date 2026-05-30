@@ -1,8 +1,3 @@
 {
-  "/intake/[slug]/[token]/done/page": "app/intake/[slug]/[token]/done/page.js",
-  "/onboarding/page": "app/onboarding/page.js",
-  "/dashboard/intake/[token]/page": "app/dashboard/intake/[token]/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/intake/[slug]/page": "app/intake/[slug]/page.js",
-  "/intake/[slug]/[token]/page": "app/intake/[slug]/[token]/page.js"
+  "/login/page": "app/login/page.js"
 }

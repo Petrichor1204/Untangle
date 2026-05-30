@@ -3,6 +3,9 @@ main.py — Untangle API v2
 Run with:  uvicorn main:app --reload --port 8000
 """
 
+from dotenv import load_dotenv
+load_dotenv()  # load backend/.env into os.environ before any module reads it
+
 import uuid
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
