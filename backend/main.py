@@ -55,7 +55,13 @@ app = FastAPI(title="Untangle API", version="2.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000", "https://untangle-iota.vercel.app"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
+    # Matches the stable Vercel production URL AND every preview deploy
+    # (untangle-<hash>-abrokwaesi42-3904s-projects.vercel.app).
+    allow_origin_regex=r"https://untangle(-[a-z0-9]+)*(-abrokwaesi42-3904s-projects)?\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
