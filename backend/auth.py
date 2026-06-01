@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 
 import bcrypt
+import sentry_sdk
 from jose import JWTError, jwt
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -49,6 +50,8 @@ def get_current_user(
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
+
+    sentry_sdk.set_user({"id": user.id, "email": user.email, "role": user.role})
     return user
 
 

@@ -6,8 +6,25 @@ Run with:  uvicorn main:app --reload --port 8000
 from dotenv import load_dotenv
 load_dotenv()  # load backend/.env into os.environ before any module reads it
 
+import os
 import uuid
 from contextlib import asynccontextmanager
+
+import sentry_sdk
+
+# Error tracking. Disabled when SENTRY_DSN is empty (local dev default).
+_sentry_dsn = os.getenv("SENTRY_DSN")
+if _sentry_dsn:
+    sentry_sdk.init(
+        dsn=_sentry_dsn,
+        environment=os.getenv("SENTRY_ENVIRONMENT", "development"),
+        # Errors only — no perf tracing or profiling for now.
+        traces_sample_rate=0.0,
+        profiles_sample_rate=0.0,
+        # Default False; flip to True only if you accept sending request
+        # bodies (including passwords on /auth/login) to Sentry.
+        send_default_pii=False,
+    )
 from fastapi import FastAPI, Depends, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
